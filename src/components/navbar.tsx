@@ -1,4 +1,3 @@
-import { Button } from "@heroui/button";
 import { Kbd } from "@heroui/kbd";
 import { Link } from "@heroui/link";
 import { Input } from "@heroui/input";
@@ -104,25 +103,19 @@ export const Navbar = () => {
 
         <NavbarItem className="hidden md:flex">
           {isAuthenticated ? (
-            <Button
-              isExternal
-              as={Link}
-              className="text-sm font-normal text-default-600 bg-default-100"
-              href={siteConfig.links.sponsor}
-              startContent={<HeartFilledIcon className="text-danger" />}
-              variant="flat"
-            >
-              Hola: {user.email}
-            </Button>
+            <Link href="/logout">
+              <div className="text-sm font-normal text-default-600 bg-default-100 px-4 py-2 rounded-full flex items-center gap-2 cursor-pointer">
+                <HeartFilledIcon className="text-danger" />
+                Hola: {user.email}
+              </div>
+            </Link>
           ) : (
-            <Button
-              className="text-sm font-normal text-default-600 bg-default-100"
-              startContent={<HeartFilledIcon className="text-danger" />}
-              variant="flat"
-              onClick={() => setIsAuthenticated(true)}
-            >
-              Iniciar sesión
-            </Button>
+            <Link href="/login">
+              <div className="text-sm font-normal text-default-600 bg-default-100 px-4 py-2 rounded-full flex items-center gap-2 cursor-pointer">
+                <HeartFilledIcon className="text-danger" />
+                Iniciar sesión
+              </div>
+            </Link>
           )}
         </NavbarItem>
       </NavbarContent>
