@@ -9,12 +9,15 @@ export interface User {
   nombre: string;
   email: string;
   curso: string;
+  rut: string;
 }
 
 export interface DecodedToken {
   estudiante_id: string;
   email: string;
   curso_nombre: string;
+  rut: string;
+  nombre: string;
 }
 
 export interface AuthContextType {

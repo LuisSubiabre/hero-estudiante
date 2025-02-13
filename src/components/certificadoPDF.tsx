@@ -35,7 +35,15 @@ const styles = StyleSheet.create({
 });
 
 // Crear el componente del documento
-const Certificado = ({ name, rut }: { name: string; rut: string }) => (
+const Certificado = ({
+  name,
+  rut,
+  curso,
+}: {
+  name: string;
+  rut: string;
+  curso: string;
+}) => (
   <Document>
     <Page size="LETTER" style={styles.page}>
       <View style={{ alignItems: "flex-start", marginBottom: 20 }}>
@@ -58,10 +66,10 @@ const Certificado = ({ name, rut }: { name: string; rut: string }) => (
         <Text style={styles.paragraph}>
           {"          "}
           Que, <Text style={styles.negrita}>{name}</Text>, Cédula de Identidad
-          N° {rut} se encuentra matriculado(a) en 3er año de Enseñanza Media en
-          este establecimiento educacional, asumiendo su calidad de{" "}
-          <Text style={styles.negrita}>ALUMNO REGULAR</Text>a contar de marzo
-          del año lectivo 2024.
+          N° {rut} se encuentra matriculado(a) en {curso} en este
+          establecimiento educacional, asumiendo su calidad de{" "}
+          <Text style={styles.negrita}>ALUMNO REGULAR</Text> a contar de marzo
+          del año lectivo {new Date().getFullYear()}.
         </Text>
       </View>
 

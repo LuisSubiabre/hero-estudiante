@@ -28,6 +28,7 @@ import { useAuth } from "@/context/AuthContext";
 export const Navbar = () => {
   const { isAuthenticated, setIsAuthenticated, user } = useAuth();
 
+  console.log(user);
   const searchInput = (
     <Input
       aria-label="Search"

@@ -3,13 +3,18 @@ import { pdf } from "@react-pdf/renderer";
 
 import MyDocument from "../components/certificadoPDF"; // Asegúrate de tener el componente correctamente importado
 
+import { useAuth } from "@/context/AuthContext";
+
 const NotasPage = () => {
+  const { user } = useAuth();
+
   // Función para generar el PDF en el navegador
   const generatePDF = () => {
-    const name = "John Doe"; // Replace with actual name
-    const rut = "12345678-9"; // Replace with actual RUT
+    const name = user.nombre.toUpperCase(); // Replace with actual name
+    const rut = user.rut.toUpperCase(); // Replace with actual RUT
+    const curso = user.curso.toUpperCase(); // Replace with actual course
 
-    pdf(<MyDocument name={name} rut={rut} />)
+    pdf(<MyDocument curso={curso} name={name} rut={rut} />)
       .toBlob() // Usamos toBlob para generar un PDF como blob
       .then((blob) => {
         // Crear un enlace para descargar el PDFd
@@ -28,8 +33,7 @@ const NotasPage = () => {
 
   return (
     <div>
-      <h1>Página de Notas</h1>
-      <button onClick={generatePDF}>Generar PDF</button>
+      <button onClick={generatePDF}>Certificado Alumno Regular</button>
     </div>
   );
 };

@@ -6,7 +6,7 @@ import AlumnoRegular from "./components/AlumnoRegular";
 
 import ProtectedRoute from "@/components/ProtectedRoute"; // Importa el componente de ruta protegida
 import IndexPage from "@/pages/index";
-import PricingPage from "@/pages/pricing";
+import InformesPage from "@/pages/informes";
 import BlogPage from "@/pages/blog";
 import AboutPage from "@/pages/about";
 
@@ -19,7 +19,7 @@ function App() {
 
       {/* Rutas públicas (accesibles sin autenticación) */}
       <Route element={<IndexPage />} path="/" />
-      <Route element={<PricingPage />} path="/pricing" />
+      <Route element={<InformesPage />} path="/informes" />
       <Route element={<BlogPage />} path="/blog" />
       <Route element={<AboutPage />} path="/about" />
 

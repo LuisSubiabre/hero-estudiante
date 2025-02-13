@@ -22,6 +22,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     nombre: "",
     email: "",
     curso: "",
+    rut: "",
   });
 
   useEffect(() => {
@@ -32,12 +33,15 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         try {
           const decodedToken: DecodedToken = jwtDecode(token);
 
+          console.log("Token decodificado:", decodedToken);
+
           setIsAuthenticated(true);
           setUser({
             user_id: decodedToken.estudiante_id,
-            nombre: decodedToken.email.split("@")[0],
+            nombre: decodedToken.nombre,
             email: decodedToken.email,
             curso: decodedToken.curso_nombre,
+            rut: decodedToken.rut,
           });
         } catch (error) {
           console.error("Error decodificando el token:", error);
