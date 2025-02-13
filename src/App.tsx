@@ -2,6 +2,7 @@ import { Route, Routes } from "react-router-dom";
 
 import NotasPage from "./pages/notas";
 import LoginForm from "./pages/login";
+import AlumnoRegular from "./components/AlumnoRegular";
 
 import ProtectedRoute from "@/components/ProtectedRoute"; // Importa el componente de ruta protegida
 import IndexPage from "@/pages/index";
@@ -14,6 +15,7 @@ function App() {
     <Routes>
       {/* Ruta pública (login) */}
       <Route element={<LoginForm />} path="/login" />
+      <Route element={<AlumnoRegular />} path="/regular" />
 
       {/* Rutas públicas (accesibles sin autenticación) */}
       <Route element={<IndexPage />} path="/" />
