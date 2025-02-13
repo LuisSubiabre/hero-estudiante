@@ -22,7 +22,7 @@ const NotasPage = () => {
         const link = document.createElement("a");
 
         link.href = url;
-        link.download = "example.pdf"; // Nombre del archivo PDF a descargar
+        link.download = `certreg-${rut.substring(0, 5)}.pdf`; // Nombre del archivo PDF a descargar
         link.click();
         URL.revokeObjectURL(url); // Limpiar el objeto URL
       })

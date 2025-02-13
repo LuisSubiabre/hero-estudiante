@@ -25,6 +25,7 @@ export interface AuthContextType {
   setIsAuthenticated: React.Dispatch<React.SetStateAction<boolean>>;
   user: User;
   setUser: React.Dispatch<React.SetStateAction<User>>;
+  logout: () => void;
 }
 
 // Tipos relacionados con el formulario de login

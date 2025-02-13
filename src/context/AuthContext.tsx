@@ -33,8 +33,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         try {
           const decodedToken: DecodedToken = jwtDecode(token);
 
-          console.log("Token decodificado:", decodedToken);
-
           setIsAuthenticated(true);
           setUser({
             user_id: decodedToken.estudiante_id,
@@ -56,9 +54,21 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     verifyToken();
   }, []);
 
+  const logout = () => {
+    localStorage.removeItem("TokenLeu"); // Elimina el token
+    setIsAuthenticated(false); // Cambia el estado de autenticación a falso
+    setUser({
+      user_id: "",
+      nombre: "",
+      email: "",
+      curso: "",
+      rut: "",
+    }); // Limpia la información del usuario
+  };
+
   return (
     <AuthContext.Provider
-      value={{ isAuthenticated, setIsAuthenticated, user, setUser }}
+      value={{ isAuthenticated, setIsAuthenticated, user, setUser, logout }}
     >
       {children}
     </AuthContext.Provider>
