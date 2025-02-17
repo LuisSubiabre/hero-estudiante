@@ -1,5 +1,6 @@
 import React from "react";
 import { pdf } from "@react-pdf/renderer";
+import { Button } from "@heroui/react";
 
 import MyDocument from "../components/certificadoPDF"; // Asegúrate de tener el componente correctamente importado
 
@@ -32,8 +33,10 @@ const NotasPage = () => {
   };
 
   return (
-    <div>
-      <button onClick={generatePDF}>Certificado Alumno Regular</button>
+    <div className="flex flex-col items-center justify-center gap-4 py-8 md:py-6">
+      <Button color="primary" onPress={generatePDF}>
+        Certificado Alumno Regular
+      </Button>
     </div>
   );
 };

@@ -28,7 +28,6 @@ import { useAuth } from "@/context/AuthContext";
 export const Navbar = () => {
   const { isAuthenticated, setIsAuthenticated, user } = useAuth();
 
-  console.log(user);
   const searchInput = (
     <Input
       aria-label="Search"
@@ -60,7 +59,7 @@ export const Navbar = () => {
             href="/"
           >
             <Logo />
-            <p className="font-bold text-inherit">ACME</p>
+            <p className="font-bold text-inherit">LEUMAG</p>
           </Link>
         </NavbarBrand>
         {isAuthenticated ? (

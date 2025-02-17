@@ -8,8 +8,9 @@ import AlumnoRegular from "./components/AlumnoRegular";
 import ProtectedRoute from "@/components/ProtectedRoute"; // Importa el componente de ruta protegida
 import IndexPage from "@/pages/index";
 import InformesPage from "@/pages/informes";
-import BlogPage from "@/pages/blog";
-import AboutPage from "@/pages/about";
+import AsistenciaPage from "@/pages/asistencia";
+import AtrasosPage from "@/pages/atrasos";
+import AclesPage from "@/pages/acles";
 
 function App() {
   return (
@@ -20,14 +21,15 @@ function App() {
 
       {/* Rutas públicas (accesibles sin autenticación) */}
       <Route element={<IndexPage />} path="/" />
-      <Route element={<BlogPage />} path="/blog" />
-      <Route element={<AboutPage />} path="/about" />
+      <Route element={<AsistenciaPage />} path="/asistencia" />
+      <Route element={<AtrasosPage />} path="/atrasos" />
 
       {/* Rutas protegidas (requieren autenticación) */}
       <Route element={<ProtectedRoute />}>
         <Route element={<NotasPage />} path="/notas" />
         <Route element={<AlumnoRegular />} path="/regular" />
         <Route element={<InformesPage />} path="/informes" />
+        <Route element={<AclesPage />} path="/acles" />
 
         {/* Aquí puedes agregar más rutas protegidas */}
       </Route>

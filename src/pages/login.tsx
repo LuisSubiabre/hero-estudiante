@@ -59,9 +59,11 @@ const LoginForm = () => {
       setIsAuthenticated(true);
       setUser({
         user_id: decodedToken.estudiante_id,
-        nombre: decodedToken.email.split("@")[0],
+        nombre: decodedToken.nombre, // Usa el nombre del token si está disponible
         email: decodedToken.email,
         curso: decodedToken.curso_nombre,
+        rut: decodedToken.rut, // Agregar rut desde el token
+        curso_nombre: decodedToken.curso_nombre,
       });
 
       navigate("/");
@@ -84,7 +86,7 @@ const LoginForm = () => {
                 fullWidth
                 required
                 label="Email"
-                placeholder="you@example.com"
+                placeholder=""
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
@@ -94,7 +96,7 @@ const LoginForm = () => {
                 fullWidth
                 required
                 label="Password"
-                placeholder="********"
+                placeholder=""
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}

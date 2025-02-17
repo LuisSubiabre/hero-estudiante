@@ -10,6 +10,7 @@ export interface User {
   email: string;
   curso: string;
   rut: string;
+  curso_nombre: string; // Add curso_nombre property
 }
 
 export interface DecodedToken {
@@ -43,4 +44,22 @@ export interface AuthResponse {
 // Tipos relacionados con errores
 export interface ApiError {
   message: string;
+}
+
+export interface Asignatura {
+  asignatura_id: number;
+  indice: number;
+  nombre_asignatura: string;
+  [key: string]: number | string | null;
+}
+
+export interface Libreta {
+  nombre_estudiante: string;
+  curso_nombre: string;
+  asignaturas: Asignatura[];
+}
+
+export interface Taller {
+  taller_id: number;
+  nombre: string;
 }
