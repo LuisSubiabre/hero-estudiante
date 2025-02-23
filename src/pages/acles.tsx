@@ -66,6 +66,9 @@ export default function NotasPage() {
     }
   };
 
+  // Obtener la cantidad de talleres inscritos
+  const cantidadTalleresInscritos = talleresInscritosList.length;
+
   // Cargar los datos iniciales
   useEffect(() => {
     fetchTalleres();
@@ -139,17 +142,23 @@ export default function NotasPage() {
           {errorTalleres && <p className="text-red-500">{errorTalleres}</p>}
 
           {!loadingTalleres && talleresDisponibles.length > 0 && (
-            <ul>
-              {talleresDisponibles.map((t) => (
-                <li key={t.taller_id} className="border p-4 mb-2">
-                  <h2 className="font-bold">{t.nombre}</h2>
-                  <p>ID: {t.taller_id}</p>
-                  <Button onPress={() => inscribirTaller(t.taller_id)}>
-                    Inscribirse
-                  </Button>
-                </li>
-              ))}
-            </ul>
+            <>
+              {cantidadTalleresInscritos >= 2 ? (
+                <p>Ya estás inscrito en 3 talleres.</p>
+              ) : (
+                <ul>
+                  {talleresDisponibles.map((t) => (
+                    <li key={t.taller_id} className="border p-4 mb-2">
+                      <h2 className="font-bold">{t.nombre}</h2>
+                      <p>ID: {t.taller_id}</p>
+                      <Button onPress={() => inscribirTaller(t.taller_id)}>
+                        Inscribirse
+                      </Button>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </>
           )}
           {!loadingTalleres && talleresDisponibles.length === 0 && (
             <p>No hay talleres disponibles.</p>
