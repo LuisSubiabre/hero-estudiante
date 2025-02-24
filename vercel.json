@@ -1,5 +1,8 @@
 {
   "rewrites": [
-    { "source": "/(.*)", "destination": "/" }
+    {
+      "source": "/:path*",
+      "destination": "http://vps-4623286-x.dattaweb.com:3500/:path*"
+    }
   ]
 }
