@@ -9,10 +9,9 @@ export default defineConfig({
   server: {
     proxy: {
       "/api": {
-        target: "http://149.50.146.106:3500", // Tu API sin HTTPS
+        target: "http://149.50.146.106:3500", // Tu servidor HTTP
         changeOrigin: true,
-        secure: false, // Permite HTTP en lugar de HTTPS
-        rewrite: (path) => path.replace(/^\/api/, ""),
+        rewrite: (path) => path.replace(/^\/api/, ""), // Elimina el prefijo /api
       },
     },
   },
