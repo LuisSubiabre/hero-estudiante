@@ -80,7 +80,7 @@ export const Navbar = () => {
             ))}
           </div>
         ) : (
-          "Iniciar sesion"
+          <Link href="/login">Iniciar sesión</Link>
         )}
       </NavbarContent>
 
