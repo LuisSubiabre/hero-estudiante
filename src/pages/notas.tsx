@@ -20,7 +20,7 @@ export default function NotasPage() {
         }
       })
       .catch((error) => {
-        setError("Hubo un error al cargar la libreta");
+        setError("Hubo un error al cargar la libreta " + error.message);
       })
       .finally(() => {
         setLoading(false);

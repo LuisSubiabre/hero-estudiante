@@ -23,6 +23,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     email: "",
     curso: "",
     rut: "",
+    curso_nombre: "",
   });
 
   useEffect(() => {
@@ -40,6 +41,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
             email: decodedToken.email,
             curso: decodedToken.curso_nombre,
             rut: decodedToken.rut,
+            curso_nombre: decodedToken.curso_nombre,
           });
         } catch (error) {
           console.error("Error decodificando el token:", error);
@@ -63,6 +65,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       email: "",
       curso: "",
       rut: "",
+      curso_nombre: "",
     }); // Limpia la información del usuario
   };
 

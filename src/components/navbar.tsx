@@ -26,7 +26,7 @@ import { Logo } from "@/components/icons";
 import { useAuth } from "@/context/AuthContext";
 
 export const Navbar = () => {
-  const { isAuthenticated, setIsAuthenticated, user } = useAuth();
+  const { isAuthenticated, user } = useAuth();
 
   const searchInput = (
     <Input
