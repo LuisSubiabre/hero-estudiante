@@ -31,16 +31,13 @@ const LoginForm = () => {
 
   const fetchAuth = async () => {
     try {
-      const response = await fetch(
-        `${import.meta.env.VITE_URL_BASE}/api/login`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ email, clave: password }),
-        }
-      );
+      const response = await fetch(`${import.meta.env.VITE_URL_BASE}/login`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, clave: password }),
+      });
 
       if (!response.ok) {
         const errorData = await response.json();
