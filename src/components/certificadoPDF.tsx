@@ -1,4 +1,3 @@
-// certificadoPDF.tsx
 import React from "react";
 import {
   Document,
@@ -7,8 +6,22 @@ import {
   StyleSheet,
   View,
   Image,
+  Font,
 } from "@react-pdf/renderer";
 
+// Registrar la fuente Roboto con la URL directa al archivo .ttf o .otf
+Font.register({
+  family: "Roboto",
+  fonts: [
+    {
+      src: "/font/roboto/Roboto-Regular.ttf", // Regular
+    },
+    {
+      src: "/font/roboto/Roboto-Bold.ttf", // Bold
+      fontWeight: "bold",
+    },
+  ],
+});
 // Crear los estilos
 const styles = StyleSheet.create({
   page: {
@@ -29,7 +42,8 @@ const styles = StyleSheet.create({
     lineHeight: 1.5,
   },
   negrita: {
-    fontWeight: "ultrabold",
+    fontFamily: "Roboto",
+    fontWeight: "bold", // Asegúrate de que la fuente tenga un peso bold
   },
   section: { textAlign: "justify", margin: 10 },
 });
@@ -89,6 +103,29 @@ const Certificado = ({
           {"          "}
           Se extiende el presente certificado a petición del alumno(a)
           interesado(a) para fines que estime conveniente.
+        </Text>
+      </View>
+
+      <View style={{ alignItems: "center", marginBottom: 20 }}>
+        <Image
+          src="/images/pbravo-signature.png"
+          style={{ width: 300, height: 80 }}
+        />
+      </View>
+      <View style={{ ...styles.section, alignItems: "center" }}>
+        <Text style={styles.paragraph}>
+          Prof. PATRICIO BRAVO JORQUERA{"\n"}
+          {"          "}
+          {"          "}
+          {"     "}D I R E C T O R
+        </Text>
+      </View>
+
+      <View
+        style={{ ...styles.section, alignItems: "center", marginBottom: 20 }}
+      >
+        <Text style={styles.paragraph}>
+          Punta Arenas, {new Date().toLocaleDateString()}
         </Text>
       </View>
     </Page>

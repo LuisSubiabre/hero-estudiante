@@ -31,7 +31,7 @@ const LoginForm = () => {
 
   const fetchAuth = async () => {
     try {
-      const response = await fetch("http://localhost:3500/login", {
+      const response = await fetch(`${import.meta.env.VITE_URL_BASE}/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

@@ -11,14 +11,17 @@ const validateToken = async () => {
       return false;
     }
 
-    const response = await fetch("http://localhost:3500/verify-token", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: token, // Envía solo el token, sin "Bearer"
-      },
-      body: JSON.stringify({ token }), // Envía el token en el cuerpo
-    });
+    const response = await fetch(
+      `${import.meta.env.VITE_URL_BASE}/verify-token`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: token, // Envía solo el token, sin "Bearer"
+        },
+        body: JSON.stringify({ token }), // Envía el token en el cuerpo
+      }
+    );
 
     console.log(response);
 
