@@ -2,7 +2,7 @@
   "rewrites": [
     {
       "source": "/:path*",
-      "destination": "http://vps-4623286-x.dattaweb.com:3500/:path*"
+      "destination": "http://149.50.146.106:3500/:path*"
     }
   ]
 }
