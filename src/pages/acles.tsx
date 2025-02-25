@@ -93,7 +93,7 @@ export default function NotasPage() {
         const payload = JSON.parse(atob(token.split(".")[1])); // Decodificar el payload
 
         return payload.curso_id;
-      } catch (error) {
+      } catch {
         return null;
       }
     } else {
@@ -162,7 +162,7 @@ export default function NotasPage() {
                   {talleresDisponibles.map((t) => (
                     <Card key={t.taller_id} className="p-4 mb-2">
                       <h2 className="font-bold">{t.nombre}</h2>
-                      <p>ID: {t.taller_id}</p>
+                      <p>Horario: {t.horario}</p>
                       <Button onPress={() => inscribirTaller(t.taller_id)}>
                         Inscribirse
                       </Button>
@@ -194,7 +194,7 @@ export default function NotasPage() {
               {talleresInscritosList.map((t) => (
                 <Card key={t.taller_id} className="p-4 mb-2">
                   <h2 className="font-bold">{t.nombre}</h2>
-                  <p>ID: {t.taller_id}</p>
+                  <p>Horario: {t.horario}</p>
                   <Button onPress={() => retirarTaller(t.taller_id)}>
                     Retirarse
                   </Button>

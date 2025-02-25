@@ -62,4 +62,6 @@ export interface Libreta {
 export interface Taller {
   taller_id: number;
   nombre: string;
+  descripcion?: string;
+  horario: string;
 }
