@@ -1,13 +1,16 @@
 import { useEffect, useState } from "react";
-import { Alert, Button, Card, Spinner } from "@heroui/react";
 import {
+  Alert,
+  Button,
+  Card,
+  Spinner,
   Modal,
   ModalContent,
   ModalHeader,
   ModalBody,
   ModalFooter,
   useDisclosure,
-} from "@heroui/modal";
+} from "@heroui/react";
 
 import { title } from "@/components/primitives";
 import DefaultLayout from "@/layouts/default";
@@ -209,7 +212,7 @@ export default function NotasPage() {
       </section>
       <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
         <ModalContent>
-          {(onClose) => (
+          {(onClose: () => void) => (
             <>
               <ModalHeader className="flex flex-col gap-1">
                 Atención
