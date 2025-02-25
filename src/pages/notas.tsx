@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Spinner } from "@heroui/spinner";
 
 import { title } from "@/components/primitives";
 import DefaultLayout from "@/layouts/default";
@@ -37,7 +38,11 @@ export default function NotasPage() {
           <h2 className="text-lg text-gray-700">{libreta?.curso_nombre}</h2>
         </div>
 
-        {loading && <p>Cargando...</p>}
+        {loading && (
+          <div className="flex justify-center items-center">
+            <Spinner />
+          </div>
+        )}
         {error && <p className="text-red-500">{error}</p>}
 
         {!loading && libreta && (

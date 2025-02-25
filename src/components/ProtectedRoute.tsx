@@ -1,3 +1,4 @@
+import { Spinner } from "@heroui/react";
 import { useEffect, useState } from "react";
 import { Navigate, Outlet } from "react-router-dom";
 
@@ -23,8 +24,6 @@ const validateToken = async () => {
       }
     );
 
-    console.log(response);
-
     if (!response.ok) {
       throw new Error("Token verification failed");
     }
@@ -33,9 +32,7 @@ const validateToken = async () => {
 
     // Si el token es válido, retorna true
     return data.isValid;
-  } catch (error) {
-    console.error(error);
-
+  } catch {
     return false;
   }
 };
@@ -47,7 +44,6 @@ const ProtectedRoute = () => {
     const checkToken = async () => {
       const isValid = await validateToken();
 
-      console.log(isValid);
       setIsValidToken(isValid);
     };
 
@@ -56,7 +52,11 @@ const ProtectedRoute = () => {
 
   // Si aún no se ha verificado el token, muestra un mensaje de carga
   if (isValidToken === null) {
-    return <div>Loading...</div>;
+    return (
+      <div className="flex justify-center items-center">
+        <Spinner />
+      </div>
+    );
   }
 
   // Si el token no es válido, redirige al login

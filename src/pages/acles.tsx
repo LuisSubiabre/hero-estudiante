@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Button } from "@heroui/react";
+import { Alert, Button, Card, Spinner } from "@heroui/react";
 
 import { title } from "@/components/primitives";
 import DefaultLayout from "@/layouts/default";
@@ -137,50 +137,61 @@ export default function NotasPage() {
 
         {/* Listado de talleres disponibles */}
         <div>
-          <h1>Listado de talleres</h1>
-          {loadingTalleres && <p>Cargando talleres...</p>}
+          {loadingTalleres && (
+            <div className="flex justify-center items-center">
+              <Spinner />
+            </div>
+          )}
           {errorTalleres && <p className="text-red-500">{errorTalleres}</p>}
 
           {!loadingTalleres && talleresDisponibles.length > 0 && (
             <>
               {cantidadTalleresInscritos >= 2 ? (
-                <p>Ya estás inscrito en 3 talleres.</p>
+                <Alert color="warning">
+                  Solo puedes inscribirte en un máximo de 2 talleres.
+                </Alert>
               ) : (
-                <ul>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                   {talleresDisponibles.map((t) => (
-                    <li key={t.taller_id} className="border p-4 mb-2">
+                    <Card key={t.taller_id} className="p-4 mb-2">
                       <h2 className="font-bold">{t.nombre}</h2>
                       <p>ID: {t.taller_id}</p>
                       <Button onPress={() => inscribirTaller(t.taller_id)}>
                         Inscribirse
                       </Button>
-                    </li>
+                    </Card>
                   ))}
-                </ul>
+                </div>
               )}
             </>
           )}
           {!loadingTalleres && talleresDisponibles.length === 0 && (
-            <p>No hay talleres disponibles.</p>
+            <Alert color="danger">No hay talleres disponibles.</Alert>
           )}
         </div>
 
         {/* Listado de talleres inscritos */}
         <div>
-          <h1>Listado de talleres inscritos</h1>
-          {loadingInscritos && <p>Cargando talleres inscritos...</p>}
+          <Alert color="secondary">
+            Talleres inscritos: {cantidadTalleresInscritos} de 2
+          </Alert>
+          {loadingInscritos && (
+            <div className="flex justify-center items-center">
+              <Spinner />
+            </div>
+          )}
           {errorInscritos && <p className="text-red-500">{errorInscritos}</p>}
 
           {!loadingInscritos && talleresInscritosList.length > 0 && (
             <ul>
               {talleresInscritosList.map((t) => (
-                <li key={t.taller_id} className="border p-4 mb-2">
+                <Card key={t.taller_id} className="p-4 mb-2">
                   <h2 className="font-bold">{t.nombre}</h2>
                   <p>ID: {t.taller_id}</p>
                   <Button onPress={() => retirarTaller(t.taller_id)}>
                     Retirarse
                   </Button>
-                </li>
+                </Card>
               ))}
             </ul>
           )}
