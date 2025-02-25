@@ -1,5 +1,13 @@
 import { useEffect, useState } from "react";
 import { Alert, Button, Card, Spinner } from "@heroui/react";
+import {
+  Modal,
+  ModalContent,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
+  useDisclosure,
+} from "@heroui/modal";
 
 import { title } from "@/components/primitives";
 import DefaultLayout from "@/layouts/default";
@@ -10,7 +18,6 @@ import {
   tallerRetirar,
 } from "@/services/tallerService";
 import { Taller } from "@/types";
-
 export default function NotasPage() {
   const [talleres, setTalleres] = useState<Taller[]>([]);
   const [talleresInscritosList, setTalleresInscritosList] = useState<Taller[]>(
@@ -20,6 +27,8 @@ export default function NotasPage() {
   const [loadingInscritos, setLoadingInscritos] = useState(true);
   const [errorTalleres, setErrorTalleres] = useState("");
   const [errorInscritos, setErrorInscritos] = useState("");
+  const [error, setError] = useState("");
+  const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
   // Función para obtener los talleres disponibles
   const fetchTalleres = async () => {
@@ -85,13 +94,9 @@ export default function NotasPage() {
 
         return payload.curso_id;
       } catch (error) {
-        console.error("Error al decodificar el token:", error);
-
         return null;
       }
     } else {
-      console.log("No se encontró un token.");
-
       return null;
     }
   };
@@ -111,8 +116,9 @@ export default function NotasPage() {
       // Volver a cargar los datos después de inscribirse
       await fetchTalleres();
       await fetchTalleresInscritos();
-    } catch (error) {
-      console.error("Error al inscribirse en el taller:", error);
+    } catch {
+      setError("Error al inscribirse en el taller.");
+      onOpen();
     }
   };
 
@@ -123,8 +129,9 @@ export default function NotasPage() {
       // Volver a cargar los datos después de retirarse
       await fetchTalleres();
       await fetchTalleresInscritos();
-    } catch (error) {
-      console.error("Error al retirarse del taller:", error);
+    } catch {
+      setError("Error al retirarse en el taller.");
+      onOpen();
     }
   };
 
@@ -200,6 +207,25 @@ export default function NotasPage() {
           )}
         </div>
       </section>
+      <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
+        <ModalContent>
+          {(onClose) => (
+            <>
+              <ModalHeader className="flex flex-col gap-1">
+                Atención
+              </ModalHeader>
+              <ModalBody>
+                <p>{error}</p>
+              </ModalBody>
+              <ModalFooter>
+                <Button color="danger" variant="light" onPress={onClose}>
+                  Cerrar
+                </Button>
+              </ModalFooter>
+            </>
+          )}
+        </ModalContent>
+      </Modal>
     </DefaultLayout>
   );
 }
