@@ -54,6 +54,10 @@ export const siteConfig = {
       label: "Informes",
       href: "/informes",
     },
+    {
+      label: "Salir",
+      href: "/Logout",
+    },
   ],
   links: {
     github: "https://github.com/frontio-ai/heroui",
