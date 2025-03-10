@@ -71,7 +71,8 @@ const Certificado = ({
         <Text style={styles.paragraph}>
           {"          "}
           Prof. <Text style={styles.negrita}>PATRICIO BRAVO JORQUERA</Text>,
-          Director del Liceo Experimental Universidad de Magallanes, certifica:
+          Director del Liceo Experimental Universidad de Magallanes, RBD
+          24327-2, de la ciudad de Punta Arenas, certifica:
         </Text>
       </View>
 
