@@ -15,7 +15,7 @@ import clsx from "clsx";
 
 import { siteConfig } from "@/config/site";
 import { ThemeSwitch } from "@/components/theme-switch";
-import { GithubIcon, HeartFilledIcon, SearchIcon } from "@/components/icons";
+import { HeartFilledIcon, SearchIcon, LogoutIcon } from "@/components/icons";
 import { useAuth } from "@/context/AuthContext";
 
 export const Navbar = () => {
@@ -72,9 +72,7 @@ export const Navbar = () => {
               </NavbarItem>
             ))}
           </div>
-        ) : (
-          <Link href="/login">Iniciar sesión</Link>
-        )}
+        ) : null}
       </NavbarContent>
 
       <NavbarContent
@@ -82,26 +80,25 @@ export const Navbar = () => {
         justify="end"
       >
         <NavbarItem className="hidden sm:flex gap-2">
-          {/* <Link isExternal href={siteConfig.links.twitter} title="Twitter">
-            <TwitterIcon className="text-default-500" />
-          </Link>
-          <Link isExternal href={siteConfig.links.discord} title="Discord">
-            <DiscordIcon className="text-default-500" />
-          </Link>
-          <Link isExternal href={siteConfig.links.github} title="GitHub">
-            <GithubIcon className="text-default-500" />
-          </Link> */}
           <ThemeSwitch />
         </NavbarItem>
 
-        <NavbarItem className="hidden md:flex">
+        <NavbarItem className="hidden md:flex gap-2">
           {isAuthenticated ? (
-            <Link href="/logout">
-              <div className="text-sm font-normal text-default-600 bg-default-100 px-4 py-2 rounded-full flex items-center gap-2 cursor-pointer">
+            <>
+              <div className="text-sm font-normal text-default-600 bg-default-100 px-4 py-2 rounded-full flex items-center gap-2">
                 <HeartFilledIcon className="text-danger" />
-                Hola: {user.email}
+                <span>Hola: {user.email}</span>
               </div>
-            </Link>
+              <Link
+                className="flex items-center gap-2 text-sm font-normal text-danger hover:bg-danger-100 px-4 py-2 rounded-full transition-colors"
+                href="/logout"
+                title="Cerrar sesión"
+              >
+                <LogoutIcon className="text-danger" size={20} />
+                <span>Cerrar sesión</span>
+              </Link>
+            </>
           ) : (
             <Link href="/login">
               <div className="text-sm font-normal text-default-600 bg-default-100 px-4 py-2 rounded-full flex items-center gap-2 cursor-pointer">
@@ -113,35 +110,44 @@ export const Navbar = () => {
         </NavbarItem>
       </NavbarContent>
 
-      <NavbarContent className="sm:hidden basis-1 pl-4" justify="end">
-        <Link isExternal href={siteConfig.links.github}>
-          <GithubIcon className="text-default-500" />
-        </Link>
+      <NavbarContent className="sm:hidden" justify="end">
         <ThemeSwitch />
         <NavbarMenuToggle />
       </NavbarContent>
 
       <NavbarMenu>
-        {searchInput}
-        <div className="mx-4 mt-2 flex flex-col gap-2">
-          {siteConfig.navMenuItems.map((item, index) => (
-            <NavbarMenuItem key={`${item}-${index}`}>
-              <Link
-                color={
-                  index === 0
-                    ? "primary"
-                    : index === siteConfig.navMenuItems.length - 1
-                      ? "danger"
-                      : "foreground"
-                }
-                href={item.href}
-                size="lg"
-              >
-                {item.label}
+        {isAuthenticated ? (
+          <>
+            {searchInput}
+            <div className="mx-4 mt-2 flex flex-col gap-2">
+              {siteConfig.navMenuItems.map((item, index) => (
+                <NavbarMenuItem key={`${item}-${index}`}>
+                  <Link
+                    color={
+                      index === 0
+                        ? "primary"
+                        : index === siteConfig.navMenuItems.length - 1
+                          ? "danger"
+                          : "foreground"
+                    }
+                    href={item.href}
+                    size="lg"
+                  >
+                    {item.label}
+                  </Link>
+                </NavbarMenuItem>
+              ))}
+            </div>
+          </>
+        ) : (
+          <div className="mx-4 mt-2 flex flex-col gap-2">
+            <NavbarMenuItem>
+              <Link color="primary" href="/login" size="lg">
+                Iniciar sesión
               </Link>
             </NavbarMenuItem>
-          ))}
-        </div>
+          </div>
+        )}
       </NavbarMenu>
     </HeroUINavbar>
   );
