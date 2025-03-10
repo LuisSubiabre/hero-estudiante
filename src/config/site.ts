@@ -25,8 +25,8 @@ export const siteConfig = {
       href: "/atrasos",
     },
     {
-      label: "Informes",
-      href: "/informes",
+      label: "Certificados",
+      href: "/certificados",
     },
   ],
   navMenuItems: [
