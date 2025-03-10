@@ -22,7 +22,6 @@ import {
   HeartFilledIcon,
   SearchIcon,
 } from "@/components/icons";
-import { Logo } from "@/components/icons";
 import { useAuth } from "@/context/AuthContext";
 
 export const Navbar = () => {
@@ -58,7 +57,7 @@ export const Navbar = () => {
             color="foreground"
             href="/"
           >
-            <Logo />
+            <img alt="LEUMAG" src="/images/logo.png" width={46} />
             <p className="font-bold text-inherit">LEUMAG</p>
           </Link>
         </NavbarBrand>
