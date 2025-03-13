@@ -101,7 +101,7 @@ export const Navbar = () => {
             </>
           ) : (
             <Link href="/login">
-              <div className="text-sm font-normal text-default-600 bg-default-100 px-4 py-2 rounded-full flex items-center gap-2 cursor-pointer">
+              <div className="animate-pulse text-sm font-normal text-default-600 bg-default-100 px-4 py-2 rounded-full flex items-center gap-2 cursor-pointer">
                 <HeartFilledIcon className="text-danger" />
                 Iniciar sesión
               </div>
