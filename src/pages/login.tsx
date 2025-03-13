@@ -1,5 +1,14 @@
 import React, { useState } from "react";
-import { Input, Button, Card } from "@heroui/react";
+import {
+  Input,
+  Button,
+  Card,
+  Modal,
+  ModalContent,
+  ModalHeader,
+  ModalBody,
+  useDisclosure,
+} from "@heroui/react";
 import { useNavigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
 
@@ -12,6 +21,12 @@ const LoginForm = () => {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string>("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [rut, setRut] = useState("");
+  const [loadingRecovery, setLoadingRecovery] = useState(false);
+  const [recoveryError, setRecoveryError] = useState("");
+  const [recoverySuccess, setRecoverySuccess] = useState(false);
+  const { isOpen, onOpen, onClose } = useDisclosure();
   const { setIsAuthenticated, setUser } = useAuth();
   const navigate = useNavigate();
 
@@ -73,6 +88,65 @@ const LoginForm = () => {
     }
   };
 
+  const handleRecoverySubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setRecoveryError("");
+    setRecoverySuccess(false);
+    setLoadingRecovery(true);
+
+    try {
+      const formattedRut = rut.toUpperCase();
+      const response = await fetch(
+        `${import.meta.env.VITE_URL_BASE}/recuperar-clave`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ rut: formattedRut }),
+        }
+      );
+
+      if (!response.ok) {
+        const errorData = await response.json();
+
+        throw new Error(
+          errorData.message || "Error al recuperar la contraseña"
+        );
+      }
+
+      setRecoverySuccess(true);
+    } catch (error) {
+      setRecoveryError((error as Error).message);
+    } finally {
+      setLoadingRecovery(false);
+    }
+  };
+
+  const validateRut = (value: string) => {
+    // Primero actualizamos el valor del input
+    setRut(value);
+
+    // Si el campo está vacío, no mostramos error
+    if (!value) {
+      setRecoveryError("");
+
+      return;
+    }
+
+    // Eliminar puntos y convertir guión en K si es necesario
+    const rutClean = value.replace(/\./g, "").replace(/k$/i, "K");
+
+    // Validar formato (XXXXXXXX-X)
+    const rutRegex = /^[0-9]{7,8}-[0-9K]$/;
+
+    if (!rutRegex.test(rutClean)) {
+      setRecoveryError("Formato de RUT inválido. Debe ser XXXXXXXX-X");
+    } else {
+      setRecoveryError("");
+    }
+  };
+
   return (
     <section className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-gray-900 dark:to-gray-800 flex items-center justify-center p-4">
       <Card className="w-full max-w-md p-6 space-y-8">
@@ -106,10 +180,53 @@ const LoginForm = () => {
           <Input
             isRequired
             className="w-full pt-4"
+            endContent={
+              <button
+                className="focus:outline-none"
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+              >
+                {showPassword ? (
+                  <svg
+                    className="w-5 h-5 text-gray-500"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                    />
+                    <path
+                      d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                    />
+                  </svg>
+                ) : (
+                  <svg
+                    className="w-5 h-5 text-gray-500"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                    />
+                  </svg>
+                )}
+              </button>
+            }
             label="Contraseña"
             labelPlacement="outside"
             size="lg"
-            type="password"
+            type={showPassword ? "text" : "password"}
             value={password}
             variant="bordered"
             onChange={(e) => setPassword(e.target.value)}
@@ -147,9 +264,58 @@ const LoginForm = () => {
         </form>
 
         <div className="text-center text-sm text-gray-500 dark:text-gray-400">
-          {/* <p>¿Necesitas ayuda? Contacta a tu profesor jefe</p> */}
+          <button
+            className="text-primary hover:underline focus:outline-none"
+            type="button"
+            onClick={onOpen}
+          >
+            ¿Olvidaste tu contraseña?
+          </button>
         </div>
       </Card>
+
+      <Modal isOpen={isOpen} onClose={onClose}>
+        <ModalContent>
+          <ModalHeader>Recuperar Contraseña</ModalHeader>
+          <ModalBody>
+            <form className="space-y-4" onSubmit={handleRecoverySubmit}>
+              <Input
+                isRequired
+                description="Ingresa tu RUT sin puntos y con guión (Ejemplo: 12345678-9)"
+                label="RUT"
+                placeholder="12345678-9"
+                value={rut}
+                onChange={(e) => validateRut(e.target.value)}
+              />
+
+              {recoveryError && (
+                <div className="text-red-500 text-sm">{recoveryError}</div>
+              )}
+
+              {recoverySuccess && (
+                <div className="text-green-500 text-sm">
+                  Se ha enviado un correo con las instrucciones para recuperar
+                  tu contraseña.
+                </div>
+              )}
+
+              <div className="flex justify-end gap-2">
+                <Button color="danger" variant="light" onPress={onClose}>
+                  Cerrar
+                </Button>
+                <Button
+                  color="primary"
+                  disabled={!rut || !!recoveryError}
+                  isLoading={loadingRecovery}
+                  type="submit"
+                >
+                  Recuperar
+                </Button>
+              </div>
+            </form>
+          </ModalBody>
+        </ModalContent>
+      </Modal>
     </section>
   );
 };

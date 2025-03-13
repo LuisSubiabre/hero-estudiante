@@ -4,15 +4,12 @@ export default function IndexPage() {
   return (
     <DefaultLayout>
       <section className="flex flex-col items-center justify-center gap-8 py-16 md:py-20">
-        <div className="relative w-32 h-32 mb-8">
-          <div className="absolute inset-0 bg-primary-100 dark:bg-primary-900 rounded-full animate-pulse" />
-          <svg
-            className="w-full h-full text-primary-500"
-            fill="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path d="M12 3L1 9l4 2.18v6L12 21l7-3.82v-6l2-1.09v-4.82L12 3zm6.82 6L12 12.72 5.18 9 12 5.28 18.82 9zM17 15.99l-5 2.73-5-2.73v-3.72L12 15l5-2.73v3.72z" />
-          </svg>
+        <div className=" flex justify-center items-center">
+          <img
+            alt="Logo Liceo Experimental Umag"
+            className="w-[200px] h-[200px] mb-6"
+            src="https://res.cloudinary.com/dx219dazh/image/upload/v1741889701/varios/xv0dt5dgdzvjj5jjrfcl.png"
+          />
         </div>
 
         <div className="inline-block max-w-2xl text-center justify-center">
