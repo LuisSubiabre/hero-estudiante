@@ -17,8 +17,7 @@ function App() {
 
       {/* Rutas públicas (accesibles sin autenticación) */}
       <Route element={<IndexPage />} path="/" />
-      <Route element={<NoDisponiblePage />} path="/asistencia" />
-      <Route element={<NoDisponiblePage />} path="/atrasos" />
+
 
       {/* Rutas protegidas (requieren autenticación) */}
       <Route element={<ProtectedRoute />}>
@@ -26,6 +25,8 @@ function App() {
         <Route element={<NoDisponiblePage />} path="/regular" />
         <Route element={<InformesPage />} path="/certificados" />
         <Route element={<NoDisponiblePage />} path="/acles" />
+        <Route element={<NoDisponiblePage />} path="/asistencia" />
+        <Route element={<NoDisponiblePage />} path="/atrasos" />
 
         {/* Aquí puedes agregar más rutas protegidas */}
       </Route>
