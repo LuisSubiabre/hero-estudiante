@@ -13,7 +13,7 @@ export default function DocsPage() {
         <div className="text-6xl text-primary-500" />
         <div className="inline-block max-w-lg text-center justify-center">
           <h1 className="text-3xl font-bold mb-4 text-gray-800 dark:text-white">
-            Sección No Disponible
+            Sección No Disponible.
           </h1>
           <p className="text-lg text-gray-600 dark:text-gray-300 mb-8">
             Lo sentimos, esta sección se encuentra en desarrollo. Estamos
