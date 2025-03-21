@@ -1,4 +1,5 @@
 import { Link } from "@heroui/link";
+
 import packageJson from "../../package.json";
 
 import { Navbar } from "@/components/navbar";
@@ -15,18 +16,16 @@ export default function DefaultLayout({
         {children}
       </main>
       <footer className="w-full flex items-center justify-center py-3">
-       
-          <span className="text-default-600">Desarrollado por</span> 
-          <Link
+        <span className="text-default-600">Desarrollado por</span>
+        <Link
           isExternal
           className="flex items-center gap-1 text-current"
           href="https://liceoexperimental.cl"
           title="Leumag homepage"
         >
-          <p className="text-primary">Liceo Experimental Umag</p> 
-           </Link>
-          <span className="text-default-600">v{packageJson.version}</span>
-      
+          <p className="text-primary mx-2"> Liceo Experimental Umag </p>
+        </Link>
+        <span className="text-default-600">v{packageJson.version}</span>
       </footer>
     </div>
   );
