@@ -86,12 +86,12 @@ export const Navbar = () => {
         <NavbarItem className="hidden md:flex gap-2">
           {isAuthenticated ? (
             <>
-              <div className="text-sm font-semibold text-default-800 bg-default-100 px-4 py-2 rounded-full flex items-center gap-2 shadow-sm">
+              <div className="text-sm font-normal text-default-600 bg-default-100 px-4 py-2 rounded-full flex items-center gap-2">
                 <HeartFilledIcon className="text-danger" />
                 <span>Hola: {user.email}</span>
               </div>
               <Link
-                className="flex items-center gap-2 text-sm font-semibold text-danger hover:bg-danger-100 px-4 py-2 rounded-full transition-colors shadow-sm"
+                className="flex items-center gap-2 text-sm font-normal text-danger hover:bg-danger-100 px-4 py-2 rounded-full transition-colors"
                 href="/logout"
                 title="Cerrar sesión"
               >
@@ -101,7 +101,7 @@ export const Navbar = () => {
             </>
           ) : (
             <Link href="/login">
-              <div className="animate-pulse text-sm font-semibold text-default-800 bg-default-100 px-4 py-2 rounded-full flex items-center gap-2 cursor-pointer shadow-sm">
+              <div className="animate-pulse text-sm font-normal text-default-600 bg-default-100 px-4 py-2 rounded-full flex items-center gap-2 cursor-pointer">
                 <HeartFilledIcon className="text-danger" />
                 Iniciar sesión
               </div>
