@@ -49,6 +49,7 @@ export default function NotasPage() {
 
       if (data) {
         setTalleres(data);
+
       } else {
         setErrorTalleres("No se encontraron talleres disponibles.");
       }
@@ -166,9 +167,12 @@ export default function NotasPage() {
                     <Card key={t.taller_id} className="p-4 mb-2">
                       <h2 className="font-bold">{t.nombre}</h2>
                       <p>Horario: {t.horario}</p>
+                  {t.cantidad_inscritos} / {t.cantidad_cupos }
+                      {t.cantidad_cupos>t.cantidad_inscritos ? (
                       <Button onPress={() => inscribirTaller(t.taller_id)}>
                         Inscribirse
                       </Button>
+                       ):( <p>Sin cupos disponibles</p> )}
                     </Card>
                   ))}
                 </div>
