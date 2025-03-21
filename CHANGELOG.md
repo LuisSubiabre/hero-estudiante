@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.1.0](https://github.com/LuisSubiabre/hero-estudiante/compare/v1.0.0...v1.1.0) (2025-03-21)
+
+
+### Features
+
+* version footer ([9a457b8](https://github.com/LuisSubiabre/hero-estudiante/commit/9a457b8ae13930ca9811921d203700ae300e5992))
+
 ## [1.0.0](https://github.com/LuisSubiabre/hero-estudiante/compare/v0.0.0...v1.0.0) (2025-03-21)
 
 ## 0.0.0 (2025-03-21)
