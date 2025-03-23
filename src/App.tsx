@@ -8,7 +8,6 @@ import IndexPage from "@/pages/index";
 import InformesPage from "@/pages/informes";
 import NoDisponiblePage from "@/pages/nodisponible";
 import AtrasosPage from "@/pages/atrasos";
-import TalleresPage from "@/pages/acles";
 
 function App() {
   return (
@@ -20,13 +19,12 @@ function App() {
       {/* Rutas públicas (accesibles sin autenticación) */}
       <Route element={<IndexPage />} path="/" />
 
-
       {/* Rutas protegidas (requieren autenticación) */}
       <Route element={<ProtectedRoute />}>
         <Route element={<NoDisponiblePage />} path="/notas" />
         <Route element={<NoDisponiblePage />} path="/regular" />
         <Route element={<InformesPage />} path="/certificados" />
-        <Route element={<TalleresPage />} path="/acles" />
+        <Route element={<NoDisponiblePage />} path="/acles" />
         <Route element={<NoDisponiblePage />} path="/asistencia" />
         <Route element={<AtrasosPage />} path="/atrasos" />
 
