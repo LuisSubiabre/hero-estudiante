@@ -12,7 +12,7 @@ export default function NotasPage() {
   const [error, setError] = useState("");
 
   useEffect(() => {
-    searchLibreta(325)
+    searchLibreta(696)
       .then((data) => {
         if (data) {
           setLibreta(data);
