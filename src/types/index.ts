@@ -67,3 +67,23 @@ export interface Taller {
   cantidad_cupos: number;
   cantidad_inscritos: number;
 }
+
+export interface Atraso {
+  id: number;
+  fecha: string;
+  hora: string;
+  tipo: string;
+  justificado: boolean;
+  observaciones: string;
+  fecha_registro: string;
+}
+
+export interface AtrasosResponse {
+  data: {
+    estudiante: {
+      nombre: string;
+      rut: string;
+    };
+    atrasos: Atraso[];
+  };
+}

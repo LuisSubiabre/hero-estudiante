@@ -7,6 +7,7 @@ import ProtectedRoute from "@/components/ProtectedRoute"; // Importa el componen
 import IndexPage from "@/pages/index";
 import InformesPage from "@/pages/informes";
 import NoDisponiblePage from "@/pages/nodisponible";
+import AtrasosPage from "@/pages/atrasos";
 
 function App() {
   return (
@@ -18,7 +19,6 @@ function App() {
       {/* Rutas públicas (accesibles sin autenticación) */}
       <Route element={<IndexPage />} path="/" />
 
-
       {/* Rutas protegidas (requieren autenticación) */}
       <Route element={<ProtectedRoute />}>
         <Route element={<NoDisponiblePage />} path="/notas" />
@@ -26,7 +26,7 @@ function App() {
         <Route element={<InformesPage />} path="/certificados" />
         <Route element={<NoDisponiblePage />} path="/acles" />
         <Route element={<NoDisponiblePage />} path="/asistencia" />
-        <Route element={<NoDisponiblePage />} path="/atrasos" />
+        <Route element={<AtrasosPage />} path="/atrasos" />
 
         {/* Aquí puedes agregar más rutas protegidas */}
       </Route>
