@@ -35,7 +35,7 @@ export default function NotasPage() {
 
   // Función para obtener los talleres disponibles
   const fetchTalleres = async () => {
-    const curso_id = jwtData();
+    const curso_id = getCursoId();
 
     if (!curso_id) {
       setErrorTalleres("No se encontró un curso asociado al usuario.");
@@ -49,7 +49,6 @@ export default function NotasPage() {
 
       if (data) {
         setTalleres(data);
-
       } else {
         setErrorTalleres("No se encontraron talleres disponibles.");
       }
@@ -62,8 +61,17 @@ export default function NotasPage() {
 
   // Función para obtener los talleres inscritos
   const fetchTalleresInscritos = async () => {
+    const estudiante_id = jwtData();
+
+    if (!estudiante_id) {
+      setErrorInscritos("No se encontró el ID del estudiante.");
+      setLoadingInscritos(false);
+
+      return;
+    }
+
     try {
-      const data = await talleresInscritos(325); // Usamos talleresInscritos aquí
+      const data = await talleresInscritos(estudiante_id);
 
       if (data) {
         setTalleresInscritosList(data);
@@ -96,13 +104,30 @@ export default function NotasPage() {
       try {
         const payload = JSON.parse(atob(token.split(".")[1])); // Decodificar el payload
 
-        return payload.curso_id;
+        return payload.estudiante_id;
       } catch {
         return null;
       }
     } else {
       return null;
     }
+  };
+
+  // Función para obtener el curso_id del token
+  const getCursoId = () => {
+    const token = localStorage.getItem("TokenLeu");
+
+    if (token) {
+      try {
+        const payload = JSON.parse(atob(token.split(".")[1]));
+
+        return payload.curso_id;
+      } catch {
+        return null;
+      }
+    }
+
+    return null;
   };
 
   // Filtrar talleres que no estén en la lista de talleres inscritos
@@ -115,9 +140,19 @@ export default function NotasPage() {
 
   // Función para inscribirse en un taller
   const inscribirTaller = async (taller_id: number) => {
+    const estudiante_id = jwtData();
+
+    console.log("----->", estudiante_id);
+
+    if (!estudiante_id) {
+      setError("No se encontró el ID del estudiante.");
+      onOpen();
+
+      return;
+    }
+
     try {
-      await tallerInscripcion(325, taller_id); // Realizar la inscripción
-      // Volver a cargar los datos después de inscribirse
+      await tallerInscripcion(estudiante_id, taller_id);
       await fetchTalleres();
       await fetchTalleresInscritos();
     } catch {
@@ -128,9 +163,17 @@ export default function NotasPage() {
 
   // Función para retirarse de un taller
   const retirarTaller = async (taller_id: number) => {
+    const estudiante_id = jwtData();
+
+    if (!estudiante_id) {
+      setError("No se encontró el ID del estudiante.");
+      onOpen();
+
+      return;
+    }
+
     try {
-      await tallerRetirar(325, taller_id); // Realizar el retiro
-      // Volver a cargar los datos después de retirarse
+      await tallerRetirar(estudiante_id, taller_id);
       await fetchTalleres();
       await fetchTalleresInscritos();
     } catch {
@@ -167,12 +210,14 @@ export default function NotasPage() {
                     <Card key={t.taller_id} className="p-4 mb-2">
                       <h2 className="font-bold">{t.nombre}</h2>
                       <p>Horario: {t.horario}</p>
-                  {t.cantidad_inscritos} / {t.cantidad_cupos }
-                      {t.cantidad_cupos>t.cantidad_inscritos ? (
-                      <Button onPress={() => inscribirTaller(t.taller_id)}>
-                        Inscribirse
-                      </Button>
-                       ):( <p>Sin cupos disponibles</p> )}
+                      {t.cantidad_inscritos} / {t.cantidad_cupos}
+                      {t.cantidad_cupos > t.cantidad_inscritos ? (
+                        <Button onPress={() => inscribirTaller(t.taller_id)}>
+                          Inscribirse
+                        </Button>
+                      ) : (
+                        <p>Sin cupos disponibles</p>
+                      )}
                     </Card>
                   ))}
                 </div>
