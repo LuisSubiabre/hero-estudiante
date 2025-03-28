@@ -8,7 +8,6 @@ import IndexPage from "@/pages/index";
 import InformesPage from "@/pages/informes";
 import NoDisponiblePage from "@/pages/nodisponible";
 import AtrasosPage from "@/pages/atrasos";
-
 function App() {
   return (
     <Routes>
