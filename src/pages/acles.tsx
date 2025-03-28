@@ -184,40 +184,117 @@ export default function NotasPage() {
 
   return (
     <DefaultLayout>
-      <section className="flex flex-col items-center justify-center gap-4 py-8 md:py-10">
+      <section className="flex flex-col items-center justify-center gap-6 py-8 md:py-10 px-4">
         <div className="inline-block max-w-lg text-center justify-center">
           <h1 className={title()}>Talleres ACLE</h1>
+          <p className="text-default-500 mt-2">
+            Inscríbete en los talleres de tu interés
+          </p>
+        </div>
+
+        {/* Estado de inscripción */}
+        <div className="w-full max-w-4xl">
+          <Alert
+            className="mb-6"
+            color={cantidadTalleresInscritos >= 2 ? "warning" : "secondary"}
+          >
+            <div className="flex justify-between items-center w-full">
+              <span>Talleres inscritos: {cantidadTalleresInscritos} de 2</span>
+              {cantidadTalleresInscritos >= 2 && (
+                <span className="font-semibold">
+                  Límite de inscripción alcanzado
+                </span>
+              )}
+            </div>
+          </Alert>
         </div>
 
         {/* Listado de talleres disponibles */}
-        <div>
+        <div className="w-full max-w-4xl">
+          <h2 className="text-xl font-semibold mb-4">Talleres Disponibles</h2>
           {loadingTalleres && (
-            <div className="flex justify-center items-center">
-              <Spinner />
+            <div className="flex justify-center items-center py-8">
+              <Spinner size="lg" />
             </div>
           )}
-          {errorTalleres && <p className="text-red-500">{errorTalleres}</p>}
+          {errorTalleres && (
+            <Alert className="mb-4" color="danger">
+              {errorTalleres}
+            </Alert>
+          )}
 
           {!loadingTalleres && talleresDisponibles.length > 0 && (
             <>
               {cantidadTalleresInscritos >= 2 ? (
-                <Alert color="warning">
-                  Solo puedes inscribirte en un máximo de 2 talleres.
-                </Alert>
+                <>
+                  <Alert className="mb-6" color="warning">
+                    Ya has alcanzado el máximo de talleres permitidos. Puedes
+                    ver los talleres disponibles a continuación, pero no podrás
+                    inscribirte en ellos.
+                  </Alert>
+                  <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                    {talleresDisponibles.map((t) => (
+                      <Card key={t.taller_id} className="p-4 bg-default-50">
+                        <div className="flex flex-col h-full">
+                          <h3 className="text-sm font-semibold mb-1">
+                            {t.nombre}
+                          </h3>
+                          <p className="text-xs text-default-600 mb-2">
+                            {t.horario}
+                          </p>
+                          <div className="flex justify-between items-center text-xs">
+                            <span className="text-default-500">
+                              Cupos: {t.cantidad_inscritos}/{t.cantidad_cupos}
+                            </span>
+                            {t.cantidad_cupos > t.cantidad_inscritos ? (
+                              <span className="text-success">Disponible</span>
+                            ) : (
+                              <span className="text-danger">Sin cupos</span>
+                            )}
+                          </div>
+                        </div>
+                      </Card>
+                    ))}
+                  </div>
+                </>
               ) : (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                   {talleresDisponibles.map((t) => (
-                    <Card key={t.taller_id} className="p-4 mb-2">
-                      <h2 className="font-bold">{t.nombre}</h2>
-                      <p>Horario: {t.horario}</p>
-                      {t.cantidad_inscritos} / {t.cantidad_cupos}
-                      {t.cantidad_cupos > t.cantidad_inscritos ? (
-                        <Button onPress={() => inscribirTaller(t.taller_id)}>
-                          Inscribirse
-                        </Button>
-                      ) : (
-                        <p>Sin cupos disponibles</p>
-                      )}
+                    <Card
+                      key={t.taller_id}
+                      className="p-6 hover:shadow-lg transition-shadow"
+                    >
+                      <div className="flex flex-col h-full">
+                        <h3 className="text-lg font-bold mb-2">{t.nombre}</h3>
+                        <p className="text-default-600 mb-4">
+                          Horario: {t.horario}
+                        </p>
+                        <div className="mt-auto">
+                          <div className="flex justify-between items-center mb-4">
+                            <span className="text-sm text-default-500">
+                              Cupos: {t.cantidad_inscritos}/{t.cantidad_cupos}
+                            </span>
+                            {t.cantidad_cupos > t.cantidad_inscritos ? (
+                              <span className="text-success text-sm">
+                                Disponible
+                              </span>
+                            ) : (
+                              <span className="text-danger text-sm">
+                                Sin cupos
+                              </span>
+                            )}
+                          </div>
+                          {t.cantidad_cupos > t.cantidad_inscritos && (
+                            <Button
+                              className="w-full"
+                              color="primary"
+                              onPress={() => inscribirTaller(t.taller_id)}
+                            >
+                              Inscribirse
+                            </Button>
+                          )}
+                        </div>
+                      </div>
                     </Card>
                   ))}
                 </div>
@@ -225,40 +302,57 @@ export default function NotasPage() {
             </>
           )}
           {!loadingTalleres && talleresDisponibles.length === 0 && (
-            <Alert color="danger">No hay talleres disponibles.</Alert>
+            <Alert className="mb-6" color="danger">
+              No hay talleres disponibles en este momento.
+            </Alert>
           )}
         </div>
 
         {/* Listado de talleres inscritos */}
-        <div>
-          <Alert color="secondary">
-            Talleres inscritos: {cantidadTalleresInscritos} de 2
-          </Alert>
+        <div className="w-full max-w-4xl">
+          <h2 className="text-xl font-semibold mb-4">Mis Talleres Inscritos</h2>
           {loadingInscritos && (
-            <div className="flex justify-center items-center">
-              <Spinner />
+            <div className="flex justify-center items-center py-8">
+              <Spinner size="lg" />
             </div>
           )}
-          {errorInscritos && <p className="text-red-500">{errorInscritos}</p>}
+          {errorInscritos && (
+            <Alert className="mb-4" color="danger">
+              {errorInscritos}
+            </Alert>
+          )}
 
-          {!loadingInscritos && talleresInscritosList.length > 0 && (
-            <ul>
+          {!loadingInscritos && talleresInscritosList.length > 0 ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {talleresInscritosList.map((t) => (
-                <Card key={t.taller_id} className="p-4 mb-2">
-                  <h2 className="font-bold">{t.nombre}</h2>
-                  <p>Horario: {t.horario}</p>
-                  <Button onPress={() => retirarTaller(t.taller_id)}>
-                    Retirarse
-                  </Button>
+                <Card key={t.taller_id} className="p-6 bg-primary/5">
+                  <div className="flex flex-col h-full">
+                    <h3 className="text-lg font-bold mb-2">{t.nombre}</h3>
+                    <p className="text-default-600 mb-4">
+                      Horario: {t.horario}
+                    </p>
+                    <div className="mt-auto">
+                      <Button
+                        className="w-full"
+                        color="danger"
+                        variant="flat"
+                        onPress={() => retirarTaller(t.taller_id)}
+                      >
+                        Retirarse del taller
+                      </Button>
+                    </div>
+                  </div>
                 </Card>
               ))}
-            </ul>
-          )}
-          {!loadingInscritos && talleresInscritosList.length === 0 && (
-            <p>No estás inscrito en ningún taller.</p>
+            </div>
+          ) : (
+            <Alert color="secondary">
+              No estás inscrito en ningún taller actualmente.
+            </Alert>
           )}
         </div>
       </section>
+
       <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
         <ModalContent>
           {(onClose: () => void) => (
@@ -267,7 +361,7 @@ export default function NotasPage() {
                 Atención
               </ModalHeader>
               <ModalBody>
-                <p>{error}</p>
+                <p className="text-default-600">{error}</p>
               </ModalBody>
               <ModalFooter>
                 <Button color="danger" variant="light" onPress={onClose}>
