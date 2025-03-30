@@ -64,6 +64,7 @@ export interface Taller {
   nombre: string;
   descripcion?: string;
   horario: string;
+  ubicacion: string;
   cantidad_cupos: number;
   cantidad_inscritos: number;
 }

@@ -11,6 +11,7 @@ import {
   ModalFooter,
   useDisclosure,
 } from "@heroui/react";
+import { CalendarDays, MapPin } from "lucide-react";
 
 import { title } from "@/components/primitives";
 import DefaultLayout from "@/layouts/default";
@@ -142,7 +143,7 @@ export default function NotasPage() {
   const inscribirTaller = async (taller_id: number) => {
     const estudiante_id = jwtData();
 
-    console.log("----->", estudiante_id);
+    // console.log("----->", estudiante_id);
 
     if (!estudiante_id) {
       setError("No se encontró el ID del estudiante.");
@@ -209,6 +210,57 @@ export default function NotasPage() {
           </Alert>
         </div>
 
+        {/* Listado de talleres inscritos */}
+        <div className="w-full max-w-4xl">
+          <h2 className="text-xl font-semibold mb-4">Mis Talleres Inscritos</h2>
+          {loadingInscritos && (
+            <div className="flex justify-center items-center py-8">
+              <Spinner size="lg" />
+            </div>
+          )}
+          {errorInscritos && (
+            <Alert className="mb-4" color="danger">
+              {errorInscritos}
+            </Alert>
+          )}
+
+          {!loadingInscritos && talleresInscritosList.length > 0 ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {talleresInscritosList.map((t) => (
+                <Card key={t.taller_id} className="p-6 bg-primary/5">
+                  <div className="flex flex-col h-full">
+                    <h3 className="text-lg font-bold mb-2">{t.nombre}</h3>
+                    <div className="flex flex-col gap-3 text-default-600 mb-4">
+                      <div className="flex items-start gap-2">
+                        <CalendarDays className="w-5 h-5 mt-0.5 flex-shrink-0" />
+                        <span className="flex-1">Horario: {t.horario}</span>
+                      </div>
+                      <div className="flex items-start gap-2">
+                        <MapPin className="w-5 h-5 mt-0.5 flex-shrink-0" />
+                        <span className="flex-1">Ubicación: {t.ubicacion}</span>
+                      </div>
+                    </div>
+                    <div className="mt-auto">
+                      <Button
+                        className="w-full"
+                        color="danger"
+                        variant="flat"
+                        onPress={() => retirarTaller(t.taller_id)}
+                      >
+                        Retirarse del taller
+                      </Button>
+                    </div>
+                  </div>
+                </Card>
+              ))}
+            </div>
+          ) : (
+            <Alert color="secondary">
+              No estás inscrito en ningún taller actualmente.
+            </Alert>
+          )}
+        </div>
+
         {/* Listado de talleres disponibles */}
         <div className="w-full max-w-4xl">
           <h2 className="text-xl font-semibold mb-4">Talleres Disponibles</h2>
@@ -236,15 +288,30 @@ export default function NotasPage() {
                     {talleresDisponibles.map((t) => (
                       <Card key={t.taller_id} className="p-4 bg-default-50">
                         <div className="flex flex-col h-full">
-                          <h3 className="text-sm font-semibold mb-1">
+                          <h3 className="text-base font-bold mb-3">
                             {t.nombre}
                           </h3>
-                          <p className="text-xs text-default-600 mb-2">
-                            {t.horario}
-                          </p>
+                          <div className="flex flex-col gap-3 text-default-600 mb-4">
+                            <div className="flex items-start gap-2">
+                              <CalendarDays className="w-5 h-5 mt-0.5 flex-shrink-0" />
+                              <span className="flex-1">
+                                Horario: {t.horario}
+                              </span>
+                            </div>
+                            <div className="flex items-start gap-2">
+                              <MapPin className="w-5 h-5 mt-0.5 flex-shrink-0" />
+                              <span className="flex-1">
+                                Ubicación: {t.ubicacion}
+                              </span>
+                            </div>
+                          </div>
                           <div className="flex justify-between items-center text-xs">
                             <span className="text-default-500">
-                              Cupos: {t.cantidad_inscritos}/{t.cantidad_cupos}
+                              Cupos:{" "}
+                              {Math.max(
+                                0,
+                                t.cantidad_cupos - t.cantidad_inscritos
+                              )}
                             </span>
                             {t.cantidad_cupos > t.cantidad_inscritos ? (
                               <span className="text-success">Disponible</span>
@@ -266,13 +333,26 @@ export default function NotasPage() {
                     >
                       <div className="flex flex-col h-full">
                         <h3 className="text-lg font-bold mb-2">{t.nombre}</h3>
-                        <p className="text-default-600 mb-4">
-                          Horario: {t.horario}
-                        </p>
+                        <div className="flex flex-col gap-3 text-default-600 mb-4">
+                          <div className="flex items-start gap-2">
+                            <CalendarDays className="w-5 h-5 mt-0.5 flex-shrink-0" />
+                            <span className="flex-1">Horario: {t.horario}</span>
+                          </div>
+                          <div className="flex items-start gap-2">
+                            <MapPin className="w-5 h-5 mt-0.5 flex-shrink-0" />
+                            <span className="flex-1">
+                              Ubicación: {t.ubicacion}
+                            </span>
+                          </div>
+                        </div>
                         <div className="mt-auto">
                           <div className="flex justify-between items-center mb-4">
                             <span className="text-sm text-default-500">
-                              Cupos: {t.cantidad_inscritos}/{t.cantidad_cupos}
+                              Cupos:{" "}
+                              {Math.max(
+                                0,
+                                t.cantidad_cupos - t.cantidad_inscritos
+                              )}
                             </span>
                             {t.cantidad_cupos > t.cantidad_inscritos ? (
                               <span className="text-success text-sm">
@@ -304,50 +384,6 @@ export default function NotasPage() {
           {!loadingTalleres && talleresDisponibles.length === 0 && (
             <Alert className="mb-6" color="danger">
               No hay talleres disponibles en este momento.
-            </Alert>
-          )}
-        </div>
-
-        {/* Listado de talleres inscritos */}
-        <div className="w-full max-w-4xl">
-          <h2 className="text-xl font-semibold mb-4">Mis Talleres Inscritos</h2>
-          {loadingInscritos && (
-            <div className="flex justify-center items-center py-8">
-              <Spinner size="lg" />
-            </div>
-          )}
-          {errorInscritos && (
-            <Alert className="mb-4" color="danger">
-              {errorInscritos}
-            </Alert>
-          )}
-
-          {!loadingInscritos && talleresInscritosList.length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {talleresInscritosList.map((t) => (
-                <Card key={t.taller_id} className="p-6 bg-primary/5">
-                  <div className="flex flex-col h-full">
-                    <h3 className="text-lg font-bold mb-2">{t.nombre}</h3>
-                    <p className="text-default-600 mb-4">
-                      Horario: {t.horario}
-                    </p>
-                    <div className="mt-auto">
-                      <Button
-                        className="w-full"
-                        color="danger"
-                        variant="flat"
-                        onPress={() => retirarTaller(t.taller_id)}
-                      >
-                        Retirarse del taller
-                      </Button>
-                    </div>
-                  </div>
-                </Card>
-              ))}
-            </div>
-          ) : (
-            <Alert color="secondary">
-              No estás inscrito en ningún taller actualmente.
             </Alert>
           )}
         </div>

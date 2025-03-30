@@ -8,6 +8,7 @@ import IndexPage from "@/pages/index";
 import InformesPage from "@/pages/informes";
 import NoDisponiblePage from "@/pages/nodisponible";
 import AtrasosPage from "@/pages/atrasos";
+import AclesPage from "@/pages/acles"; // Asegúrate de que la ruta sea correcta 
 function App() {
   return (
     <Routes>
@@ -23,7 +24,7 @@ function App() {
         <Route element={<NoDisponiblePage />} path="/notas" />
         <Route element={<NoDisponiblePage />} path="/regular" />
         <Route element={<InformesPage />} path="/certificados" />
-        <Route element={<NoDisponiblePage />} path="/acles" />
+        <Route element={<AclesPage />} path="/acles" />
         <Route element={<NoDisponiblePage />} path="/asistencia" />
         <Route element={<AtrasosPage />} path="/atrasos" />
 
