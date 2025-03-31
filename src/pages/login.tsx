@@ -229,6 +229,7 @@ const LoginForm = () => {
             type={showPassword ? "text" : "password"}
             value={password}
             variant="bordered"
+            onBlur={(e) => setPassword(e.target.value.toUpperCase())}
             onChange={(e) => setPassword(e.target.value)}
           />
 
