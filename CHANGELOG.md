@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.3.1](https://github.com/LuisSubiabre/hero-estudiante/compare/v1.3.0...v1.3.1) (2025-03-31)
+
+
+### Bug Fixes
+
+* digito veriticador a mayuscular al perder foco ([80d6c67](https://github.com/LuisSubiabre/hero-estudiante/commit/80d6c670f788e99e0806f4dd6f891fc4124ed4e9))
+* modificar token decodificado ([d734083](https://github.com/LuisSubiabre/hero-estudiante/commit/d734083963fbe80523a245638b886700d41bc197))
+
 ## [1.3.0](https://github.com/LuisSubiabre/hero-estudiante/compare/v1.2.1...v1.3.0) (2025-03-31)
 
 
