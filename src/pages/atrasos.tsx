@@ -12,16 +12,34 @@ const jwtData = () => {
 
   if (token) {
     try {
-      const payload = JSON.parse(atob(token.split(".")[1]));
+      const base64Url = token.split(".")[1];
+
+      // Convertir Base64URL a Base64 estándar
+      const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
+
+      // Decodificar usando decodeURIComponent para manejar caracteres especiales
+      const decoded = decodeURIComponent(
+        atob(base64)
+          .split("")
+          .map(c => "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2))
+          .join("")
+      );
+
+      const payload = JSON.parse(decoded);
+
+      console.log("Payload decodificado:", payload);
 
       return payload.estudiante_id;
-    } catch {
+    } catch (error) {
+      console.error("Error al decodificar el token:", error);
+
       return null;
     }
   }
 
   return null;
 };
+
 
 export default function DocsPage() {
   const [atrasosData, setAtrasosData] = useState<AtrasosResponse | null>(null);

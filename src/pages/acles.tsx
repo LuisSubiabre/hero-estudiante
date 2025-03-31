@@ -98,38 +98,63 @@ export default function NotasPage() {
   }, []);
 
   // Función para decodificar el token JWT
-  const jwtData = () => {
-    const token = localStorage.getItem("TokenLeu");
+const jwtData = () => {
+  const token = localStorage.getItem("TokenLeu");
 
-    if (token) {
-      try {
-        const payload = JSON.parse(atob(token.split(".")[1])); // Decodificar el payload
+  if (token) {
+    try {
+      const base64Url = token.split(".")[1];
 
-        return payload.estudiante_id;
-      } catch {
-        return null;
-      }
-    } else {
+      // Convertir Base64URL a Base64 estándar
+      const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
+
+      // Decodificar usando decodeURIComponent para manejar caracteres especiales
+      const decoded = decodeURIComponent(
+        atob(base64)
+          .split("")
+          .map(c => "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2))
+          .join("")
+      );
+
+      const payload = JSON.parse(decoded);
+
+
+      return payload.estudiante_id;
+    } catch (error) {
+      console.error("Error al decodificar el token:", error);
+
       return null;
     }
-  };
+  }
+
+  return null;
+};
 
   // Función para obtener el curso_id del token
   const getCursoId = () => {
     const token = localStorage.getItem("TokenLeu");
-
+  
     if (token) {
       try {
-        const payload = JSON.parse(atob(token.split(".")[1]));
-
-        return payload.curso_id;
+        const base64Url = token.split(".")[1];
+        const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
+  
+        const decoded = decodeURIComponent(
+          atob(base64)
+            .split("")
+            .map(c => "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2))
+            .join("")
+        );
+  
+        return JSON.parse(decoded).curso_id;
       } catch {
         return null;
       }
     }
-
+  
     return null;
   };
+  
 
   // Filtrar talleres que no estén en la lista de talleres inscritos
   const talleresDisponibles = talleres.filter(
