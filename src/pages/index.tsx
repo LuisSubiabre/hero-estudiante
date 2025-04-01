@@ -14,14 +14,89 @@ export default function IndexPage() {
             </h2>
             <div className="w-full bg-white dark:bg-gray-800 rounded-lg shadow-lg p-4">
               <iframe
+                className="rounded-lg"
+                frameBorder="0"
+                height="600"
+                scrolling="no"
                 src="https://calendar.google.com/calendar/embed?src=liceoexperimental.cl_v1vo40hg7ljnh1avc8tmlcnmf0%40group.calendar.google.com&ctz=America%2FPunta_Arenas"
                 style={{ border: 0 }}
+                title="Calendario Académico"
                 width="100%"
-                height="600"
-                frameBorder="0"
-                scrolling="no"
-                className="rounded-lg"
-              ></iframe>
+               />
+            </div>
+
+            <div className="mt-12">
+              <h2 className="text-2xl font-bold text-center mb-6 text-gray-800 dark:text-white">
+                Inspectores por Niveles
+              </h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
+                  <h3 className="text-xl font-semibold mb-4 text-primary-500">Educación Básica</h3>
+                  <div className="space-y-4">
+                    <div className="flex justify-between items-start border-b pb-2">
+                      <span className="font-medium">Nivel de Transición 1 y 2</span>
+                      <div className="text-right">
+                        <div>Arielle Guerra</div>
+                        <div className="text-sm text-gray-500 dark:text-gray-400">aguerra@liceoexperimental.cl</div>
+                      </div>
+                    </div>
+                    <div className="flex justify-between items-start border-b pb-2">
+                      <span className="font-medium">1os y 2os Básico</span>
+                      <div className="text-right">
+                        <div>Paola Cárdenas</div>
+                        <div className="text-sm text-gray-500 dark:text-gray-400">pcardenas@liceoexperimental.cl</div>
+                      </div>
+                    </div>
+                    <div className="flex justify-between items-start border-b pb-2">
+                      <span className="font-medium">3os y 4os Básico</span>
+                      <div className="text-right">
+                        <div>Margarita Carreño</div>
+                        <div className="text-sm text-gray-500 dark:text-gray-400">mcarreno@liceoexperimental.cl</div>
+                      </div>
+                    </div>
+                    <div className="flex justify-between items-start border-b pb-2">
+                      <span className="font-medium">5os y 6os Básicos</span>
+                      <div className="text-right">
+                        <div>Ricardo Ahumada</div>
+                        <div className="text-sm text-gray-500 dark:text-gray-400">rahumada@liceoexperimental.cl</div>
+                      </div>
+                    </div>
+                    <div className="flex justify-between items-start border-b pb-2">
+                      <span className="font-medium">7os y 8os Básicos</span>
+                      <div className="text-right">
+                        <div>Marta Ilnao</div>
+                        <div className="text-sm text-gray-500 dark:text-gray-400">milnao@liceoexperimental.cl</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
+                  <h3 className="text-xl font-semibold mb-4 text-primary-500">Educación Media</h3>
+                  <div className="space-y-4">
+                    <div className="flex justify-between items-start border-b pb-2">
+                      <span className="font-medium">1os AC y 2os AB Medios</span>
+                      <div className="text-right">
+                        <div>Elizabeth Galindo</div>
+                        <div className="text-sm text-gray-500 dark:text-gray-400">egalindo@liceoexperimental.cl</div>
+                      </div>
+                    </div>
+                    <div className="flex justify-between items-start border-b pb-2">
+                      <span className="font-medium">1° B y 3os Medios</span>
+                      <div className="text-right">
+                        <div>Ariela Hijerra</div>
+                        <div className="text-sm text-gray-500 dark:text-gray-400">mhijerra@liceoexperimental.cl</div>
+                      </div>
+                    </div>
+                    <div className="flex justify-between items-start border-b pb-2">
+                      <span className="font-medium">2° C y 4os Medios</span>
+                      <div className="text-right">
+                        <div>Ángela Vidal</div>
+                        <div className="text-sm text-gray-500 dark:text-gray-400">avidal@liceoexperimental.cl</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </section>
