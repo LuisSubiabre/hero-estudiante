@@ -15,7 +15,7 @@ import clsx from "clsx";
 
 import { siteConfig } from "@/config/site";
 import { ThemeSwitch } from "@/components/theme-switch";
-import { HeartFilledIcon, SearchIcon, LogoutIcon, HomeIcon, BookOpenIcon, UserGroupIcon, ClockIcon, DocumentTextIcon } from "@/components/icons";
+import { HeartFilledIcon, SearchIcon, LogoutIcon, HomeIcon, BookOpenIcon, UserGroupIcon, ClockIcon, DocumentTextIcon, FlagIcon } from "@/components/icons";
 import { useAuth } from "@/context/AuthContext";
 
 export const Navbar = () => {
@@ -54,6 +54,8 @@ export const Navbar = () => {
         return <ClockIcon className="w-5 h-5" />;
       case "certificados":
         return <DocumentTextIcon className="w-5 h-5" />;
+      case "acles":
+        return <FlagIcon className="w-5 h-5" />;
       case "salir":
         return <LogoutIcon className="w-5 h-5" />;
       default:
