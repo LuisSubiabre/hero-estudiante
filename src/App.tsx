@@ -3,12 +3,13 @@ import { Route, Routes } from "react-router-dom";
 import LoginForm from "./pages/login";
 import Logout from "./pages/logout";
 
-import ProtectedRoute from "@/components/ProtectedRoute"; // Importa el componente de ruta protegida
+import ProtectedRoute from "@/components/ProtectedRoute";
 import IndexPage from "@/pages/index";
 import InformesPage from "@/pages/informes";
 import NoDisponiblePage from "@/pages/nodisponible";
 import AtrasosPage from "@/pages/atrasos";
-import AclesPage from "@/pages/acles"; // Asegúrate de que la ruta sea correcta 
+import AclesPage from "@/pages/acles";
+
 function App() {
   return (
     <Routes>
@@ -16,19 +17,13 @@ function App() {
       <Route element={<LoginForm />} path="/login" />
       <Route element={<Logout />} path="/logout" />
 
-      {/* Rutas públicas (accesibles sin autenticación) */}
-      <Route element={<IndexPage />} path="/" />
-
       {/* Rutas protegidas (requieren autenticación) */}
       <Route element={<ProtectedRoute />}>
-        <Route element={<NoDisponiblePage />} path="/notas" />
-        <Route element={<NoDisponiblePage />} path="/regular" />
-        <Route element={<InformesPage />} path="/certificados" />
-        <Route element={<AclesPage />} path="/acles" />
-        <Route element={<NoDisponiblePage />} path="/asistencia" />
+        <Route element={<IndexPage />} path="/" />
+        <Route element={<InformesPage />} path="/informes" />
+        <Route element={<NoDisponiblePage />} path="/nodisponible" />
         <Route element={<AtrasosPage />} path="/atrasos" />
-
-        {/* Aquí puedes agregar más rutas protegidas */}
+        <Route element={<AclesPage />} path="/acles" />
       </Route>
     </Routes>
   );
