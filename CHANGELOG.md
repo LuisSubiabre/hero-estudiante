@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.4.0](https://github.com/LuisSubiabre/hero-estudiante/compare/v1.3.1...v1.4.0) (2025-04-01)
+
+
+### Features
+
+* icon acle ([7a802cc](https://github.com/LuisSubiabre/hero-estudiante/commit/7a802cc744052f76a3be46002f1c86c8429aad9a))
+* inspectores de nivel ([30b648d](https://github.com/LuisSubiabre/hero-estudiante/commit/30b648d0c1bcd3bfe834f02cdbe3719ecf469abf))
+* mejora ux ([18dc6e1](https://github.com/LuisSubiabre/hero-estudiante/commit/18dc6e1bebbe5bf4d12b6292f010028567ca154f))
+* menu mobile ([e4255b5](https://github.com/LuisSubiabre/hero-estudiante/commit/e4255b59f66cb063fe565cd022b9b8e2ae2ba55f))
+* redirecciona al login cuando no hay sesion ([16001f4](https://github.com/LuisSubiabre/hero-estudiante/commit/16001f4795f37f32faee5185ff2f80a1b49e8f1d))
+
+
+### Bug Fixes
+
+* menu responsive ([9c3059e](https://github.com/LuisSubiabre/hero-estudiante/commit/9c3059ea0d575144b872a071565a437df35302c8))
+
 ### [1.3.1](https://github.com/LuisSubiabre/hero-estudiante/compare/v1.3.0...v1.3.1) (2025-03-31)
 
 
