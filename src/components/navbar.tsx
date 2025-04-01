@@ -15,7 +15,7 @@ import clsx from "clsx";
 
 import { siteConfig } from "@/config/site";
 import { ThemeSwitch } from "@/components/theme-switch";
-import { HeartFilledIcon, SearchIcon, LogoutIcon } from "@/components/icons";
+import { HeartFilledIcon, SearchIcon, LogoutIcon, HomeIcon, BookOpenIcon, UserGroupIcon, ClockIcon, DocumentTextIcon } from "@/components/icons";
 import { useAuth } from "@/context/AuthContext";
 
 export const Navbar = () => {
@@ -42,8 +42,27 @@ export const Navbar = () => {
     />
   );
 
+  const getIconForLabel = (label: string) => {
+    switch (label.toLowerCase()) {
+      case "inicio":
+        return <HomeIcon className="w-5 h-5" />;
+      case "notas":
+        return <BookOpenIcon className="w-5 h-5" />;
+      case "asistencia":
+        return <UserGroupIcon className="w-5 h-5" />;
+      case "atrasos":
+        return <ClockIcon className="w-5 h-5" />;
+      case "certificados":
+        return <DocumentTextIcon className="w-5 h-5" />;
+      case "salir":
+        return <LogoutIcon className="w-5 h-5" />;
+      default:
+        return null;
+    }
+  };
+
   return (
-    <HeroUINavbar maxWidth="xl" position="sticky">
+    <HeroUINavbar className="transition-all duration-300" maxWidth="xl" position="sticky">
       <NavbarContent className="basis-1/5 sm:basis-full" justify="start">
         <NavbarBrand className="gap-3 max-w-fit">
           <Link
@@ -112,17 +131,18 @@ export const Navbar = () => {
 
       <NavbarContent className="sm:hidden" justify="end">
         <ThemeSwitch />
-        <NavbarMenuToggle />
+        <NavbarMenuToggle className="ml-2" />
       </NavbarContent>
 
-      <NavbarMenu>
+      <NavbarMenu className="bg-default-50 dark:bg-default-900/50 backdrop-blur-lg">
         {isAuthenticated ? (
           <>
             {searchInput}
-            <div className="mx-4 mt-2 flex flex-col gap-2">
+            <div className="mx-4 mt-4 flex flex-col gap-3">
               {siteConfig.navMenuItems.map((item, index) => (
                 <NavbarMenuItem key={`${item}-${index}`}>
                   <Link
+                    className="flex items-center gap-3 w-full py-3 px-4 rounded-lg transition-colors hover:bg-default-100 dark:hover:bg-default-800"
                     color={
                       index === 0
                         ? "primary"
@@ -133,17 +153,24 @@ export const Navbar = () => {
                     href={item.href}
                     size="lg"
                   >
-                    {item.label}
+                    {getIconForLabel(item.label)}
+                    <span>{item.label}</span>
                   </Link>
                 </NavbarMenuItem>
               ))}
             </div>
           </>
         ) : (
-          <div className="mx-4 mt-2 flex flex-col gap-2">
+          <div className="mx-4 mt-4 flex flex-col gap-3">
             <NavbarMenuItem>
-              <Link color="primary" href="/login" size="lg">
-                Iniciar sesión
+              <Link 
+                className="flex items-center gap-3 w-full py-3 px-4 rounded-lg transition-colors hover:bg-default-100 dark:hover:bg-default-800"
+                color="primary" 
+                href="/login" 
+                size="lg"
+              >
+                <HeartFilledIcon className="w-5 h-5" />
+                <span>Iniciar sesión</span>
               </Link>
             </NavbarMenuItem>
           </div>
