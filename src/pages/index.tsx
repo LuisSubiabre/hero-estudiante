@@ -26,9 +26,12 @@ export default function IndexPage() {
             </div>
 
             <div className="mt-12">
-              <h2 className="text-2xl font-bold text-center mb-6 text-gray-800 dark:text-white">
+              <h2 className="text-2xl font-bold text-center mb-4 text-gray-800 dark:text-white">
                 Inspectores por Niveles
               </h2>
+              <h4 className="text-lg text-center text-gray-800 dark:text-white">
+                Para envio de justificaciones
+              </h4>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
                   <h3 className="text-xl font-semibold mb-4 text-primary-500">Educación Básica</h3>
