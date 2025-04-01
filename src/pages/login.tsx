@@ -153,51 +153,111 @@ const LoginForm = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-gray-900 dark:to-gray-800 flex flex-col">
       <div className="flex-1 flex items-center justify-center p-4">
-        <Card className="w-full max-w-md p-6 space-y-8">
-          <div className="text-center space-y-2">
-            <img
-              alt="LEUMAG"
-              className="mx-auto w-24 h-24 object-contain"
-              src="/images/logo.png"
-            />
-            <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
+        <Card className="w-full max-w-md p-8 space-y-8 shadow-xl transform transition-all duration-300 hover:shadow-2xl">
+          <div className="text-center space-y-4">
+            <div className="relative">
+              <img
+                alt="LEUMAG"
+                className="mx-auto w-28 h-28 object-contain transform transition-transform duration-300 hover:scale-105"
+                src="/images/logo.png"
+              />
+              <div className="absolute inset-0 bg-blue-500/10 rounded-full blur-xl -z-10" />
+            </div>
+            <h1 className="text-3xl font-bold text-gray-900 dark:text-white tracking-tight">
               Liceo Experimental Umag
             </h1>
-            <p className="text-sm text-gray-500 dark:text-gray-400">
+            <p className="text-sm text-gray-500 dark:text-gray-400 font-medium">
               Portal del Estudiante
             </p>
           </div>
 
-          <form className="space-y-6" onSubmit={handleSubmit}>
-            <Input
-              isRequired
-              className="w-full"
-              label="Correo Electrónico"
-              labelPlacement="outside"
-              size="lg"
-              type="email"
-              value={email}
-              variant="bordered"
-              onChange={(e) => setEmail(e.target.value)}
-            />
+          <form className="space-y-8 py-4" onSubmit={handleSubmit}>
+            <div className="space-y-2">
+              <Input
+                isRequired
+                className="w-full"
+                classNames={{
+                  input: "text-base",
+                  inputWrapper: "shadow-sm hover:shadow-md transition-shadow duration-200",
+                  label: "text-gray-700 dark:text-gray-300 font-medium"
+                }}
+                label="Correo Electrónico"
+                labelPlacement="outside"
+                size="lg"
+                type="email"
+                value={email}
+                variant="bordered"
+                onChange={(e) => setEmail(e.target.value)}
+              />
+            </div>
 
-            <Input
-              isRequired
-              className="w-full"
-              label="Contraseña"
-              labelPlacement="outside"
-              size="lg"
-              type={showPassword ? "text" : "password"}
-              value={password}
-              variant="bordered"
-              onBlur={(e) => setPassword(e.target.value.toUpperCase())}
-              onChange={(e) => setPassword(e.target.value)}
-            />
+            <div className="space-y-2">
+              <Input
+                isRequired
+                className="w-full"
+                classNames={{
+                  input: "text-base",
+                  inputWrapper: "shadow-sm hover:shadow-md transition-shadow duration-200",
+                  label: "text-gray-700 dark:text-gray-300 font-medium"
+                }}
+                endContent={
+                  <button
+                    className="focus:outline-none p-1 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full transition-colors duration-200"
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                  >
+                    {showPassword ? (
+                      <svg
+                        className="w-5 h-5 text-gray-500"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth="2"
+                        />
+                        <path
+                          d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth="2"
+                        />
+                      </svg>
+                    ) : (
+                      <svg
+                        className="w-5 h-5 text-gray-500"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth="2"
+                        />
+                      </svg>
+                    )}
+                  </button>
+                }
+                label="Contraseña"
+                labelPlacement="outside"
+                size="lg"
+                type={showPassword ? "text" : "password"}
+                value={password}
+                variant="bordered"
+                onBlur={(e) => setPassword(e.target.value.toUpperCase())}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+            </div>
 
             {error && (
-              <div className="p-3 text-sm text-red-500 bg-red-50 dark:bg-red-900/30 rounded-lg flex items-center gap-2">
+              <div className="p-4 text-sm text-red-500 bg-red-50 dark:bg-red-900/30 rounded-lg flex items-center gap-3 animate-fade-in">
                 <svg
-                  className="w-5 h-5"
+                  className="w-5 h-5 flex-shrink-0"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -209,12 +269,12 @@ const LoginForm = () => {
                     strokeWidth="2"
                   />
                 </svg>
-                <span>{error}</span>
+                <span className="font-medium">{error}</span>
               </div>
             )}
 
             <Button
-              className="w-full font-semibold"
+              className="w-full font-semibold h-12 text-base shadow-md hover:shadow-lg transition-all duration-200"
               color="primary"
               disabled={loading || !email || !password}
               isLoading={loading}
@@ -225,9 +285,9 @@ const LoginForm = () => {
             </Button>
           </form>
 
-          <div className="text-center text-sm text-gray-500 dark:text-gray-400">
+          <div className="text-center">
             <button
-              className="text-primary hover:underline focus:outline-none"
+              className="text-primary hover:text-primary-600 font-medium transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-primary/20 rounded-lg px-4 py-2"
               type="button"
               onClick={onOpen}
             >
@@ -237,26 +297,40 @@ const LoginForm = () => {
         </Card>
       </div>
 
-      <footer className="w-full flex items-center justify-center py-3">
-        <span className="text-default-600">Desarrollado por</span>
+      <footer className="w-full flex items-center justify-center py-4 bg-white/50 dark:bg-gray-900/50 backdrop-blur-sm">
+        <span className="text-gray-600 dark:text-gray-400">Desarrollado por</span>
         <Link
           isExternal
-          className="flex items-center gap-1 text-current"
+          className="flex items-center gap-1 text-current hover:text-primary transition-colors duration-200"
           href="https://liceoexperimental.cl"
           title="Leumag homepage"
         >
-          <p className="text-primary mx-2"> Liceo Experimental Umag </p>
+          <p className="text-primary mx-2 font-medium"> Liceo Experimental Umag </p>
         </Link>
-        <span className="text-default-600">v{packageJson.version}</span>
+        <span className="text-gray-600 dark:text-gray-400">v{packageJson.version}</span>
       </footer>
 
-      <Modal isOpen={isOpen} onClose={onClose}>
+      <Modal 
+        classNames={{
+          base: "bg-white dark:bg-gray-800",
+          header: "border-b border-gray-200 dark:border-gray-700",
+          body: "py-6",
+          footer: "border-t border-gray-200 dark:border-gray-700"
+        }} 
+        isOpen={isOpen}
+        onClose={onClose}
+      >
         <ModalContent>
-          <ModalHeader>Recuperar Contraseña</ModalHeader>
+          <ModalHeader className="text-xl font-bold">Recuperar Contraseña</ModalHeader>
           <ModalBody>
             <form className="space-y-4" onSubmit={handleRecoverySubmit}>
               <Input
                 isRequired
+                classNames={{
+                  input: "text-base",
+                  inputWrapper: "shadow-sm hover:shadow-md transition-shadow duration-200",
+                  label: "text-gray-700 dark:text-gray-300 font-medium"
+                }}
                 errorMessage={recoveryError}
                 isInvalid={!!recoveryError}
                 label="RUT"
@@ -265,13 +339,27 @@ const LoginForm = () => {
                 onChange={(e) => validateRut(e.target.value)}
               />
               {recoverySuccess && (
-                <p className="text-success text-sm">
-                  Se ha enviado un correo con las instrucciones para recuperar tu
-                  contraseña.
-                </p>
+                <div className="p-4 text-sm text-success bg-success-50 dark:bg-success-900/30 rounded-lg flex items-center gap-3 animate-fade-in">
+                  <svg
+                    className="w-5 h-5 flex-shrink-0"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                    />
+                  </svg>
+                  <span className="font-medium">
+                    Se ha enviado un correo con las instrucciones para recuperar tu contraseña.
+                  </span>
+                </div>
               )}
               <Button
-                className="w-full"
+                className="w-full h-12 text-base shadow-md hover:shadow-lg transition-all duration-200"
                 color="primary"
                 isLoading={loadingRecovery}
                 type="submit"
