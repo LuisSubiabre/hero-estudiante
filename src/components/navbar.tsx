@@ -95,14 +95,14 @@ export const Navbar = () => {
       </NavbarContent>
 
       <NavbarContent
-        className="hidden sm:flex basis-1/5 sm:basis-full"
+        className="hidden lg:flex basis-1/5 sm:basis-full"
         justify="end"
       >
-        <NavbarItem className="hidden sm:flex gap-2">
+        <NavbarItem className="hidden lg:flex gap-2">
           <ThemeSwitch />
         </NavbarItem>
 
-        <NavbarItem className="hidden md:flex gap-2">
+        <NavbarItem className="hidden lg:flex gap-2">
           {isAuthenticated ? (
             <>
               <div className="text-sm font-normal text-default-600 bg-default-100 px-4 py-2 rounded-full flex items-center gap-2">
@@ -129,7 +129,7 @@ export const Navbar = () => {
         </NavbarItem>
       </NavbarContent>
 
-      <NavbarContent className="sm:hidden" justify="end">
+      <NavbarContent className="flex lg:hidden" justify="end">
         <ThemeSwitch />
         <NavbarMenuToggle className="ml-2" />
       </NavbarContent>
