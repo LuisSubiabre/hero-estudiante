@@ -11,6 +11,9 @@ import {
 } from "@heroui/react";
 import { useNavigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
+import { Link } from "@heroui/link";
+
+import packageJson from "../../package.json";
 
 import { DecodedToken } from "@/types/index.ts"; // Importa los tipos
 import { useAuth } from "@/context/AuthContext";
@@ -148,132 +151,104 @@ const LoginForm = () => {
   };
 
   return (
-    <section className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-gray-900 dark:to-gray-800 flex items-center justify-center p-4">
-      <Card className="w-full max-w-md p-6 space-y-8">
-        <div className="text-center space-y-2">
-          <img
-            alt="LEUMAG"
-            className="mx-auto w-24 h-24 object-contain"
-            src="/images/logo.png"
-          />
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
-            Liceo Experimental Umag
-          </h1>
-          <p className="text-sm text-gray-500 dark:text-gray-400">
-            Portal del Estudiante
-          </p>
-        </div>
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-gray-900 dark:to-gray-800 flex flex-col">
+      <div className="flex-1 flex items-center justify-center p-4">
+        <Card className="w-full max-w-md p-6 space-y-8">
+          <div className="text-center space-y-2">
+            <img
+              alt="LEUMAG"
+              className="mx-auto w-24 h-24 object-contain"
+              src="/images/logo.png"
+            />
+            <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
+              Liceo Experimental Umag
+            </h1>
+            <p className="text-sm text-gray-500 dark:text-gray-400">
+              Portal del Estudiante
+            </p>
+          </div>
 
-        <form className="space-y-6" onSubmit={handleSubmit}>
-          <Input
-            isRequired
-            className="w-full"
-            label="Correo Electrónico"
-            labelPlacement="outside"
-            size="lg"
-            type="email"
-            value={email}
-            variant="bordered"
-            onChange={(e) => setEmail(e.target.value)}
-          />
+          <form className="space-y-6" onSubmit={handleSubmit}>
+            <Input
+              isRequired
+              className="w-full"
+              label="Correo Electrónico"
+              labelPlacement="outside"
+              size="lg"
+              type="email"
+              value={email}
+              variant="bordered"
+              onChange={(e) => setEmail(e.target.value)}
+            />
 
-          <Input
-            isRequired
-            className="w-full pt-4"
-            endContent={
-              <button
-                className="focus:outline-none"
-                type="button"
-                onClick={() => setShowPassword(!showPassword)}
-              >
-                {showPassword ? (
-                  <svg
-                    className="w-5 h-5 text-gray-500"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                    />
-                    <path
-                      d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                    />
-                  </svg>
-                ) : (
-                  <svg
-                    className="w-5 h-5 text-gray-500"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                    />
-                  </svg>
-                )}
-              </button>
-            }
-            label="Contraseña"
-            labelPlacement="outside"
-            size="lg"
-            type={showPassword ? "text" : "password"}
-            value={password}
-            variant="bordered"
-            onBlur={(e) => setPassword(e.target.value.toUpperCase())}
-            onChange={(e) => setPassword(e.target.value)}
-          />
+            <Input
+              isRequired
+              className="w-full"
+              label="Contraseña"
+              labelPlacement="outside"
+              size="lg"
+              type={showPassword ? "text" : "password"}
+              value={password}
+              variant="bordered"
+              onBlur={(e) => setPassword(e.target.value.toUpperCase())}
+              onChange={(e) => setPassword(e.target.value)}
+            />
 
-          {error && (
-            <div className="p-3 text-sm text-red-500 bg-red-50 dark:bg-red-900/30 rounded-lg flex items-center gap-2">
-              <svg
-                className="w-5 h-5"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                />
-              </svg>
-              <span>{error}</span>
-            </div>
-          )}
+            {error && (
+              <div className="p-3 text-sm text-red-500 bg-red-50 dark:bg-red-900/30 rounded-lg flex items-center gap-2">
+                <svg
+                  className="w-5 h-5"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                  />
+                </svg>
+                <span>{error}</span>
+              </div>
+            )}
 
-          <Button
-            className="w-full font-semibold"
-            color="primary"
-            disabled={loading || !email || !password}
-            isLoading={loading}
-            size="lg"
-            type="submit"
-          >
-            {loading ? "Iniciando sesión..." : "Iniciar Sesión"}
-          </Button>
-        </form>
+            <Button
+              className="w-full font-semibold"
+              color="primary"
+              disabled={loading || !email || !password}
+              isLoading={loading}
+              size="lg"
+              type="submit"
+            >
+              {loading ? "Iniciando sesión..." : "Iniciar Sesión"}
+            </Button>
+          </form>
 
-        <div className="text-center text-sm text-gray-500 dark:text-gray-400">
-          <button
-            className="text-primary hover:underline focus:outline-none"
-            type="button"
-            onClick={onOpen}
-          >
-            ¿Olvidaste tu contraseña?
-          </button>
-        </div>
-      </Card>
+          <div className="text-center text-sm text-gray-500 dark:text-gray-400">
+            <button
+              className="text-primary hover:underline focus:outline-none"
+              type="button"
+              onClick={onOpen}
+            >
+              ¿Olvidaste tu contraseña?
+            </button>
+          </div>
+        </Card>
+      </div>
+
+      <footer className="w-full flex items-center justify-center py-3">
+        <span className="text-default-600">Desarrollado por</span>
+        <Link
+          isExternal
+          className="flex items-center gap-1 text-current"
+          href="https://liceoexperimental.cl"
+          title="Leumag homepage"
+        >
+          <p className="text-primary mx-2"> Liceo Experimental Umag </p>
+        </Link>
+        <span className="text-default-600">v{packageJson.version}</span>
+      </footer>
 
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalContent>
@@ -282,42 +257,32 @@ const LoginForm = () => {
             <form className="space-y-4" onSubmit={handleRecoverySubmit}>
               <Input
                 isRequired
-                description="Ingresa tu RUT sin puntos y con guión (Ejemplo: 12345678-9)"
+                errorMessage={recoveryError}
+                isInvalid={!!recoveryError}
                 label="RUT"
-                placeholder="12345678-9"
+                placeholder="Ej: 12345678-9"
                 value={rut}
                 onChange={(e) => validateRut(e.target.value)}
               />
-
-              {recoveryError && (
-                <div className="text-red-500 text-sm">{recoveryError}</div>
-              )}
-
               {recoverySuccess && (
-                <div className="text-green-500 text-sm">
-                  Se ha enviado un correo con las instrucciones para recuperar
-                  tu contraseña.
-                </div>
+                <p className="text-success text-sm">
+                  Se ha enviado un correo con las instrucciones para recuperar tu
+                  contraseña.
+                </p>
               )}
-
-              <div className="flex justify-end gap-2">
-                <Button color="danger" variant="light" onPress={onClose}>
-                  Cerrar
-                </Button>
-                <Button
-                  color="primary"
-                  disabled={!rut || !!recoveryError}
-                  isLoading={loadingRecovery}
-                  type="submit"
-                >
-                  Recuperar
-                </Button>
-              </div>
+              <Button
+                className="w-full"
+                color="primary"
+                isLoading={loadingRecovery}
+                type="submit"
+              >
+                {loadingRecovery ? "Enviando..." : "Recuperar Contraseña"}
+              </Button>
             </form>
           </ModalBody>
         </ModalContent>
       </Modal>
-    </section>
+    </div>
   );
 };
 

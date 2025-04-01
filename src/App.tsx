@@ -9,26 +9,23 @@ import InformesPage from "@/pages/informes";
 import NoDisponiblePage from "@/pages/nodisponible";
 import AtrasosPage from "@/pages/atrasos";
 import AclesPage from "@/pages/acles"; // Asegúrate de que la ruta sea correcta 
+
 function App() {
   return (
     <Routes>
-      {/* Ruta pública (login) */}
+      {/* Rutas públicas (no requieren autenticación) */}
       <Route element={<LoginForm />} path="/login" />
       <Route element={<Logout />} path="/logout" />
 
-      {/* Rutas públicas (accesibles sin autenticación) */}
-      <Route element={<IndexPage />} path="/" />
-
-      {/* Rutas protegidas (requieren autenticación) */}
+      {/* Todas las demás rutas requieren autenticación */}
       <Route element={<ProtectedRoute />}>
+        <Route element={<IndexPage />} path="/" />
         <Route element={<NoDisponiblePage />} path="/notas" />
         <Route element={<NoDisponiblePage />} path="/regular" />
         <Route element={<InformesPage />} path="/certificados" />
         <Route element={<AclesPage />} path="/acles" />
         <Route element={<NoDisponiblePage />} path="/asistencia" />
         <Route element={<AtrasosPage />} path="/atrasos" />
-
-        {/* Aquí puedes agregar más rutas protegidas */}
       </Route>
     </Routes>
   );
