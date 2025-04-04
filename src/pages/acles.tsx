@@ -29,8 +29,8 @@ export default function NotasPage() {
   const [loadingInscritos, setLoadingInscritos] = useState(true);
   const [errorTalleres, setErrorTalleres] = useState("");
   const [errorInscritos, setErrorInscritos] = useState("");
-  const [error, setError] = useState("");
-  const { isOpen, onOpen, onOpenChange } = useDisclosure();
+  const [error, ] = useState("");
+  const { isOpen, onOpenChange } = useDisclosure();
 
   // Función para obtener los talleres disponibles
   const fetchTalleres = async () => {
