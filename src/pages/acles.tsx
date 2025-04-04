@@ -18,8 +18,6 @@ import DefaultLayout from "@/layouts/default";
 import {
   searchTaller,
   talleresInscritos,
-  tallerInscripcion,
-  tallerRetirar,
 } from "@/services/tallerService";
 import { Taller } from "@/types";
 export default function NotasPage() {
@@ -165,48 +163,48 @@ const jwtData = () => {
   );
 
   // Función para inscribirse en un taller
-  const inscribirTaller = async (taller_id: number) => {
-    const estudiante_id = jwtData();
+  // const inscribirTaller = async (taller_id: number) => {
+  //   const estudiante_id = jwtData();
 
-    // console.log("----->", estudiante_id);
+  //   // console.log("----->", estudiante_id);
 
-    if (!estudiante_id) {
-      setError("No se encontró el ID del estudiante.");
-      onOpen();
+  //   if (!estudiante_id) {
+  //     setError("No se encontró el ID del estudiante.");
+  //     onOpen();
 
-      return;
-    }
+  //     return;
+  //   }
 
-    try {
-      await tallerInscripcion(estudiante_id, taller_id);
-      await fetchTalleres();
-      await fetchTalleresInscritos();
-    } catch {
-      setError("Error al inscribirse en el taller.");
-      onOpen();
-    }
-  };
+  //   try {
+  //     await tallerInscripcion(estudiante_id, taller_id);
+  //     await fetchTalleres();
+  //     await fetchTalleresInscritos();
+  //   } catch {
+  //     setError("Error al inscribirse en el taller.");
+  //     onOpen();
+  //   }
+  // };
 
   // Función para retirarse de un taller
-  const retirarTaller = async (taller_id: number) => {
-    const estudiante_id = jwtData();
+  // const retirarTaller = async (taller_id: number) => {
+  //   const estudiante_id = jwtData();
 
-    if (!estudiante_id) {
-      setError("No se encontró el ID del estudiante.");
-      onOpen();
+  //   if (!estudiante_id) {
+  //     setError("No se encontró el ID del estudiante.");
+  //     onOpen();
 
-      return;
-    }
+  //     return;
+  //   }
 
-    try {
-      await tallerRetirar(estudiante_id, taller_id);
-      await fetchTalleres();
-      await fetchTalleresInscritos();
-    } catch {
-      setError("Error al retirarse en el taller.");
-      onOpen();
-    }
-  };
+  //   try {
+  //     await tallerRetirar(estudiante_id, taller_id);
+  //     await fetchTalleres();
+  //     await fetchTalleresInscritos();
+  //   } catch {
+  //     setError("Error al retirarse en el taller.");
+  //     onOpen();
+  //   }
+  // };
 
   return (
     <DefaultLayout>
@@ -216,6 +214,13 @@ const jwtData = () => {
           <p className="text-default-500 mt-2">
             Inscríbete en los talleres de tu interés
           </p>
+          {cantidadTalleresInscritos >= 2 && (
+            <div className="mt-4">
+              <span className="inline-block bg-warning text-white text-sm font-semibold px-4 py-2 rounded">
+                El periodo de inscripciones ha finalizado.
+              </span>
+            </div>
+          )}
         </div>
 
         {/* Estado de inscripción */}
@@ -266,14 +271,14 @@ const jwtData = () => {
                       </div>
                     </div>
                     <div className="mt-auto">
-                      <Button
+                      {/* <Button
                         className="w-full"
                         color="danger"
                         variant="flat"
                         onPress={() => retirarTaller(t.taller_id)}
                       >
                         Retirarse del taller
-                      </Button>
+                      </Button> */}
                     </div>
                   </div>
                 </Card>
@@ -389,15 +394,7 @@ const jwtData = () => {
                               </span>
                             )}
                           </div>
-                          {t.cantidad_cupos > t.cantidad_inscritos && (
-                            <Button
-                              className="w-full"
-                              color="primary"
-                              onPress={() => inscribirTaller(t.taller_id)}
-                            >
-                              Inscribirse
-                            </Button>
-                          )}
+              
                         </div>
                       </div>
                     </Card>
