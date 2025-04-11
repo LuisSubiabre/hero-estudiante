@@ -18,6 +18,8 @@ import DefaultLayout from "@/layouts/default";
 import {
   searchTaller,
   talleresInscritos,
+  tallerInscripcion,
+  tallerRetirar,
 } from "@/services/tallerService";
 import { Taller } from "@/types";
 export default function NotasPage() {
@@ -29,8 +31,8 @@ export default function NotasPage() {
   const [loadingInscritos, setLoadingInscritos] = useState(true);
   const [errorTalleres, setErrorTalleres] = useState("");
   const [errorInscritos, setErrorInscritos] = useState("");
-  const [error, ] = useState("");
-  const { isOpen, onOpenChange } = useDisclosure();
+  const [error, setError] = useState("");
+  const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
   // Función para obtener los talleres disponibles
   const fetchTalleres = async () => {
@@ -96,115 +98,132 @@ export default function NotasPage() {
   }, []);
 
   // Función para decodificar el token JWT
-const jwtData = () => {
-  const token = localStorage.getItem("TokenLeu");
+  const jwtData = () => {
+    const token = localStorage.getItem("TokenLeu");
 
-  if (token) {
-    try {
-      const base64Url = token.split(".")[1];
+    if (token) {
+      try {
+        const base64Url = token.split(".")[1];
 
-      // Convertir Base64URL a Base64 estándar
-      const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
+        // Convertir Base64URL a Base64 estándar
+        const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
 
-      // Decodificar usando decodeURIComponent para manejar caracteres especiales
-      const decoded = decodeURIComponent(
-        atob(base64)
-          .split("")
-          .map(c => "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2))
-          .join("")
-      );
+        // Decodificar usando decodeURIComponent para manejar caracteres especiales
+        const decoded = decodeURIComponent(
+          atob(base64)
+            .split("")
+            .map((c) => "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2))
+            .join("")
+        );
 
-      const payload = JSON.parse(decoded);
+        const payload = JSON.parse(decoded);
 
+        return payload.estudiante_id;
+      } catch (error) {
+        console.error("Error al decodificar el token:", error);
 
-      return payload.estudiante_id;
-    } catch (error) {
-      console.error("Error al decodificar el token:", error);
-
-      return null;
+        return null;
+      }
     }
-  }
 
-  return null;
-};
+    return null;
+  };
 
   // Función para obtener el curso_id del token
   const getCursoId = () => {
     const token = localStorage.getItem("TokenLeu");
-  
+
     if (token) {
       try {
         const base64Url = token.split(".")[1];
         const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
-  
+
         const decoded = decodeURIComponent(
           atob(base64)
             .split("")
-            .map(c => "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2))
+            .map((c) => "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2))
             .join("")
         );
-  
+
         return JSON.parse(decoded).curso_id;
       } catch {
         return null;
       }
     }
-  
+
     return null;
   };
-  
 
   // Filtrar talleres que no estén en la lista de talleres inscritos
-  const talleresDisponibles = talleres.filter(
-    (taller) =>
-      !talleresInscritosList.some(
-        (inscrito) => inscrito.taller_id === taller.taller_id
-      )
-  );
+  const talleresDisponibles = talleres
+    .filter(
+      (taller) =>
+        !talleresInscritosList.some(
+          (inscrito) => inscrito.taller_id === taller.taller_id
+        )
+    )
+    .sort((a, b) => {
+      // El taller 54 va primero
+      if (a.taller_id === 54) return -1;
+      if (b.taller_id === 54) return 1;
+
+      // El resto se ordena por ID
+      return a.taller_id - b.taller_id;
+    });
+
+  // Ordenar también los talleres inscritos
+  const talleresInscritosOrdenados = [...talleresInscritosList].sort((a, b) => {
+    // El taller 54 va primero
+    if (a.taller_id === 54) return -1;
+    if (b.taller_id === 54) return 1;
+
+    // El resto se ordena por ID
+    return a.taller_id - b.taller_id;
+  });
 
   // Función para inscribirse en un taller
-  // const inscribirTaller = async (taller_id: number) => {
-  //   const estudiante_id = jwtData();
+  const inscribirTaller = async (taller_id: number) => {
+    const estudiante_id = jwtData();
 
-  //   // console.log("----->", estudiante_id);
+    // console.log("----->", estudiante_id);
 
-  //   if (!estudiante_id) {
-  //     setError("No se encontró el ID del estudiante.");
-  //     onOpen();
+    if (!estudiante_id) {
+      setError("No se encontró el ID del estudiante.");
+      onOpen();
 
-  //     return;
-  //   }
+      return;
+    }
 
-  //   try {
-  //     await tallerInscripcion(estudiante_id, taller_id);
-  //     await fetchTalleres();
-  //     await fetchTalleresInscritos();
-  //   } catch {
-  //     setError("Error al inscribirse en el taller.");
-  //     onOpen();
-  //   }
-  // };
+    try {
+      await tallerInscripcion(estudiante_id, taller_id);
+      await fetchTalleres();
+      await fetchTalleresInscritos();
+    } catch {
+      setError("Error al inscribirse en el taller.");
+      onOpen();
+    }
+  };
 
   // Función para retirarse de un taller
-  // const retirarTaller = async (taller_id: number) => {
-  //   const estudiante_id = jwtData();
+  const retirarTaller = async (taller_id: number) => {
+    const estudiante_id = jwtData();
 
-  //   if (!estudiante_id) {
-  //     setError("No se encontró el ID del estudiante.");
-  //     onOpen();
+    if (!estudiante_id) {
+      setError("No se encontró el ID del estudiante.");
+      onOpen();
 
-  //     return;
-  //   }
+      return;
+    }
 
-  //   try {
-  //     await tallerRetirar(estudiante_id, taller_id);
-  //     await fetchTalleres();
-  //     await fetchTalleresInscritos();
-  //   } catch {
-  //     setError("Error al retirarse en el taller.");
-  //     onOpen();
-  //   }
-  // };
+    try {
+      await tallerRetirar(estudiante_id, taller_id);
+      await fetchTalleres();
+      await fetchTalleresInscritos();
+    } catch {
+      setError("Error al retirarse en el taller.");
+      onOpen();
+    }
+  };
 
   return (
     <DefaultLayout>
@@ -254,9 +273,9 @@ const jwtData = () => {
             </Alert>
           )}
 
-          {!loadingInscritos && talleresInscritosList.length > 0 ? (
+          {!loadingInscritos && talleresInscritosOrdenados.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {talleresInscritosList.map((t) => (
+              {talleresInscritosOrdenados.map((t) => (
                 <Card key={t.taller_id} className="p-6 bg-primary/5">
                   <div className="flex flex-col h-full">
                     <h3 className="text-lg font-bold mb-2">{t.nombre}</h3>
@@ -271,14 +290,16 @@ const jwtData = () => {
                       </div>
                     </div>
                     <div className="mt-auto">
-                      {/* <Button
-                        className="w-full"
-                        color="danger"
-                        variant="flat"
-                        onPress={() => retirarTaller(t.taller_id)}
-                      >
-                        Retirarse del taller
-                      </Button> */}
+                      {t.taller_id === 54 && (
+                        <Button
+                          className="w-full"
+                          color="danger"
+                          variant="flat"
+                          onPress={() => retirarTaller(t.taller_id)}
+                        >
+                          Retirarse del taller
+                        </Button>
+                      )}
                     </div>
                   </div>
                 </Card>
@@ -311,10 +332,10 @@ const jwtData = () => {
                 <>
                   <Alert className="mb-6" color="warning">
                     Ya has alcanzado el máximo de talleres permitidos. Puedes
-                    ver los talleres disponibles a continuación, pero no podrás
-                    inscribirte en ellos.
+                    ver los talleres disponibles a continuación, pero solo
+                    podrás inscribirte en el taller especial.
                   </Alert>
-                  <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {talleresDisponibles.map((t) => (
                       <Card key={t.taller_id} className="p-4 bg-default-50">
                         <div className="flex flex-col h-full">
@@ -349,6 +370,16 @@ const jwtData = () => {
                               <span className="text-danger">Sin cupos</span>
                             )}
                           </div>
+                          {t.taller_id === 54 &&
+                            t.cantidad_cupos > t.cantidad_inscritos && (
+                              <Button
+                                className="w-full mt-4"
+                                color="primary"
+                                onPress={() => inscribirTaller(t.taller_id)}
+                              >
+                                Inscribirse en el taller
+                              </Button>
+                            )}
                         </div>
                       </Card>
                     ))}
@@ -394,7 +425,16 @@ const jwtData = () => {
                               </span>
                             )}
                           </div>
-              
+                          {t.taller_id === 54 &&
+                            t.cantidad_cupos > t.cantidad_inscritos && (
+                              <Button
+                                className="w-full"
+                                color="primary"
+                                onPress={() => inscribirTaller(t.taller_id)}
+                              >
+                                Inscribirse en el taller
+                              </Button>
+                            )}
                         </div>
                       </div>
                     </Card>
