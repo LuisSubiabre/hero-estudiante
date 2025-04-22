@@ -6,13 +6,68 @@ import DefaultLayout from "@/layouts/default";
 import { searchLibreta } from "@/services/libretaService";
 import { Libreta } from "@/types";
 
+// Función para obtener el estudiante_id del token
+const jwtData = () => {
+  const token = localStorage.getItem("TokenLeu");
+
+  if (token) {
+    try {
+      const base64Url = token.split(".")[1];
+      const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
+      const decoded = decodeURIComponent(
+        atob(base64)
+          .split("")
+          .map(c => "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2))
+          .join("")
+      );
+
+      return JSON.parse(decoded).estudiante_id;
+    } catch (error) {
+      console.error("Error al decodificar el token:", error);
+
+      return null;
+    }
+  }
+
+  return null;
+};
+
+// Función para convertir calificaciones numéricas a conceptos
+const convertirCalificacion = (calificacion: number | null, esConcepto: boolean) => {
+  if (calificacion === null) return "-";
+  
+  if (!esConcepto) return calificacion.toString();
+
+  switch (calificacion) {
+    case 70:
+      return "MB";
+    case 50:
+      return "B";
+    case 40:
+      return "S";
+    case 30:
+      return "I";
+    default:
+      return calificacion.toString();
+  }
+};
+
 export default function NotasPage() {
   const [libreta, setLibreta] = useState<Libreta | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
   useEffect(() => {
-    searchLibreta(696)
+    const estudiante_id = jwtData();
+    
+    if (!estudiante_id) {
+      setError("No se encontró el ID del estudiante");
+      setLoading(false);
+
+      return;
+    }
+
+    searchLibreta(estudiante_id)
       .then((data) => {
         if (data) {
           setLibreta(data);
@@ -102,7 +157,7 @@ export default function NotasPage() {
                           key={i}
                           className="border border-gray-300 px-2 py-2"
                         >
-                          {asignatura[`calificacion${i + 1}`] ?? "-"}
+                          {convertirCalificacion(asignatura[`calificacion${i + 1}`] as number | null, Boolean(asignatura.concepto))}
                         </td>
                       ))}
                       {/* Segundo Semestre */}
@@ -111,7 +166,7 @@ export default function NotasPage() {
                           key={i + 12}
                           className="border border-gray-300 px-2 py-2"
                         >
-                          {asignatura[`calificacion${i + 13}`] ?? "-"}
+                          {convertirCalificacion(asignatura[`calificacion${i + 13}`] as number | null, Boolean(asignatura.concepto))}
                         </td>
                       ))}
                     </tr>

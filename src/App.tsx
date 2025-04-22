@@ -8,6 +8,7 @@ import IndexPage from "@/pages/index";
 import InformesPage from "@/pages/informes";
 import NoDisponiblePage from "@/pages/nodisponible";
 import AtrasosPage from "@/pages/atrasos";
+import NotasPage from "@/pages/notas";
 import AclesPage from "@/pages/acles"; // Asegúrate de que la ruta sea correcta 
 
 function App() {
@@ -20,7 +21,7 @@ function App() {
       {/* Todas las demás rutas requieren autenticación */}
       <Route element={<ProtectedRoute />}>
         <Route element={<IndexPage />} path="/" />
-        <Route element={<NoDisponiblePage />} path="/notas" />
+        <Route element={<NotasPage />} path="/notas" />
         <Route element={<NoDisponiblePage />} path="/regular" />
         <Route element={<InformesPage />} path="/certificados" />
         <Route element={<AclesPage />} path="/acles" />

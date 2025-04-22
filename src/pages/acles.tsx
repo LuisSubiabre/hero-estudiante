@@ -333,7 +333,7 @@ export default function NotasPage() {
                   <Alert className="mb-6" color="warning">
                     Ya has alcanzado el máximo de talleres permitidos. Puedes
                     ver los talleres disponibles a continuación, pero solo
-                    podrás inscribirte en el taller especial.
+                    podrás inscribirte en el taller especial. Si tienes dudas, puedes escribir a <strong>acle@liceoexperimental.cl</strong>
                   </Alert>
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {talleresDisponibles.map((t) => (
