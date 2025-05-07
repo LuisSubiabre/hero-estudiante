@@ -79,8 +79,8 @@ export default function IndexPage() {
                     <div className="flex justify-between items-start border-b pb-2">
                       <span className="font-medium">1os AC y 2os AB Medios</span>
                       <div className="text-right">
-                        <div>Elizabeth Galindo</div>
-                        <div className="text-sm text-gray-500 dark:text-gray-400">egalindo@liceoexperimental.cl</div>
+                        <div>María Angélica Castelblanco</div>
+                        <div className="text-sm text-gray-500 dark:text-gray-400">mcastelblanco@liceoexperimental.cl</div>
                       </div>
                     </div>
                     <div className="flex justify-between items-start border-b pb-2">
