@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.6.1](https://github.com/LuisSubiabre/hero-estudiante/compare/v1.6.0...v1.6.1) (2025-05-07)
+
+
+### Features
+
+* agregar configuración de promedios y cálculo en la página de notas ([c05d868](https://github.com/LuisSubiabre/hero-estudiante/commit/c05d8681b3605677090056d8d0fa3e830fbafd35))
+
 ## [1.6.0](https://github.com/LuisSubiabre/hero-estudiante/compare/v1.5.0...v1.6.0) (2025-04-25)
 
 
