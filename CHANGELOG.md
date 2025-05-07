@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.6.2](https://github.com/LuisSubiabre/hero-estudiante/compare/v1.6.1...v1.6.2) (2025-05-07)
+
+
+### Features
+
+* agregar configuración de reescritura en vercel.json ([25d496a](https://github.com/LuisSubiabre/hero-estudiante/commit/25d496a5cc634e1c93467667e725e09ea294b266))
+
 ### [1.6.1](https://github.com/LuisSubiabre/hero-estudiante/compare/v1.6.0...v1.6.1) (2025-05-07)
 
 
