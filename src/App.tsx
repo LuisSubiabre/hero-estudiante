@@ -10,6 +10,7 @@ import NoDisponiblePage from "@/pages/nodisponible";
 import AtrasosPage from "@/pages/atrasos";
 import NotasPage from "@/pages/notas";
 import AclesPage from "@/pages/acles"; // Asegúrate de que la ruta sea correcta 
+import Asistencia from "@/components/Asistencia";
 
 function App() {
   return (
@@ -25,7 +26,7 @@ function App() {
         <Route element={<NoDisponiblePage />} path="/regular" />
         <Route element={<InformesPage />} path="/certificados" />
         <Route element={<AclesPage />} path="/acles" />
-        <Route element={<NoDisponiblePage />} path="/asistencia" />
+        <Route element={<Asistencia />} path="/asistencia" />
         <Route element={<AtrasosPage />} path="/atrasos" />
       </Route>
     </Routes>
