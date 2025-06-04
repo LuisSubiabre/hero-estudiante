@@ -103,45 +103,47 @@ const styles = StyleSheet.create({
   page: {
     flexDirection: "column",
     backgroundColor: "#fff",
-    padding: 20,
+    padding: 10,
+    width: "8.5in",
+    height: "11in",
   },
   header: {
     alignItems: "center",
-    marginBottom: 15,
+    marginBottom: 5,
     borderBottom: "1px solid #e0e0e0",
-    paddingBottom: 8,
+    paddingBottom: 3,
   },
   title: {
-    fontSize: 16,
-    marginTop: 8,
-    marginBottom: 4,
+    fontSize: 14,
+    marginTop: 3,
+    marginBottom: 1,
     textAlign: "center",
     color: "#1a365d",
     fontWeight: "bold",
   },
   subtitle: {
-    fontSize: 12,
-    marginBottom: 4,
+    fontSize: 11,
+    marginBottom: 1,
     textAlign: "center",
     color: "#4a5568",
   },
   studentInfo: {
-    marginBottom: 12,
-    padding: 8,
+    marginBottom: 5,
+    padding: 4,
     backgroundColor: "#f8fafc",
     borderRadius: 4,
   },
   infoText: {
     fontSize: 9,
-    marginBottom: 2,
+    marginBottom: 1,
   },
   semesterHeader: {
     flexDirection: "row",
-    marginBottom: 4,
+    marginBottom: 1,
   },
   semesterBox: {
     flex: 1,
-    padding: 4,
+    padding: 1,
     alignItems: "center",
   },
   firstSemester: {
@@ -160,18 +162,18 @@ const styles = StyleSheet.create({
     borderStyle: "solid",
     borderWidth: 1,
     borderColor: "#e2e8f0",
-    marginTop: 8,
+    marginTop: 3,
   },
   tableRow: {
     flexDirection: "row",
-    minHeight: 20,
+    minHeight: 18,
   },
   tableHeader: {
     backgroundColor: "#2c5282",
   },
   tableCell: {
-    padding: 4,
-    fontSize: 7,
+    padding: 2,
+    fontSize: 8,
     borderStyle: "solid",
     borderWidth: 1,
     borderColor: "#e2e8f0",
@@ -192,27 +194,27 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   finalAverages: {
-    marginTop: 15,
-    padding: 8,
+    marginTop: 5,
+    padding: 4,
     backgroundColor: "#f8fafc",
     borderRadius: 4,
   },
   averageText: {
     fontSize: 9,
-    marginBottom: 2,
+    marginBottom: 1,
   },
   signatures: {
     flexDirection: "row",
     justifyContent: "space-between",
-    marginTop: 30,
-    paddingHorizontal: 30,
+    marginTop: 8,
+    paddingHorizontal: 15,
   },
   signatureBox: {
     alignItems: "center",
   },
   signatureLine: {
     fontSize: 9,
-    marginBottom: 4,
+    marginBottom: 1,
   },
   signatureName: {
     fontSize: 8,
@@ -220,14 +222,98 @@ const styles = StyleSheet.create({
   },
   footer: {
     position: "absolute",
-    bottom: 20,
-    left: 20,
-    right: 20,
+    bottom: 5,
+    left: 10,
+    right: 10,
     textAlign: "center",
     fontSize: 7,
     color: "#718096",
   },
+  chartContainer: {
+    marginTop: 5,
+    padding: 4,
+    backgroundColor: "#f8fafc",
+    borderRadius: 4,
+  },
+  chartTitle: {
+    fontSize: 9,
+    fontWeight: "bold",
+    marginBottom: 2,
+    textAlign: "center",
+    color: "#2d3748",
+  },
+  chart: {
+    height: 120,
+    flexDirection: "row",
+    alignItems: "flex-end",
+    justifyContent: "space-between",
+    paddingHorizontal: 3,
+    position: "relative",
+  },
+  barContainer: {
+    flex: 1,
+    alignItems: "center",
+    marginHorizontal: 1,
+    height: "100%",
+    position: "relative",
+  },
+  bar: {
+    width: 12,
+    backgroundColor: "#2c5282",
+    position: "absolute",
+    bottom: 20, // Espacio para las etiquetas
+  },
+  barLabel: {
+    fontSize: 6,
+    textAlign: "center",
+    color: "#4a5568",
+    width: 35,
+    position: "absolute",
+    bottom: 0,
+  },
+  barValue: {
+    fontSize: 6,
+    textAlign: "center",
+    color: "#2d3748",
+    position: "absolute",
+    bottom: 22, // Justo encima de la barra
+  },
 });
+
+// Función para truncar texto
+const truncateText = (text: string, maxLength: number = 12) => {
+  if (text.length <= maxLength) return text;
+
+  return text.slice(0, maxLength) + "...";
+};
+
+// Componente para el gráfico de barras
+const BarChart = ({ data }: { data: { label: string; value: number }[] }) => {
+  const maxValue = Math.max(...data.map(item => item.value));
+  const scale = 100 / maxValue; // Aumentamos la escala para barras más altas
+
+  return (
+    <View style={styles.chartContainer}>
+      <Text style={styles.chartTitle}>Gráfico de Rendimiento Promedios Finales por Asignatura</Text>
+      <View style={styles.chart}>
+        {data.map((item, index) => (
+          <View key={index} style={styles.barContainer}>
+            <Text style={styles.barValue}>{item.value}</Text>
+            <View
+              style={[
+                styles.bar,
+                {
+                  height: item.value * scale,
+                },
+              ]}
+            />
+            <Text style={styles.barLabel}>{truncateText(item.label)}</Text>
+          </View>
+        ))}
+      </View>
+    </View>
+  );
+};
 
 // Componente para el PDF
 const NotasPDF = ({ libreta }: { libreta: Libreta }) => {
@@ -248,6 +334,25 @@ const NotasPDF = ({ libreta }: { libreta: Libreta }) => {
 
     return cellStyles;
   };
+
+  // Preparar datos para el gráfico
+  const chartData = libreta.asignaturas
+    .sort((a, b) => a.indice - b.indice)
+    .map(asignatura => {
+      const notas1S = obtenerNotasSemestre(asignatura, 1, 10);
+      const notas2S = obtenerNotasSemestre(asignatura, 13, 22);
+      const promedio1S = calcularPromedio(notas1S, configPromedios.promedioAnualAsignatura);
+      const promedio2S = calcularPromedio(notas2S, configPromedios.promedioAnualAsignatura);
+      const promedioFinal = calcularPromedio(
+        [promedio1S, promedio2S].filter(nota => nota !== null) as number[],
+        configPromedios.promedioAnualAsignatura
+      );
+
+      return {
+        label: asignatura.nombre_asignatura,
+        value: promedioFinal !== null ? promedioFinal : 0,
+      };
+    });
 
   return (
     <Document>
@@ -341,10 +446,10 @@ const NotasPDF = ({ libreta }: { libreta: Libreta }) => {
           <Text style={styles.averageText}>
             Promedio General 2° Semestre: {calcularPromedioGeneral(libreta, 2)}
           </Text>
-          <Text style={styles.averageText}>
-            {/* Promedio General Final: {calcularPromedioGeneral(libreta, 3)} */}
-          </Text>
         </View>
+
+        {/* Gráfico de Promedios */}
+        <BarChart data={chartData} />
 
         {/* Firmas */}
         <View style={styles.signatures}>
