@@ -186,8 +186,12 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   subjectCell: {
-    flex: 4,
+    flex: 6,
     textAlign: "left",
+  },
+  gradeCell: {
+    flex: 0.8,
+    textAlign: "center",
   },
   averageCell: {
     backgroundColor: "#f7fafc",
@@ -262,6 +266,15 @@ const styles = StyleSheet.create({
     backgroundColor: "#2c5282",
     position: "absolute",
     bottom: 20, // Espacio para las etiquetas
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  barValue: {
+    fontSize: 5,
+    textAlign: "center",
+    color: "#ffffff",
+    position: "absolute",
+    bottom: "50%",
   },
   barLabel: {
     fontSize: 6,
@@ -270,13 +283,6 @@ const styles = StyleSheet.create({
     width: 35,
     position: "absolute",
     bottom: 0,
-  },
-  barValue: {
-    fontSize: 6,
-    textAlign: "center",
-    color: "#2d3748",
-    position: "absolute",
-    bottom: 22, // Justo encima de la barra
   },
 });
 
@@ -298,7 +304,6 @@ const BarChart = ({ data }: { data: { label: string; value: number }[] }) => {
       <View style={styles.chart}>
         {data.map((item, index) => (
           <View key={index} style={styles.barContainer}>
-            <Text style={styles.barValue}>{item.value}</Text>
             <View
               style={[
                 styles.bar,
@@ -306,7 +311,9 @@ const BarChart = ({ data }: { data: { label: string; value: number }[] }) => {
                   height: item.value * scale,
                 },
               ]}
-            />
+            >
+              <Text style={styles.barValue}>{item.value}</Text>
+            </View>
             <Text style={styles.barLabel}>{truncateText(item.label)}</Text>
           </View>
         ))}
@@ -329,8 +336,13 @@ const NotasPDF = ({ libreta }: { libreta: Libreta }) => {
   const getCellStyle = (index: number, totalCells: number) => {
     const cellStyles: any[] = [styles.tableCell];
 
-    if (index === 0) cellStyles.push(styles.subjectCell);
-    if (index >= totalCells - 3) cellStyles.push(styles.averageCell);
+    if (index === 0) {
+      cellStyles.push(styles.subjectCell);
+    } else if (index >= totalCells - 3) {
+      cellStyles.push(styles.averageCell);
+    } else {
+      cellStyles.push(styles.gradeCell);
+    }
 
     return cellStyles;
   };
@@ -393,7 +405,7 @@ const NotasPDF = ({ libreta }: { libreta: Libreta }) => {
                 style={[
                   styles.tableCell, 
                   styles.headerCell,
-                  index === 0 ? styles.subjectCell : {}
+                  index === 0 ? styles.subjectCell : styles.gradeCell
                 ]}
               >
                 {header}
@@ -464,7 +476,7 @@ const NotasPDF = ({ libreta }: { libreta: Libreta }) => {
           </View>
           <View style={styles.signatureBox}>
             <Image
-              src="/images/pbravo-signature.png"
+              src="https://res.cloudinary.com/dx219dazh/image/upload/v1746451823/varios/zrnowutpg5fgaijjxkpm.png"
               style={{ width: 120, height: 40 }}
             />
             <Text style={styles.signatureLine}>_______________________</Text>
