@@ -85,7 +85,7 @@ const Asistencia = () => {
                 <TableCell>{item.anio}</TableCell>
                 <TableCell>{item.total_dias}</TableCell>
                 <TableCell>{item.dias_asistidos}</TableCell>
-                <TableCell>{item.porcentaje_asistencia}%</TableCell>
+                <TableCell>{Math.floor(parseFloat(item.porcentaje_asistencia))}%</TableCell>
               </TableRow>
             ))}
           </TableBody>
