@@ -184,7 +184,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   subjectCell: {
-    flex: 2,
+    flex: 4,
     textAlign: "left",
   },
   averageCell: {
@@ -233,9 +233,9 @@ const styles = StyleSheet.create({
 const NotasPDF = ({ libreta }: { libreta: Libreta }) => {
   const headerRow = [
     "Asignatura",
-    ...Array(12).fill("").map((_, i) => `${i + 1}`),
+    ...Array(10).fill("").map((_, i) => `${i + 1}`),
     "1S",
-    ...Array(11).fill("").map((_, i) => `${i + 13}`),
+    ...Array(10).fill("").map((_, i) => `${i + 13}`),
     "2S",
     "PF",
   ];
@@ -243,12 +243,8 @@ const NotasPDF = ({ libreta }: { libreta: Libreta }) => {
   const getCellStyle = (index: number, totalCells: number) => {
     const cellStyles: any[] = [styles.tableCell];
 
-    if (index === 0) {
-      cellStyles.push(styles.subjectCell);
-    }
-    if (index >= totalCells - 3) {
-      cellStyles.push(styles.averageCell);
-    }
+    if (index === 0) cellStyles.push(styles.subjectCell);
+    if (index >= totalCells - 3) cellStyles.push(styles.averageCell);
 
     return cellStyles;
   };
@@ -303,9 +299,9 @@ const NotasPDF = ({ libreta }: { libreta: Libreta }) => {
           {/* Body de la tabla */}
           {libreta.asignaturas
             .sort((a, b) => a.indice - b.indice)
-            .map((asignatura, rowIndex) => {
-              const notas1S = obtenerNotasSemestre(asignatura, 1, 12);
-              const notas2S = obtenerNotasSemestre(asignatura, 13, 23);
+            .map((asignatura) => {
+              const notas1S = obtenerNotasSemestre(asignatura, 1, 10);
+              const notas2S = obtenerNotasSemestre(asignatura, 13, 22);
               const promedio1S = calcularPromedio(notas1S, configPromedios.promedioAnualAsignatura);
               const promedio2S = calcularPromedio(notas2S, configPromedios.promedioAnualAsignatura);
               const promedioFinal = calcularPromedio(
@@ -323,13 +319,7 @@ const NotasPDF = ({ libreta }: { libreta: Libreta }) => {
               ];
 
               return (
-                <View 
-                  key={asignatura.asignatura_id} 
-                  style={[
-                    styles.tableRow,
-                    { backgroundColor: rowIndex % 2 === 0 ? "#ffffff" : "#f8fafc" }
-                  ]}
-                >
+                <View key={asignatura.asignatura_id} style={styles.tableRow}>
                   {rowData.map((cell, index) => (
                     <Text 
                       key={index} 
@@ -352,7 +342,7 @@ const NotasPDF = ({ libreta }: { libreta: Libreta }) => {
             Promedio General 2° Semestre: {calcularPromedioGeneral(libreta, 2)}
           </Text>
           <Text style={styles.averageText}>
-            Promedio General Final: {calcularPromedioGeneral(libreta, 3)}
+            {/* Promedio General Final: {calcularPromedioGeneral(libreta, 3)} */}
           </Text>
         </View>
 
@@ -388,18 +378,18 @@ const calcularPromedioGeneral = (libreta: Libreta, tipo: number): string => {
 
   const promedios = asignaturas.map(asignatura => {
     if (tipo === 1) {
-      const notas = obtenerNotasSemestre(asignatura, 1, 12);
+      const notas = obtenerNotasSemestre(asignatura, 1, 10);
       const promedio = calcularPromedio(notas, configPromedios.promedioAnualAsignatura);
 
       return promedio !== null ? promedio : null;
     } else if (tipo === 2) {
-      const notas = obtenerNotasSemestre(asignatura, 13, 23);
+      const notas = obtenerNotasSemestre(asignatura, 13, 22);
       const promedio = calcularPromedio(notas, configPromedios.promedioAnualAsignatura);
 
       return promedio !== null ? promedio : null;
     } else {
-      const notas1S = obtenerNotasSemestre(asignatura, 1, 12);
-      const notas2S = obtenerNotasSemestre(asignatura, 13, 23);
+      const notas1S = obtenerNotasSemestre(asignatura, 1, 10);
+      const notas2S = obtenerNotasSemestre(asignatura, 13, 22);
       const promedio1S = calcularPromedio(notas1S, configPromedios.promedioAnualAsignatura);
       const promedio2S = calcularPromedio(notas2S, configPromedios.promedioAnualAsignatura);
       const promediosSemestres = [promedio1S, promedio2S].filter((nota): nota is number => nota !== null);
@@ -495,13 +485,13 @@ export default function NotasPage() {
                     </th>
                     <th
                       className="border border-gray-300 px-4 py-2 bg-blue-100"
-                      colSpan={12}
+                      colSpan={10}
                     >
                       Primer Semestre
                     </th>
                     <th
                       className="border border-gray-300 px-4 py-2 bg-green-100"
-                      colSpan={11}
+                      colSpan={10}
                     >
                       Segundo Semestre
                     </th>
@@ -516,14 +506,14 @@ export default function NotasPage() {
                     </th>
                   </tr>
                   <tr className="bg-gray-50">
-                    {[...Array(12)].map((_, i) => (
+                    {[...Array(10)].map((_, i) => (
                       <th key={i} className="border border-gray-300 px-2 py-2">
                         {i + 1}
                       </th>
                     ))}
-                    {[...Array(11)].map((_, i) => (
+                    {[...Array(10)].map((_, i) => (
                       <th
-                        key={i + 12}
+                        key={i + 10}
                         className="border border-gray-300 px-2 py-2"
                       >
                         {i + 13}
@@ -535,8 +525,8 @@ export default function NotasPage() {
                   {libreta.asignaturas
                     .sort((a, b) => a.indice - b.indice)
                     .map((asignatura) => {
-                      const notas1S = obtenerNotasSemestre(asignatura, 1, 12);
-                      const notas2S = obtenerNotasSemestre(asignatura, 13, 23);
+                      const notas1S = obtenerNotasSemestre(asignatura, 1, 10);
+                      const notas2S = obtenerNotasSemestre(asignatura, 13, 22);
                       const promedio1S = calcularPromedio(notas1S, configPromedios.promedioAnualAsignatura);
                       const promedio2S = calcularPromedio(notas2S, configPromedios.promedioAnualAsignatura);
                       const promedioFinal = calcularPromedio(
@@ -553,7 +543,7 @@ export default function NotasPage() {
                             {asignatura.nombre_asignatura}
                           </td>
                           {/* Primer Semestre */}
-                          {[...Array(12)].map((_, i) => (
+                          {[...Array(10)].map((_, i) => (
                             <td
                               key={i}
                               className="border border-gray-300 px-2 py-2"
@@ -562,9 +552,9 @@ export default function NotasPage() {
                             </td>
                           ))}
                           {/* Segundo Semestre */}
-                          {[...Array(11)].map((_, i) => (
+                          {[...Array(10)].map((_, i) => (
                             <td
-                              key={i + 12}
+                              key={i + 10}
                               className="border border-gray-300 px-2 py-2"
                             >
                               {convertirCalificacion(asignatura[`calificacion${i + 13}`] as number | null, Boolean(asignatura.concepto))}
@@ -597,7 +587,7 @@ export default function NotasPage() {
                     const promedios1S = libreta.asignaturas
                       .filter(asignatura => !asignatura.concepto)
                       .map(asignatura => {
-                        const notas = obtenerNotasSemestre(asignatura, 1, 12);
+                        const notas = obtenerNotasSemestre(asignatura, 1, 10);
 
                         // Usar promedioAnualAsignatura para redondear cada promedio de asignatura
                         return calcularPromedio(notas, configPromedios.promedioAnualAsignatura);
@@ -621,7 +611,7 @@ export default function NotasPage() {
                     const promedios2S = libreta.asignaturas
                       .filter(asignatura => !asignatura.concepto)
                       .map(asignatura => {
-                        const notas = obtenerNotasSemestre(asignatura, 13, 23);
+                        const notas = obtenerNotasSemestre(asignatura, 13, 22);
 
                         // Usar promedioAnualAsignatura para redondear cada promedio de asignatura
                         return calcularPromedio(notas, configPromedios.promedioAnualAsignatura);
