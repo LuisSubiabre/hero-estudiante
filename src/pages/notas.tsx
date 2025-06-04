@@ -1,5 +1,14 @@
 import { useEffect, useState } from "react";
 import { Spinner } from "@heroui/spinner";
+import {
+  Document,
+  Page,
+  Text,
+  View,
+  StyleSheet,
+  PDFDownloadLink,
+  Image,
+} from "@react-pdf/renderer";
 
 import { title } from "@/components/primitives";
 import DefaultLayout from "@/layouts/default";
@@ -89,6 +98,330 @@ const obtenerNotasSemestre = (asignatura: any, inicio: number, fin: number) => {
   );
 };
 
+// Estilos para el PDF
+const styles = StyleSheet.create({
+  page: {
+    flexDirection: "column",
+    backgroundColor: "#fff",
+    padding: 20,
+  },
+  header: {
+    alignItems: "center",
+    marginBottom: 15,
+    borderBottom: "1px solid #e0e0e0",
+    paddingBottom: 8,
+  },
+  title: {
+    fontSize: 16,
+    marginTop: 8,
+    marginBottom: 4,
+    textAlign: "center",
+    color: "#1a365d",
+    fontWeight: "bold",
+  },
+  subtitle: {
+    fontSize: 12,
+    marginBottom: 4,
+    textAlign: "center",
+    color: "#4a5568",
+  },
+  studentInfo: {
+    marginBottom: 12,
+    padding: 8,
+    backgroundColor: "#f8fafc",
+    borderRadius: 4,
+  },
+  infoText: {
+    fontSize: 9,
+    marginBottom: 2,
+  },
+  semesterHeader: {
+    flexDirection: "row",
+    marginBottom: 4,
+  },
+  semesterBox: {
+    flex: 1,
+    padding: 4,
+    alignItems: "center",
+  },
+  firstSemester: {
+    backgroundColor: "#ebf8ff",
+  },
+  secondSemester: {
+    backgroundColor: "#f0fff4",
+  },
+  semesterText: {
+    fontSize: 8,
+    fontWeight: "bold",
+    color: "#2d3748",
+  },
+  table: {
+    width: "auto",
+    borderStyle: "solid",
+    borderWidth: 1,
+    borderColor: "#e2e8f0",
+    marginTop: 8,
+  },
+  tableRow: {
+    flexDirection: "row",
+    minHeight: 20,
+  },
+  tableHeader: {
+    backgroundColor: "#2c5282",
+  },
+  tableCell: {
+    padding: 4,
+    fontSize: 7,
+    borderStyle: "solid",
+    borderWidth: 1,
+    borderColor: "#e2e8f0",
+    flex: 1,
+    textAlign: "center",
+  },
+  headerCell: {
+    backgroundColor: "#2c5282",
+    color: "#ffffff",
+    fontWeight: "bold",
+  },
+  subjectCell: {
+    flex: 2,
+    textAlign: "left",
+  },
+  averageCell: {
+    backgroundColor: "#f7fafc",
+    fontWeight: "bold",
+  },
+  finalAverages: {
+    marginTop: 15,
+    padding: 8,
+    backgroundColor: "#f8fafc",
+    borderRadius: 4,
+  },
+  averageText: {
+    fontSize: 9,
+    marginBottom: 2,
+  },
+  signatures: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginTop: 30,
+    paddingHorizontal: 30,
+  },
+  signatureBox: {
+    alignItems: "center",
+  },
+  signatureLine: {
+    fontSize: 9,
+    marginBottom: 4,
+  },
+  signatureName: {
+    fontSize: 8,
+    color: "#4a5568",
+  },
+  footer: {
+    position: "absolute",
+    bottom: 20,
+    left: 20,
+    right: 20,
+    textAlign: "center",
+    fontSize: 7,
+    color: "#718096",
+  },
+});
+
+// Componente para el PDF
+const NotasPDF = ({ libreta }: { libreta: Libreta }) => {
+  const headerRow = [
+    "Asignatura",
+    ...Array(12).fill("").map((_, i) => `${i + 1}`),
+    "1S",
+    ...Array(11).fill("").map((_, i) => `${i + 13}`),
+    "2S",
+    "PF",
+  ];
+
+  const getCellStyle = (index: number, totalCells: number) => {
+    const cellStyles: any[] = [styles.tableCell];
+
+    if (index === 0) {
+      cellStyles.push(styles.subjectCell);
+    }
+    if (index >= totalCells - 3) {
+      cellStyles.push(styles.averageCell);
+    }
+
+    return cellStyles;
+  };
+
+  return (
+    <Document>
+      <Page size="LETTER" style={styles.page}>
+        {/* Logo y Encabezado */}
+        <View style={styles.header}>
+          <Image
+            src="/images/logo_fondo_blanco.png"
+            style={{ width: 120, height: 32 }}
+          />
+          <Text style={styles.title}>Informe Parcial de Calificaciones</Text>
+          <Text style={styles.subtitle}>Liceo Experimental UMAG</Text>
+        </View>
+
+        {/* Información del Estudiante */}
+        <View style={styles.studentInfo}>
+          <Text style={styles.infoText}>Estudiante: {libreta.nombre_estudiante}</Text>
+          <Text style={styles.infoText}>Curso: {libreta.curso_nombre}</Text>
+        </View>
+
+        {/* Tabla de Notas */}
+        <View style={styles.table}>
+          {/* Encabezados de Semestre */}
+          <View style={styles.semesterHeader}>
+            <View style={[styles.semesterBox, styles.firstSemester]}>
+              <Text style={styles.semesterText}>1er Semestre</Text>
+            </View>
+            <View style={[styles.semesterBox, styles.secondSemester]}>
+              <Text style={styles.semesterText}>2do Semestre</Text>
+            </View>
+          </View>
+
+          {/* Header de la tabla */}
+          <View style={[styles.tableRow, styles.tableHeader]}>
+            {headerRow.map((header, index) => (
+              <Text 
+                key={index} 
+                style={[
+                  styles.tableCell, 
+                  styles.headerCell,
+                  index === 0 ? styles.subjectCell : {}
+                ]}
+              >
+                {header}
+              </Text>
+            ))}
+          </View>
+
+          {/* Body de la tabla */}
+          {libreta.asignaturas
+            .sort((a, b) => a.indice - b.indice)
+            .map((asignatura, rowIndex) => {
+              const notas1S = obtenerNotasSemestre(asignatura, 1, 12);
+              const notas2S = obtenerNotasSemestre(asignatura, 13, 23);
+              const promedio1S = calcularPromedio(notas1S, configPromedios.promedioAnualAsignatura);
+              const promedio2S = calcularPromedio(notas2S, configPromedios.promedioAnualAsignatura);
+              const promedioFinal = calcularPromedio(
+                [promedio1S, promedio2S].filter(nota => nota !== null) as number[],
+                configPromedios.promedioAnualAsignatura
+              );
+
+              const rowData = [
+                asignatura.nombre_asignatura,
+                ...notas1S.map(n => convertirCalificacion(n, Boolean(asignatura.concepto))),
+                convertirCalificacion(promedio1S, Boolean(asignatura.concepto)),
+                ...notas2S.map(n => convertirCalificacion(n, Boolean(asignatura.concepto))),
+                convertirCalificacion(promedio2S, Boolean(asignatura.concepto)),
+                convertirCalificacion(promedioFinal, Boolean(asignatura.concepto))
+              ];
+
+              return (
+                <View 
+                  key={asignatura.asignatura_id} 
+                  style={[
+                    styles.tableRow,
+                    { backgroundColor: rowIndex % 2 === 0 ? "#ffffff" : "#f8fafc" }
+                  ]}
+                >
+                  {rowData.map((cell, index) => (
+                    <Text 
+                      key={index} 
+                      style={getCellStyle(index, rowData.length)}
+                    >
+                      {cell}
+                    </Text>
+                  ))}
+                </View>
+              );
+            })}
+        </View>
+
+        {/* Promedios Finales */}
+        <View style={styles.finalAverages}>
+          <Text style={styles.averageText}>
+            Promedio General 1° Semestre: {calcularPromedioGeneral(libreta, 1)}
+          </Text>
+          <Text style={styles.averageText}>
+            Promedio General 2° Semestre: {calcularPromedioGeneral(libreta, 2)}
+          </Text>
+          <Text style={styles.averageText}>
+            Promedio General Final: {calcularPromedioGeneral(libreta, 3)}
+          </Text>
+        </View>
+
+        {/* Firmas */}
+        <View style={styles.signatures}>
+          <View style={styles.signatureBox}>
+            <Text style={styles.signatureLine}>_______________________</Text>
+            <Text style={styles.signatureName}>Profesor Jefe</Text>
+          </View>
+          <View style={styles.signatureBox}>
+            <Image
+              src="/images/pbravo-signature.png"
+              style={{ width: 120, height: 40 }}
+            />
+            <Text style={styles.signatureName}>Director</Text>
+          </View>
+        </View>
+
+        {/* Pie de página */}
+        <Text style={styles.footer}>
+          Documento generado el {new Date().toLocaleDateString()}
+        </Text>
+      </Page>
+    </Document>
+  );
+};
+
+// Función para calcular el promedio general
+const calcularPromedioGeneral = (libreta: Libreta, tipo: number): string => {
+  const asignaturas = libreta.asignaturas.filter(a => !a.concepto);
+  
+  if (asignaturas.length === 0) return "-";
+
+  const promedios = asignaturas.map(asignatura => {
+    if (tipo === 1) {
+      const notas = obtenerNotasSemestre(asignatura, 1, 12);
+      const promedio = calcularPromedio(notas, configPromedios.promedioAnualAsignatura);
+
+      return promedio !== null ? promedio : null;
+    } else if (tipo === 2) {
+      const notas = obtenerNotasSemestre(asignatura, 13, 23);
+      const promedio = calcularPromedio(notas, configPromedios.promedioAnualAsignatura);
+
+      return promedio !== null ? promedio : null;
+    } else {
+      const notas1S = obtenerNotasSemestre(asignatura, 1, 12);
+      const notas2S = obtenerNotasSemestre(asignatura, 13, 23);
+      const promedio1S = calcularPromedio(notas1S, configPromedios.promedioAnualAsignatura);
+      const promedio2S = calcularPromedio(notas2S, configPromedios.promedioAnualAsignatura);
+      const promediosSemestres = [promedio1S, promedio2S].filter((nota): nota is number => nota !== null);
+
+      return promediosSemestres.length > 0 ? 
+        calcularPromedio(promediosSemestres, configPromedios.promedioAnualAsignatura) : 
+        null;
+    }
+  });
+
+  const promediosNumericos = promedios
+    .filter((p): p is number => p !== null)
+    .map(p => typeof p === 'string' ? parseFloat(p) : p)
+    .filter((p): p is number => !isNaN(p));
+
+  if (promediosNumericos.length === 0) return "-";
+
+  const promedioFinal = promediosNumericos.reduce((a, b) => a + b, 0) / promediosNumericos.length;
+
+  return Math.floor(promedioFinal).toString();
+};
+
 export default function NotasPage() {
   const [libreta, setLibreta] = useState<Libreta | null>(null);
   const [loading, setLoading] = useState(true);
@@ -128,6 +461,17 @@ export default function NotasPage() {
             Notas de: {libreta ? libreta.nombre_estudiante : "Cargando..."}
           </h1>
           <h2 className="text-lg text-gray-700">{libreta?.curso_nombre}</h2>
+          {!loading && libreta && (
+            <PDFDownloadLink
+              className="mt-4 inline-block px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors"
+              document={<NotasPDF libreta={libreta} />}
+              fileName={`notas_${libreta.nombre_estudiante}.pdf`}
+            >
+              {({ blob, url, loading, error }) =>
+                loading ? "Generando PDF..." : "Descargar PDF"
+              }
+            </PDFDownloadLink>
+          )}
         </div>
 
         {loading && (
