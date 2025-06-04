@@ -56,6 +56,7 @@ export interface Asignatura {
 export interface Libreta {
   nombre_estudiante: string;
   curso_nombre: string;
+  profesor_jefe_nombre: string;
   asignaturas: Asignatura[];
 }
 

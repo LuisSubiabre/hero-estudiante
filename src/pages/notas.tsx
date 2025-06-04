@@ -235,7 +235,7 @@ const NotasPDF = ({ libreta }: { libreta: Libreta }) => {
     "Asignatura",
     ...Array(10).fill("").map((_, i) => `${i + 1}`),
     "1S",
-    ...Array(10).fill("").map((_, i) => `${i + 13}`),
+    ...Array(10).fill("").map((_, i) => `${i + 1}`),
     "2S",
     "PF",
   ];
@@ -349,7 +349,12 @@ const NotasPDF = ({ libreta }: { libreta: Libreta }) => {
         {/* Firmas */}
         <View style={styles.signatures}>
           <View style={styles.signatureBox}>
+          <Image
+              src="#"
+              style={{ width: 120, height: 40 }}
+            />
             <Text style={styles.signatureLine}>_______________________</Text>
+            <Text style={styles.signatureName}>{libreta.profesor_jefe_nombre}</Text>
             <Text style={styles.signatureName}>Profesor Jefe</Text>
           </View>
           <View style={styles.signatureBox}>
@@ -357,6 +362,8 @@ const NotasPDF = ({ libreta }: { libreta: Libreta }) => {
               src="/images/pbravo-signature.png"
               style={{ width: 120, height: 40 }}
             />
+            <Text style={styles.signatureLine}>_______________________</Text>
+            <Text style={styles.signatureName}>PATRICIO BRAVO JORQUERA</Text>
             <Text style={styles.signatureName}>Director</Text>
           </View>
         </View>
@@ -477,9 +484,7 @@ export default function NotasPage() {
               <table className="min-w-full border-collapse border border-gray-300">
                 <thead>
                   <tr className="bg-gray-100">
-                    <th className="border border-gray-300 px-4 py-2" rowSpan={2}>
-                      #
-                    </th>
+
                     <th className="border border-gray-300 px-4 py-2" rowSpan={2}>
                       Asignatura
                     </th>
@@ -516,7 +521,7 @@ export default function NotasPage() {
                         key={i + 10}
                         className="border border-gray-300 px-2 py-2"
                       >
-                        {i + 13}
+                        {i + 1}
                       </th>
                     ))}
                   </tr>
@@ -536,9 +541,6 @@ export default function NotasPage() {
 
                       return (
                         <tr key={asignatura.asignatura_id} className="text-center">
-                          <td className="border border-gray-300 px-4 py-2">
-                            {asignatura.indice}
-                          </td>
                           <td className="border border-gray-300 px-4 py-2">
                             {asignatura.nombre_asignatura}
                           </td>
