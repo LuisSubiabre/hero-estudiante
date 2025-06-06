@@ -163,9 +163,6 @@ const styles = StyleSheet.create({
   },
   table: {
     width: "auto",
-    borderStyle: "solid",
-    borderWidth: 1,
-    borderColor: "#e2e8f0",
     marginTop: 3,
   },
   tableRow: {
@@ -176,34 +173,32 @@ const styles = StyleSheet.create({
     backgroundColor: "#2c5282",
   },
   tableCell: {
-    padding: 2,
+    padding: 1,
     fontSize: 8,
-    borderStyle: "solid",
-    borderWidth: 1,
-    borderColor: "#e2e8f0",
     flex: 1,
     textAlign: "center",
-    minWidth: 20,
+    minWidth: 15,
   },
   headerCell: {
     backgroundColor: "#2c5282",
     color: "#ffffff",
     fontWeight: "bold",
-    minWidth: 20,
+    minWidth: 15,
   },
   subjectCell: {
     flex: 6,
     textAlign: "left",
-    minWidth: 120,
+    minWidth: 100,
   },
   gradeCell: {
-    flex: 0.8,
+    flex: 0.7,
     textAlign: "center",
-    minWidth: 20,
+    minWidth: 15,
   },
   averageCell: {
     backgroundColor: "#f7fafc",
     fontWeight: "bold",
+    minWidth: 15,
   },
   finalAverages: {
     marginTop: 5,
@@ -331,7 +326,7 @@ const BarChart = ({ data }: { data: { label: string; value: number }[] }) => {
 };
 
 // Componente para el PDF
-const NotasPDF = ({ libreta }: { libreta: Libreta }) => {
+const NotasPDF = ({ libreta, promediosCurso }: { libreta: Libreta, promediosCurso: any[] }) => {
   const headerRow = [
     "Asignatura",
     ...Array(10).fill("").map((_, i) => `${i + 1}`),
@@ -339,7 +334,49 @@ const NotasPDF = ({ libreta }: { libreta: Libreta }) => {
     ...Array(10).fill("").map((_, i) => `${i + 1}`),
     "2S",
     "PF",
+    "PC"
   ];
+
+  // Función para obtener el promedio del curso para una asignatura
+  const getPromedioCurso = (asignatura_id: number) => {
+    const promedio = promediosCurso.find(p => p.asignatura_id === asignatura_id);
+
+    if (promedio) {
+      const valor = parseFloat(promedio.promedio_general);
+      
+      // Encontrar si la asignatura es conceptual
+      const asignatura = libreta.asignaturas.find(a => a.asignatura_id === asignatura_id);
+      const esConcepto = Boolean(asignatura?.concepto);
+
+      if (esConcepto) {
+        // Aproximar: 59.5 -> 60, 59.4 -> 59
+        const redondeado = Math.round(valor * 10) / 10 >= Math.floor(valor) + 0.5
+          ? Math.ceil(valor)
+          : Math.floor(valor);
+
+        // Convertir a concepto
+        switch (redondeado) {
+          case 70:
+            return "MB";
+          case 50:
+            return "B";
+          case 40:
+            return "S";
+          case 30:
+            return "I";
+          default:
+            return redondeado.toString();
+        }
+      }
+
+      // Si no es conceptual, solo redondear
+      return Math.round(valor * 10) / 10 >= Math.floor(valor) + 0.5
+        ? Math.ceil(valor)
+        : Math.floor(valor);
+    }
+
+    return "-";
+  };
 
   const getCellStyle = (index: number, totalCells: number) => {
     const cellStyles: any[] = [styles.tableCell];
@@ -395,16 +432,6 @@ const NotasPDF = ({ libreta }: { libreta: Libreta }) => {
 
         {/* Tabla de Notas */}
         <View style={styles.table}>
-          {/* Encabezados de Semestre */}
-          {/* <View style={styles.semesterHeader}>
-            <View style={[styles.semesterBox, styles.firstSemester]}>
-              <Text style={styles.semesterText}>1er Semestre</Text>
-            </View>
-            <View style={[styles.semesterBox, styles.secondSemester]}>
-              <Text style={styles.semesterText}>2do Semestre</Text>
-            </View>
-          </View> */}
-
           {/* Header de la tabla */}
           <View style={[styles.tableRow, styles.tableHeader]}>
             {headerRow.map((header, index) => (
@@ -440,7 +467,8 @@ const NotasPDF = ({ libreta }: { libreta: Libreta }) => {
                 convertirCalificacion(promedio1S, Boolean(asignatura.concepto)),
                 ...notas2S.map(n => convertirCalificacion(n, Boolean(asignatura.concepto))),
                 convertirCalificacion(promedio2S, Boolean(asignatura.concepto)),
-                convertirCalificacion(promedioFinal, Boolean(asignatura.concepto))
+                convertirCalificacion(promedioFinal, Boolean(asignatura.concepto)),
+                getPromedioCurso(asignatura.asignatura_id)
               ];
 
               return (
@@ -448,7 +476,12 @@ const NotasPDF = ({ libreta }: { libreta: Libreta }) => {
                   {rowData.map((cell, index) => (
                     <Text 
                       key={index} 
-                      style={getCellStyle(index, rowData.length)}
+                      style={[
+                        styles.tableCell,
+                        index === 0 ? styles.subjectCell : styles.gradeCell,
+                        index >= rowData.length - 3 ? styles.averageCell : {},
+                        index === rowData.length - 1 ? styles.gradeCell : {}
+                      ]}
                     >
                       {cell}
                     </Text>
@@ -593,17 +626,34 @@ export default function NotasPage() {
       });
   }, []);
 
-  // Función para obtener el promedio del curso para una asignatura
+  // Función para obtener el promedio del curso para una asignatura (usada en la tabla HTML)
   const getPromedioCurso = (asignatura_id: number) => {
     const promedio = promediosCurso.find(p => p.asignatura_id === asignatura_id);
 
     if (promedio) {
       const valor = parseFloat(promedio.promedio_general);
+      
+      // Encontrar si la asignatura es conceptual
+      const asignatura = libreta?.asignaturas.find(a => a.asignatura_id === asignatura_id);
+      const esConcepto = Boolean(asignatura?.concepto);
 
       // Aproximar: 59.5 -> 60, 59.4 -> 59
-      return Math.round(valor * 10) / 10 >= Math.floor(valor) + 0.5 
-        ? Math.ceil(valor) 
+      const redondeado = Math.round(valor * 10) / 10 >= Math.floor(valor) + 0.5
+        ? Math.ceil(valor)
         : Math.floor(valor);
+
+      if (esConcepto) {
+        // Convertir a concepto
+        if (redondeado >= 70) return "MB";
+        if (redondeado >= 50) return "B";
+        if (redondeado >= 40) return "S";
+        if (redondeado >= 30) return "I";
+
+        return redondeado.toString();
+      }
+
+      // Si no es conceptual, mantener como número
+      return redondeado.toString();
     }
 
     return "-";
@@ -620,7 +670,7 @@ export default function NotasPage() {
           {!loading && libreta && (
             <PDFDownloadLink
               className="mt-4 inline-block px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors"
-              document={<NotasPDF libreta={libreta} />}
+              document={<NotasPDF libreta={libreta} promediosCurso={promediosCurso} />}
               fileName={`notas_${libreta.nombre_estudiante}.pdf`}
             >
               {({ blob, url, loading, error }) =>
