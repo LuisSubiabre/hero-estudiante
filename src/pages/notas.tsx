@@ -621,8 +621,8 @@ export default function NotasPage() {
     const estudiante_id = jwt?.estudiante_id;
     const curso_id = jwt?.curso_id;
 
-    console.log("JWT completo:", jwt);
-    console.log("curso_id:", curso_id);
+    //console.log("JWT completo:", jwt);
+    //console.log("curso_id:", curso_id);
     
     if (!estudiante_id) {
       setError("No se encontró el ID del estudiante");
@@ -635,7 +635,7 @@ export default function NotasPage() {
     if (curso_id) {
       promediosCursos(curso_id)
         .then((promediosData) => {
-          console.log("Promedios del curso:", promediosData);
+        //  console.log("Promedios del curso:", promediosData);
           setPromediosCurso(promediosData);
         })
         .catch((error) => {
