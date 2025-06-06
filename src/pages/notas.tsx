@@ -179,19 +179,23 @@ const styles = StyleSheet.create({
     borderColor: "#e2e8f0",
     flex: 1,
     textAlign: "center",
+    minWidth: 20,
   },
   headerCell: {
     backgroundColor: "#2c5282",
     color: "#ffffff",
     fontWeight: "bold",
+    minWidth: 20,
   },
   subjectCell: {
     flex: 6,
     textAlign: "left",
+    minWidth: 120,
   },
   gradeCell: {
     flex: 0.8,
     textAlign: "center",
+    minWidth: 20,
   },
   averageCell: {
     backgroundColor: "#f7fafc",
