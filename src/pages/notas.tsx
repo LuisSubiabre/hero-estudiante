@@ -6,7 +6,6 @@ import {
   Text,
   View,
   StyleSheet,
-  PDFDownloadLink,
   Image,
 } from "@react-pdf/renderer";
 
@@ -668,7 +667,7 @@ export default function NotasPage() {
             Notas de: {libreta ? libreta.nombre_estudiante : "Cargando..."}
           </h1>
           <h2 className="text-lg text-gray-700">{libreta?.curso_nombre}</h2>
-          {!loading && libreta && (
+          {/* {!loading && libreta && (
             <PDFDownloadLink
               className="mt-4 inline-block px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors"
               document={<NotasPDF libreta={libreta} promediosCurso={promediosCurso} />}
@@ -678,7 +677,7 @@ export default function NotasPage() {
                 loading ? "Generando PDF..." : "Descargar PDF"
               }
             </PDFDownloadLink>
-          )}
+          )} */}
         </div>
 
         {loading && (
