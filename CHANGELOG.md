@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [3.0.2](https://github.com/LuisSubiabre/hero-estudiante/compare/v3.0.1...v3.0.2) (2025-06-06)
+
+
+### Bug Fixes
+
+* comentar logs en el componente NotasPage para limpiar la consola y mejorar la legibilidad del código ([2e8a5b3](https://github.com/LuisSubiabre/hero-estudiante/commit/2e8a5b3f04375af45cba1d97db0687a8b41c7d8d))
+
 ### [3.0.1](https://github.com/LuisSubiabre/hero-estudiante/compare/v3.0.0...v3.0.1) (2025-06-06)
 
 
