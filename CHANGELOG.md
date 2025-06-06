@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [3.0.1](https://github.com/LuisSubiabre/hero-estudiante/compare/v3.0.0...v3.0.1) (2025-06-06)
+
+
+### Bug Fixes
+
+* comentar el uso del hook useAuth y el estilo de celdas en el componente NotasPage para mejorar la legibilidad del código ([27c947f](https://github.com/LuisSubiabre/hero-estudiante/commit/27c947f166c9f62da1390f9bcf6736ec3ef39c88))
+
 ## [3.0.0](https://github.com/LuisSubiabre/hero-estudiante/compare/v2.0.1...v3.0.0) (2025-06-06)
 
 
