@@ -2,6 +2,28 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.0.0](https://github.com/LuisSubiabre/hero-estudiante/compare/v2.0.1...v3.0.0) (2025-06-06)
+
+
+### Features
+
+* agregar funcionalidad para generar y descargar un PDF con el informe de calificaciones del estudiante ([8a53b6a](https://github.com/LuisSubiabre/hero-estudiante/commit/8a53b6abe0e05c892f4c943f56d13ee4b77c7fc5))
+* agregar funcionalidad para obtener promedios de cursos y mostrarlos en la tabla de notas ([ac0c84c](https://github.com/LuisSubiabre/hero-estudiante/commit/ac0c84cbca76fe420ac442e443921d680df2b22e))
+* agregar nombre del profesor jefe en la libreta y ajustar el PDF para mostrar la firma y nombre del director ([3cc4a26](https://github.com/LuisSubiabre/hero-estudiante/commit/3cc4a26584f5747a845dbe9a5cd6f1a62dcea085))
+* agregar propiedades minWidth a las celdas en la tabla de notas para mejorar la consistencia del diseño ([c28e589](https://github.com/LuisSubiabre/hero-estudiante/commit/c28e58920197681ba800e710cdb154b40de1692e))
+* ajustar estilos de celdas y mejorar la visualización del gráfico en la sección de notas ([c517f7b](https://github.com/LuisSubiabre/hero-estudiante/commit/c517f7b8b3b2a581613665b670005b97dbe9654e))
+* ajustar estilos en el PDF y agregar gráfico de promedios finales por asignatura ([fcb7d91](https://github.com/LuisSubiabre/hero-estudiante/commit/fcb7d914084a54052af6241466084f095a056082))
+* modificar estilos de celdas en la tabla de notas y agregar cálculo de promedios de curso en el PDF ([8bed1da](https://github.com/LuisSubiabre/hero-estudiante/commit/8bed1daa7f0450e4443feb5c4481e6a160af56a5))
+* refactorizar la lógica de cálculo de promedios en el componente NotasPDF y mejorar la gestión de promedios de curso en la tabla de notas ([96a2e23](https://github.com/LuisSubiabre/hero-estudiante/commit/96a2e23f7f099d73b2f643c8c60eb97fae0154e1))
+
+
+### Bug Fixes
+
+* ajustar el número de celdas en la tabla de notas y corregir el cálculo de promedios para reflejar los cambios en los semestres ([3dea99c](https://github.com/LuisSubiabre/hero-estudiante/commit/3dea99cb20914cb8fa83702090ef2b9c24b2a0e3))
+* comentar el enlace de descarga del PDF en el componente NotasPage para mejorar la legibilidad del código ([18daad7](https://github.com/LuisSubiabre/hero-estudiante/commit/18daad7d388afe4f2547b318c08c8601561ebd41))
+* comentar encabezados de semestre en la tabla de notas para mejorar la legibilidad del código ([2946db9](https://github.com/LuisSubiabre/hero-estudiante/commit/2946db9f7e4620d6a8327949ca8e5f544c0d15c3))
+* corregir el cálculo del porcentaje de asistencia para mostrar solo la parte entera ([3daa9cc](https://github.com/LuisSubiabre/hero-estudiante/commit/3daa9cc5ed6da34ab1b5a6109ea804563ef12867))
+
 ### [2.0.1](https://github.com/LuisSubiabre/hero-estudiante/compare/v2.0.0...v2.0.1) (2025-06-03)
 
 
