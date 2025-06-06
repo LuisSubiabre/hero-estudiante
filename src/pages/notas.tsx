@@ -15,6 +15,14 @@ import DefaultLayout from "@/layouts/default";
 import { searchLibreta, promediosCursos } from "@/services/libretaService";
 import { Libreta } from "@/types";
 import configPromedios from "@/config/configPromedios";
+import { useAuth } from "@/context/AuthContext";
+
+// Interfaz para los promedios del curso
+interface PromedioCurso {
+  asignatura_id: number;
+  promedio: string;
+  promedio_general: string;
+}
 
 // Función para obtener el estudiante_id del token
 const jwtData = () => {
@@ -326,7 +334,7 @@ const BarChart = ({ data }: { data: { label: string; value: number }[] }) => {
 };
 
 // Componente para el PDF
-const NotasPDF = ({ libreta, promediosCurso }: { libreta: Libreta, promediosCurso: any[] }) => {
+const NotasPDF = ({ libreta, promediosCurso }: { libreta: Libreta, promediosCurso: PromedioCurso[] }) => {
   const headerRow = [
     "Asignatura",
     ...Array(10).fill("").map((_, i) => `${i + 1}`),
@@ -337,7 +345,7 @@ const NotasPDF = ({ libreta, promediosCurso }: { libreta: Libreta, promediosCurs
     "PC"
   ];
 
-  // Función para obtener el promedio del curso para una asignatura
+  // Función para obtener el promedio del curso para una asignatura (usada en el PDF)
   const getPromedioCurso = (asignatura_id: number) => {
     const promedio = promediosCurso.find(p => p.asignatura_id === asignatura_id);
 
@@ -348,31 +356,23 @@ const NotasPDF = ({ libreta, promediosCurso }: { libreta: Libreta, promediosCurs
       const asignatura = libreta.asignaturas.find(a => a.asignatura_id === asignatura_id);
       const esConcepto = Boolean(asignatura?.concepto);
 
-      if (esConcepto) {
-        // Aproximar: 59.5 -> 60, 59.4 -> 59
-        const redondeado = Math.round(valor * 10) / 10 >= Math.floor(valor) + 0.5
-          ? Math.ceil(valor)
-          : Math.floor(valor);
-
-        // Convertir a concepto
-        switch (redondeado) {
-          case 70:
-            return "MB";
-          case 50:
-            return "B";
-          case 40:
-            return "S";
-          case 30:
-            return "I";
-          default:
-            return redondeado.toString();
-        }
-      }
-
-      // Si no es conceptual, solo redondear
-      return Math.round(valor * 10) / 10 >= Math.floor(valor) + 0.5
+      // Aproximar: 59.5 -> 60, 59.4 -> 59
+      const redondeado = Math.round(valor * 10) / 10 >= Math.floor(valor) + 0.5
         ? Math.ceil(valor)
         : Math.floor(valor);
+
+      if (esConcepto) {
+        // Convertir a concepto
+        if (redondeado >= 70) return "MB";
+        if (redondeado >= 50) return "B";
+        if (redondeado >= 40) return "S";
+        if (redondeado >= 30) return "I";
+
+        return redondeado.toString();
+      }
+
+      // Si no es conceptual, mantener como número
+      return redondeado.toString();
     }
 
     return "-";
@@ -578,10 +578,44 @@ const calcularPromedioGeneral = (libreta: Libreta, tipo: number): string => {
 };
 
 export default function NotasPage() {
+  const { user } = useAuth();
   const [libreta, setLibreta] = useState<Libreta | null>(null);
+  const [promediosCurso, setPromediosCurso] = useState<PromedioCurso[]>([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
-  const [promediosCurso, setPromediosCurso] = useState<any[]>([]);
+  const [error, setError] = useState<string | null>(null);
+
+  // Función para obtener el promedio del curso para una asignatura (usada en la tabla HTML)
+  const getPromedioCurso = (asignatura_id: number) => {
+    const promedio = promediosCurso.find(p => p.asignatura_id === asignatura_id);
+
+    if (promedio) {
+      const valor = parseFloat(promedio.promedio_general);
+      
+      // Encontrar si la asignatura es conceptual
+      const asignatura = libreta?.asignaturas.find(a => a.asignatura_id === asignatura_id);
+      const esConcepto = Boolean(asignatura?.concepto);
+
+      // Aproximar: 59.5 -> 60, 59.4 -> 59
+      const redondeado = Math.round(valor * 10) / 10 >= Math.floor(valor) + 0.5
+        ? Math.ceil(valor)
+        : Math.floor(valor);
+
+      if (esConcepto) {
+        // Convertir a concepto
+        if (redondeado >= 70) return "MB";
+        if (redondeado >= 50) return "B";
+        if (redondeado >= 40) return "S";
+        if (redondeado >= 30) return "I";
+
+        return redondeado.toString();
+      }
+
+      // Si no es conceptual, mantener como número
+      return redondeado.toString();
+    }
+
+    return "-";
+  };
 
   useEffect(() => {
     const jwt = jwtData();
@@ -625,39 +659,6 @@ export default function NotasPage() {
         setLoading(false);
       });
   }, []);
-
-  // Función para obtener el promedio del curso para una asignatura (usada en la tabla HTML)
-  const getPromedioCurso = (asignatura_id: number) => {
-    const promedio = promediosCurso.find(p => p.asignatura_id === asignatura_id);
-
-    if (promedio) {
-      const valor = parseFloat(promedio.promedio_general);
-      
-      // Encontrar si la asignatura es conceptual
-      const asignatura = libreta?.asignaturas.find(a => a.asignatura_id === asignatura_id);
-      const esConcepto = Boolean(asignatura?.concepto);
-
-      // Aproximar: 59.5 -> 60, 59.4 -> 59
-      const redondeado = Math.round(valor * 10) / 10 >= Math.floor(valor) + 0.5
-        ? Math.ceil(valor)
-        : Math.floor(valor);
-
-      if (esConcepto) {
-        // Convertir a concepto
-        if (redondeado >= 70) return "MB";
-        if (redondeado >= 50) return "B";
-        if (redondeado >= 40) return "S";
-        if (redondeado >= 30) return "I";
-
-        return redondeado.toString();
-      }
-
-      // Si no es conceptual, mantener como número
-      return redondeado.toString();
-    }
-
-    return "-";
-  };
 
   return (
     <DefaultLayout>
