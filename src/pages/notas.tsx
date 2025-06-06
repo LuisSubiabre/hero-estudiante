@@ -6,6 +6,7 @@ import {
   Text,
   View,
   StyleSheet,
+  PDFDownloadLink,
   Image,
 } from "@react-pdf/renderer";
 
@@ -14,7 +15,6 @@ import DefaultLayout from "@/layouts/default";
 import { searchLibreta, promediosCursos } from "@/services/libretaService";
 import { Libreta } from "@/types";
 import configPromedios from "@/config/configPromedios";
-import { useAuth } from "@/context/AuthContext";
 
 // Interfaz para los promedios del curso
 interface PromedioCurso {
@@ -377,19 +377,19 @@ const NotasPDF = ({ libreta, promediosCurso }: { libreta: Libreta, promediosCurs
     return "-";
   };
 
-  const getCellStyle = (index: number, totalCells: number) => {
-    const cellStyles: any[] = [styles.tableCell];
+  // const getCellStyle = (index: number, totalCells: number) => {
+  //   const cellStyles: any[] = [styles.tableCell];
 
-    if (index === 0) {
-      cellStyles.push(styles.subjectCell);
-    } else if (index >= totalCells - 3) {
-      cellStyles.push(styles.averageCell);
-    } else {
-      cellStyles.push(styles.gradeCell);
-    }
+  //   if (index === 0) {
+  //     cellStyles.push(styles.subjectCell);
+  //   } else if (index >= totalCells - 3) {
+  //     cellStyles.push(styles.averageCell);
+  //   } else {
+  //     cellStyles.push(styles.gradeCell);
+  //   }
 
-    return cellStyles;
-  };
+  //   return cellStyles;
+  // };
 
   // Preparar datos para el gráfico
   const chartData = libreta.asignaturas
@@ -577,7 +577,7 @@ const calcularPromedioGeneral = (libreta: Libreta, tipo: number): string => {
 };
 
 export default function NotasPage() {
-  const { user } = useAuth();
+  //const { user } = useAuth();
   const [libreta, setLibreta] = useState<Libreta | null>(null);
   const [promediosCurso, setPromediosCurso] = useState<PromedioCurso[]>([]);
   const [loading, setLoading] = useState(true);
@@ -667,17 +667,17 @@ export default function NotasPage() {
             Notas de: {libreta ? libreta.nombre_estudiante : "Cargando..."}
           </h1>
           <h2 className="text-lg text-gray-700">{libreta?.curso_nombre}</h2>
-          {/* {!loading && libreta && (
+          {!loading && libreta && (
             <PDFDownloadLink
               className="mt-4 inline-block px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors"
               document={<NotasPDF libreta={libreta} promediosCurso={promediosCurso} />}
               fileName={`notas_${libreta.nombre_estudiante}.pdf`}
             >
-              {({ blob, url, loading, error }) =>
+              {({ loading,  }) =>
                 loading ? "Generando PDF..." : "Descargar PDF"
               }
             </PDFDownloadLink>
-          )} */}
+          )}
         </div>
 
         {loading && (
