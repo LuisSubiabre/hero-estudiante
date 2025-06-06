@@ -388,14 +388,14 @@ const NotasPDF = ({ libreta }: { libreta: Libreta }) => {
         {/* Tabla de Notas */}
         <View style={styles.table}>
           {/* Encabezados de Semestre */}
-          <View style={styles.semesterHeader}>
+          {/* <View style={styles.semesterHeader}>
             <View style={[styles.semesterBox, styles.firstSemester]}>
               <Text style={styles.semesterText}>1er Semestre</Text>
             </View>
             <View style={[styles.semesterBox, styles.secondSemester]}>
               <Text style={styles.semesterText}>2do Semestre</Text>
             </View>
-          </View>
+          </View> */}
 
           {/* Header de la tabla */}
           <View style={[styles.tableRow, styles.tableHeader]}>
