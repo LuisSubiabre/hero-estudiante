@@ -12,7 +12,7 @@ import {
 
 import { title } from "@/components/primitives";
 import DefaultLayout from "@/layouts/default";
-import { searchLibreta } from "@/services/libretaService";
+import { searchLibreta, promediosCursos } from "@/services/libretaService";
 import { Libreta } from "@/types";
 import configPromedios from "@/config/configPromedios";
 
@@ -31,9 +31,13 @@ const jwtData = () => {
           .join("")
       );
 
-      return JSON.parse(decoded).estudiante_id;
+      const payload = JSON.parse(decoded);
+
+     // console.log("Payload completo:", payload);
+
+      return payload;
     } catch (error) {
-      console.error("Error al decodificar el token:", error);
+    //  console.error("Error al decodificar el token:", error);
 
       return null;
     }
@@ -544,15 +548,33 @@ export default function NotasPage() {
   const [libreta, setLibreta] = useState<Libreta | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [promediosCurso, setPromediosCurso] = useState<any[]>([]);
 
   useEffect(() => {
-    const estudiante_id = jwtData();
+    const jwt = jwtData();
+    const estudiante_id = jwt?.estudiante_id;
+    const curso_id = jwt?.curso_id;
+
+    console.log("JWT completo:", jwt);
+    console.log("curso_id:", curso_id);
     
     if (!estudiante_id) {
       setError("No se encontró el ID del estudiante");
       setLoading(false);
 
       return;
+    }
+
+    // Obtener promedios del curso
+    if (curso_id) {
+      promediosCursos(curso_id)
+        .then((promediosData) => {
+          console.log("Promedios del curso:", promediosData);
+          setPromediosCurso(promediosData);
+        })
+        .catch((error) => {
+          console.error("Error al obtener promedios del curso:", error);
+        });
     }
 
     searchLibreta(estudiante_id)
@@ -570,6 +592,22 @@ export default function NotasPage() {
         setLoading(false);
       });
   }, []);
+
+  // Función para obtener el promedio del curso para una asignatura
+  const getPromedioCurso = (asignatura_id: number) => {
+    const promedio = promediosCurso.find(p => p.asignatura_id === asignatura_id);
+
+    if (promedio) {
+      const valor = parseFloat(promedio.promedio_general);
+
+      // Aproximar: 59.5 -> 60, 59.4 -> 59
+      return Math.round(valor * 10) / 10 >= Math.floor(valor) + 0.5 
+        ? Math.ceil(valor) 
+        : Math.floor(valor);
+    }
+
+    return "-";
+  };
 
   return (
     <DefaultLayout>
@@ -605,7 +643,6 @@ export default function NotasPage() {
               <table className="min-w-full border-collapse border border-gray-300">
                 <thead>
                   <tr className="bg-gray-100">
-
                     <th className="border border-gray-300 px-4 py-2" rowSpan={2}>
                       Asignatura
                     </th>
@@ -629,6 +666,9 @@ export default function NotasPage() {
                     </th>
                     <th className="border border-gray-300 px-4 py-2 bg-gray-200" rowSpan={2}>
                       PF
+                    </th>
+                    <th className="border border-gray-300 px-4 py-2 bg-gray-200" rowSpan={2}>
+                      PC
                     </th>
                   </tr>
                   <tr className="bg-gray-50">
@@ -692,6 +732,9 @@ export default function NotasPage() {
                           </td>
                           <td className="border border-gray-300 px-2 py-2 font-semibold">
                             {promedioFinal !== null ? convertirCalificacion(promedioFinal, Boolean(asignatura.concepto)) : "-"}
+                          </td>
+                          <td className="border border-gray-300 px-2 py-2 font-semibold">
+                            {getPromedioCurso(asignatura.asignatura_id)}
                           </td>
                         </tr>
                       );

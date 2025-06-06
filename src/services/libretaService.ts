@@ -5,3 +5,9 @@ export const searchLibreta = async (id: number) => {
 
   return response.data;
 };
+
+export const promediosCursos = async (curso_id: number) => {
+  const response = await api.get(`/libreta/promedios/${curso_id}`);
+
+  return response.data;
+};
