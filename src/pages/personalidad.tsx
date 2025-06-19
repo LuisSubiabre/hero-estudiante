@@ -467,8 +467,9 @@ export default function PersonalidadPage() {
           </div>
 
           {/* Observaciones */}
+          <div className="space-y-6 mt-6">
           {informe.observaciones && (
-            <Card className="w-full mb-6 p-6 bg-yellow-50 dark:bg-gray-800 border border-yellow-200 dark:border-gray-600">
+            <Card className="w-full mb-6 p-6 bg-yellow-50 dark:bg-gray-800 border border-yellow-200 dark:border-gray-600 p-4">
               <div className="flex items-center gap-3 mb-4">
                 <FileText className="w-6 h-6 text-yellow-600 dark:text-yellow-400" />
                 <h3 className="text-lg font-semibold text-gray-800 dark:text-white">Observaciones</h3>
@@ -477,7 +478,7 @@ export default function PersonalidadPage() {
                 <p className="text-gray-700 dark:text-white leading-relaxed">{informe.observaciones}</p>
               </div>
             </Card>
-          )}
+          )}</div>
 
           {/* Fechas
           <Card className="w-full p-6 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-600">
