@@ -12,6 +12,7 @@ import {
 } from "@heroui/navbar";
 import { link as linkStyles } from "@heroui/theme";
 import clsx from "clsx";
+import { UserIcon } from "lucide-react";
 
 import { siteConfig } from "@/config/site";
 import { ThemeSwitch } from "@/components/theme-switch";
@@ -56,6 +57,8 @@ export const Navbar = () => {
         return <DocumentTextIcon className="w-5 h-5" />;
       case "acles":
         return <FlagIcon className="w-5 h-5" />;
+      case "personalidad":
+        return <UserIcon className="w-5 h-5" />;
       case "salir":
         return <LogoutIcon className="w-5 h-5" />;
       default:

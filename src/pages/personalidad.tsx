@@ -197,7 +197,7 @@ export default function PersonalidadPage() {
           return;
         }
 
-        console.log('Solicitando informe de personalidad para estudiante ID:', estudianteId);
+        //console.log('Solicitando informe de personalidad para estudiante ID:', estudianteId);
         const response: PersonalidadResponse = await getPersonalidad(estudianteId);
 
         setData(response.data);
