@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Card, Chip, Spinner } from "@heroui/react";
+import { Card, Chip, Spinner, Button } from "@heroui/react";
 import { 
   User, 
   BookOpen, 
@@ -9,12 +9,15 @@ import {
   CheckCircle,
   Clock,
   FileText,
-  Heart
+  Heart,
+  Download
 } from "lucide-react";
+import { PDFDownloadLink } from "@react-pdf/renderer";
 
 import { title } from "@/components/primitives";
 import DefaultLayout from "@/layouts/default";
 import { getPersonalidad } from "@/services/personalidad";
+import PersonalidadPDF from "@/components/personalidadPDF";
 
 interface FormacionEtica {
   [key: string]: string;
@@ -372,6 +375,27 @@ export default function PersonalidadPage() {
           <div className="mb-8">
             <h2 className={title()}>Informe de Personalidad</h2>
             <p className="text-gray-600 dark:text-gray-300 mt-2">Evaluación integral del desarrollo personal y académico</p>
+            
+            {/* Botón de descarga PDF */}
+            {!loading && data && (
+              <div className="mt-4">
+                <PDFDownloadLink
+                  document={<PersonalidadPDF data={data} />}
+                  fileName={`informe_personalidad_${data.nombre_estudiante.replace(/\s+/g, '_')}.pdf`}
+                >
+                  {({ loading, error }) => (
+                    <Button
+                      className="mt-2"
+                      color="primary"
+                      disabled={loading}
+                      startContent={loading ? <Spinner size="sm" /> : <Download className="w-4 h-4" />}
+                    >
+                      {loading ? "Generando PDF..." : "Descargar PDF"}
+                    </Button>
+                  )}
+                </PDFDownloadLink>
+              </div>
+            )}
           </div>
           
           {/* Información del estudiante */}
