@@ -371,8 +371,8 @@ export default function PersonalidadPage() {
   return (
     <DefaultLayout>
       <section className="flex flex-col items-center justify-center gap-6 py-8 md:py-10 px-4">
-        <div className="inline-block max-w-4xl text-center justify-center w-full">
-          <div className="mb-8">
+        <div className="inline-block max-w-4xl text-left justify-center w-full">
+          <div className="mb-8 text-center">
             <h2 className={title()}>Informe de Personalidad</h2>
             <p className="text-gray-600 dark:text-gray-300 mt-2">Evaluación integral del desarrollo personal y académico</p>
             
