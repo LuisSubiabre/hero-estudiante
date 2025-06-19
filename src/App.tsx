@@ -4,6 +4,7 @@ import LoginForm from "./pages/login";
 import Logout from "./pages/logout";
 
 import ProtectedRoute from "@/components/ProtectedRoute"; // Importa el componente de ruta protegida
+import CourseRestrictedRoute from "@/components/CourseRestrictedRoute"; // Importa el componente de restricción por curso
 import IndexPage from "@/pages/index";
 import InformesPage from "@/pages/informes";
 import NoDisponiblePage from "@/pages/nodisponible";
@@ -23,13 +24,29 @@ function App() {
       {/* Todas las demás rutas requieren autenticación */}
       <Route element={<ProtectedRoute />}>
         <Route element={<IndexPage />} path="/" />
-        <Route element={<NotasPage />} path="/notas" />
         <Route element={<NoDisponiblePage />} path="/regular" />
         <Route element={<InformesPage />} path="/certificados" />
         <Route element={<AclesPage />} path="/acles" />
         <Route element={<Asistencia />} path="/asistencia" />
         <Route element={<AtrasosPage />} path="/atrasos" />
-        <Route element={<Personalidad />} path="/personalidad" />
+        
+        {/* Rutas restringidas por curso */}
+        <Route 
+          element={
+            <CourseRestrictedRoute>
+              <NotasPage />
+            </CourseRestrictedRoute>
+          } 
+          path="/notas" 
+        />
+        <Route 
+          element={
+            <CourseRestrictedRoute>
+              <Personalidad />
+            </CourseRestrictedRoute>
+          } 
+          path="/personalidad" 
+        />
       </Route>
     </Routes>
   );

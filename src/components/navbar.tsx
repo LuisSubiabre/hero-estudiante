@@ -18,9 +18,34 @@ import { siteConfig } from "@/config/site";
 import { ThemeSwitch } from "@/components/theme-switch";
 import { HeartFilledIcon, SearchIcon, LogoutIcon, HomeIcon, BookOpenIcon, UserGroupIcon, ClockIcon, DocumentTextIcon, FlagIcon } from "@/components/icons";
 import { useAuth } from "@/context/AuthContext";
+import { useJWT } from "@/hooks/useJWT";
 
 export const Navbar = () => {
   const { isAuthenticated, user } = useAuth();
+  const { curso_id } = useJWT();
+
+  // Función para filtrar elementos de navegación según el curso_id
+  const getFilteredNavItems = () => {
+    if (!curso_id || curso_id < 1 || curso_id > 5) {
+      return siteConfig.navItems;
+    }
+    
+    // Si el curso_id está entre 1 y 5, excluir "Notas" y "Personalidad"
+    return siteConfig.navItems.filter(item => 
+      item.label !== "Notas" && item.label !== "Personalidad"
+    );
+  };
+
+  const getFilteredNavMenuItems = () => {
+    if (!curso_id || curso_id < 1 || curso_id > 5) {
+      return siteConfig.navMenuItems;
+    }
+    
+    // Si el curso_id está entre 1 y 5, excluir "Notas" y "Personalidad"
+    return siteConfig.navMenuItems.filter(item => 
+      item.label !== "Notas" && item.label !== "Personalidad"
+    );
+  };
 
   const searchInput = (
     <Input
@@ -81,7 +106,7 @@ export const Navbar = () => {
         </NavbarBrand>
         {isAuthenticated ? (
           <div className="hidden lg:flex gap-4 justify-start ml-2">
-            {siteConfig.navItems.map((item) => (
+            {getFilteredNavItems().map((item) => (
               <NavbarItem key={item.href}>
                 <Link
                   className={clsx(
@@ -144,14 +169,14 @@ export const Navbar = () => {
           <>
             {searchInput}
             <div className="mx-4 mt-4 flex flex-col gap-3">
-              {siteConfig.navMenuItems.map((item, index) => (
+              {getFilteredNavMenuItems().map((item, index) => (
                 <NavbarMenuItem key={`${item}-${index}`}>
                   <Link
                     className="flex items-center gap-3 w-full py-3 px-4 rounded-lg transition-colors hover:bg-default-100 dark:hover:bg-default-800"
                     color={
                       index === 0
                         ? "primary"
-                        : index === siteConfig.navMenuItems.length - 1
+                        : index === getFilteredNavMenuItems().length - 1
                           ? "danger"
                           : "foreground"
                     }

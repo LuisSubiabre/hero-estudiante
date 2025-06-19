@@ -3,13 +3,13 @@ import { Card, Chip, Spinner } from "@heroui/react";
 import { 
   User, 
   BookOpen, 
-  Award, 
   Users, 
   TrendingUp, 
   AlertTriangle,
   CheckCircle,
   Clock,
-  FileText
+  FileText,
+  Heart
 } from "lucide-react";
 
 import { title } from "@/components/primitives";
@@ -249,31 +249,18 @@ export default function PersonalidadPage() {
   const getCategoryIcon = (category: string) => {
     switch (category) {
       case 'formacion_etica':
-        return <Award className="w-6 h-6" />;
+        return <Heart className="w-6 h-6 text-red-600 dark:text-red-400" />;
       case 'crecimiento':
         return <TrendingUp className="w-6 h-6 text-green-600 dark:text-green-400" />;
       case 'entorno':
-        return <Users className="w-6 h-6" />;
+        return <Users className="w-6 h-6 text-blue-600 dark:text-blue-400" />;
       case 'aprendizaje':
-        return <BookOpen className="w-6 h-6 text-orange-600 dark:text-orange-400" />;
+        return <BookOpen className="w-6 h-6 text-purple-600 dark:text-purple-400" />;
       case 'conductas':
         return <AlertTriangle className="w-6 h-6 text-red-600 dark:text-red-400" />;
       default:
         return <FileText className="w-6 h-6 text-gray-600 dark:text-gray-400" />;
     }
-  };
-
-  const getCategoryColor = (category: string) => {
-    return 'border-l-blue-500 bg-blue-50 dark:bg-gray-800 dark:border-l-blue-400';
-  };
-
-  const calculateProgress = (data: Record<string, string>) => {
-    const total = Object.keys(data).length;
-    const positiveCount = Object.values(data).filter(value => 
-      value === "Siempre" || value === "Frecuentemente"
-    ).length;
-
-    return (positiveCount / total) * 100;
   };
 
   const getItemName = (category: string, key: string): string => {
@@ -297,7 +284,7 @@ export default function PersonalidadPage() {
 
   const renderCategory = (title: string, data: Record<string, string>, categoryKey: string) => {
     return (
-      <Card className={`w-full mb-6 overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300 ${getCategoryColor(categoryKey)}`}>
+      <Card className={`w-full mb-6 overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300`}>
         <div className="p-6">
           <div className="flex items-center gap-3 mb-4">
             {getCategoryIcon(categoryKey)}
