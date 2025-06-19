@@ -25,6 +25,10 @@ export const siteConfig = {
       href: "/atrasos",
     },
     {
+      label: "Personalidad",
+      href: "/personalidad",
+    },
+    {
       label: "Certificados",
       href: "/certificados",
     },
@@ -49,6 +53,10 @@ export const siteConfig = {
     {
       label: "Atrasos",
       href: "/atrasos",
+    },
+    {
+      label: "Personalidad",
+      href: "/personalidad",
     },
     {
       label: "Certificados",

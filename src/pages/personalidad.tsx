@@ -1,0 +1,386 @@
+import { useEffect, useState } from "react";
+import { Card, Chip, Spinner } from "@heroui/react";
+
+import { title } from "@/components/primitives";
+import DefaultLayout from "@/layouts/default";
+import { getPersonalidad } from "@/services/personalidad";
+
+interface FormacionEtica {
+  [key: string]: string;
+  formacion_etica_1: string;
+  formacion_etica_2: string;
+  formacion_etica_3: string;
+  formacion_etica_4: string;
+  formacion_etica_5: string;
+  formacion_etica_6: string;
+  formacion_etica_7: string;
+  formacion_etica_8: string;
+}
+
+interface Crecimiento {
+  [key: string]: string;
+  crecimiento_1: string;
+  crecimiento_2: string;
+  crecimiento_3: string;
+  crecimiento_4: string;
+  crecimiento_5: string;
+}
+
+interface Entorno {
+  [key: string]: string;
+  entorno_1: string;
+  entorno_2: string;
+  entorno_3: string;
+  entorno_4: string;
+  entorno_5: string;
+  entorno_6: string;
+  entorno_7: string;
+}
+
+interface Aprendizaje {
+  [key: string]: string;
+  aprendizaje_1: string;
+  aprendizaje_2: string;
+  aprendizaje_3: string;
+  aprendizaje_4: string;
+  aprendizaje_5: string;
+  aprendizaje_6: string;
+  aprendizaje_7: string;
+}
+
+interface Conductas {
+  [key: string]: string;
+  conductas_1: string;
+  conductas_2: string;
+  conductas_3: string;
+  conductas_4: string;
+  conductas_5: string;
+  conductas_6: string;
+  conductas_7: string;
+}
+
+interface Informe {
+  informe_id: number;
+  anio: number;
+  formacion_etica: FormacionEtica;
+  crecimiento: Crecimiento;
+  entorno: Entorno;
+  aprendizaje: Aprendizaje;
+  conductas: Conductas;
+  observaciones: string | null;
+  estado: string;
+  fecha_creacion: string;
+  fecha_actualizacion: string;
+}
+
+interface PersonalidadData {
+  estudiante_id: number;
+  nombre_estudiante: string;
+  rut_estudiante: string;
+  curso_nombre: string;
+  profesor_jefe_nombre: string;
+  informes: Informe[];
+}
+
+interface PersonalidadResponse {
+  success: boolean;
+  data: PersonalidadData;
+}
+
+const FORMACION_ETICA_ITEMS = [
+  "Es responsable con sus tareas, trabajos y demás obligaciones escolares.",
+  "Asiste a clases en forma puntual y constante",
+  "Trata con respeto a sus compañeros/as, profesores/as y miembros de la comunidad",
+  "Es honesto(a) en su trabajo y en su vida escolar en general, asumiendo responsabilidades en sus acciones",
+  "Respeta las normas de convivencia establecidas",
+  "Respeta ideas y creencias distintas a las propias",
+  "Es un alumno(a) solidario(a) y generoso(a) con los demás",
+  "Utiliza el diálogo como medio de resolución de conflictos",
+];
+
+const CRECIMIENTO_ITEMS = [
+  "Reconoce sus virtudes y defectos",
+  "Es responsable con los compromisos que adquiere",
+  "Se preocupa por su higiene y presentación personal",
+  "Reacciona positivamente frente a situaciones nuevas o conflictivas",
+  "Reconoce sus errores y trata de superarlos",
+];
+
+const ENTORNO_ITEMS = [
+  "Tiene un grupo de amigos(as) estable",
+  "Ayuda a sus compañeros(as)",
+  "Propone ideas al grupo",
+  "Se ofrece voluntario(a) en las actividades a realizar",
+  "Actúa con responsabilidad en el cuidado del medio ambiente",
+  "Participa en actividades que el Liceo programa en la comunidad",
+  "Respeta las normas disciplinarias y seguridad vigentes en el Liceo",
+];
+
+const APRENDIZAJE_ITEMS = [
+  "Atiende en clases",
+  "Se concentra adecuadamente en el trabajo",
+  "Demuestra interés y compromiso por su aprendizaje",
+  "Desarrolla al máximo sus capacidades",
+  "Demuestra sentido de superación",
+  "Participa activamente durante la clase y/o actividades",
+  "Asiste regularmente a rendir sus evaluaciones, en fecha indicada",
+];
+
+const CONDUCTAS_ITEMS = [
+  "Agresividad",
+  "Estado de ánimo decaído",
+  "Conflictos interpersonales",
+  "Aislamiento, soledad",
+  "Episodios de ansiedad inmanejables",
+  "Excesiva pasividad",
+  "Desinterés en labores académicas",
+];
+
+export default function PersonalidadPage() {
+  const [data, setData] = useState<PersonalidadData | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  // Función para decodificar el token JWT y obtener el estudiante_id
+  const jwtData = () => {
+    const token = localStorage.getItem("TokenLeu");
+
+    if (token) {
+      try {
+        const base64Url = token.split(".")[1];
+
+        // Convertir Base64URL a Base64 estándar
+        const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
+
+        // Decodificar usando decodeURIComponent para manejar caracteres especiales
+        const decoded = decodeURIComponent(
+          atob(base64)
+            .split("")
+            .map((c) => "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2))
+            .join("")
+        );
+
+        const payload = JSON.parse(decoded);
+
+        return payload.estudiante_id;
+      } catch (error) {
+        console.error("Error al decodificar el token:", error);
+
+        return null;
+      }
+    }
+
+    return null;
+  };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setLoading(true);
+        const estudianteId = jwtData();
+        
+        if (!estudianteId) {
+          setError("No se encontró el ID del estudiante en el token.");
+          setLoading(false);
+
+          return;
+        }
+
+        console.log('Solicitando informe de personalidad para estudiante ID:', estudianteId);
+        const response: PersonalidadResponse = await getPersonalidad(estudianteId);
+
+        setData(response.data);
+      } catch (err) {
+        setError("Error al cargar los datos de personalidad");
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case "Siempre":
+        return "success";
+      case "Frecuentemente":
+        return "warning";
+      case "A veces":
+        return "secondary";
+      case "Nunca":
+        return "danger";
+      case "No observado":
+        return "default";
+      default:
+        return "default";
+    }
+  };
+
+  const getItemName = (category: string, key: string): string => {
+    const index = parseInt(key.match(/\d+$/)?.[0] || '1') - 1;
+    
+    switch (category) {
+      case 'formacion_etica':
+        return FORMACION_ETICA_ITEMS[index] || key;
+      case 'crecimiento':
+        return CRECIMIENTO_ITEMS[index] || key;
+      case 'entorno':
+        return ENTORNO_ITEMS[index] || key;
+      case 'aprendizaje':
+        return APRENDIZAJE_ITEMS[index] || key;
+      case 'conductas':
+        return CONDUCTAS_ITEMS[index] || key;
+      default:
+        return key;
+    }
+  };
+
+  const renderCategory = (title: string, data: Record<string, string>, categoryKey: string) => {
+    return (
+      <Card className="w-full mb-4 p-6">
+        <div className="mb-4">
+          <h3 className="text-lg font-semibold">{title}</h3>
+        </div>
+        <div className="border-t border-gray-200 mb-4" />
+        <div className="grid grid-cols-1 gap-3">
+          {Object.entries(data).map(([key, value]) => (
+            <div key={key} className="flex justify-between items-start p-3 bg-gray-50 rounded">
+              <span className="text-sm font-medium flex-1 mr-4">
+                {getItemName(categoryKey, key)}
+              </span>
+              <Chip 
+                className="flex-shrink-0"
+                color={getStatusColor(value) as any}
+                size="sm"
+                variant="flat"
+              >
+                {value}
+              </Chip>
+            </div>
+          ))}
+        </div>
+      </Card>
+    );
+  };
+
+  if (loading) {
+    return (
+      <DefaultLayout>
+        <section className="flex flex-col items-center justify-center gap-4 py-8 md:py-10">
+          <Spinner size="lg" />
+          <p>Cargando informe de personalidad...</p>
+        </section>
+      </DefaultLayout>
+    );
+  }
+
+  if (error) {
+    return (
+      <DefaultLayout>
+        <section className="flex flex-col items-center justify-center gap-4 py-8 md:py-10">
+          <div className="text-center">
+            <h2 className={title()}>Error</h2>
+            <p className="text-red-500">{error}</p>
+          </div>
+        </section>
+      </DefaultLayout>
+    );
+  }
+
+  if (!data) {
+    return (
+      <DefaultLayout>
+        <section className="flex flex-col items-center justify-center gap-4 py-8 md:py-10">
+          <div className="text-center">
+            <h2 className={title()}>No se encontraron datos</h2>
+          </div>
+        </section>
+      </DefaultLayout>
+    );
+  }
+
+  const informe = data.informes[0]; // Tomamos el primer informe
+
+  return (
+    <DefaultLayout>
+      <section className="flex flex-col items-center justify-center gap-4 py-8 md:py-10">
+        <div className="inline-block max-w-4xl text-center justify-center w-full">
+          <h2 className={title()}>Informe de Personalidad</h2>
+          
+          {/* Información del estudiante */}
+          <Card className="w-full mb-6 p-6">
+            <div className="mb-4">
+              <h3 className="text-xl font-bold">Información del Estudiante</h3>
+            </div>
+            <div className="border-t border-gray-200 mb-4" />
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <p><strong>Nombre:</strong> {data.nombre_estudiante}</p>
+                <p><strong>RUT:</strong> {data.rut_estudiante}</p>
+              </div>
+              <div>
+                <p><strong>Curso:</strong> {data.curso_nombre}</p>
+                <p><strong>Profesor Jefe:</strong> {data.profesor_jefe_nombre}</p>
+              </div>
+            </div>
+            <div className="mt-4">
+              <p><strong>Año:</strong> {informe.anio}</p>
+              <p><strong>Estado:</strong> 
+                <Chip 
+                  className="ml-2"
+                  color={informe.estado === 'creado' ? 'success' : 'warning'}
+                  size="sm"
+                  variant="flat"
+                >
+                  {informe.estado}
+                </Chip>
+              </p>
+            </div>
+          </Card>
+
+          {/* Categorías del informe */}
+          {renderCategory("Formación Ética", informe.formacion_etica, 'formacion_etica')}
+          {renderCategory("Crecimiento y Autonomía", informe.crecimiento, 'crecimiento')}
+          {renderCategory("Entorno Escolar", informe.entorno, 'entorno')}
+          {renderCategory("Aprendizaje", informe.aprendizaje, 'aprendizaje')}
+          {renderCategory("Conductas", informe.conductas, 'conductas')}
+
+          {/* Observaciones */}
+          {informe.observaciones && (
+            <Card className="w-full mb-4 p-6">
+              <div className="mb-4">
+                <h3 className="text-lg font-semibold">Observaciones</h3>
+              </div>
+              <div className="border-t border-gray-200 mb-4" />
+              <p className="text-gray-700">{informe.observaciones}</p>
+            </Card>
+          )}
+
+          {/* Fechas */}
+          <Card className="w-full p-6">
+            <div className="mb-4">
+              <h3 className="text-lg font-semibold">Información del Informe</h3>
+            </div>
+            <div className="border-t border-gray-200 mb-4" />
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <p><strong>Fecha de Creación:</strong></p>
+                <p className="text-sm text-gray-600">
+                  {new Date(informe.fecha_creacion).toLocaleDateString('es-CL')}
+                </p>
+              </div>
+              <div>
+                <p><strong>Última Actualización:</strong></p>
+                <p className="text-sm text-gray-600">
+                  {new Date(informe.fecha_actualizacion).toLocaleDateString('es-CL')}
+                </p>
+              </div>
+            </div>
+          </Card>
+        </div>
+      </section>
+    </DefaultLayout>
+  );
+}

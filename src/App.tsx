@@ -11,6 +11,7 @@ import AtrasosPage from "@/pages/atrasos";
 import NotasPage from "@/pages/notas";
 import AclesPage from "@/pages/acles"; // Asegúrate de que la ruta sea correcta 
 import Asistencia from "@/components/Asistencia";
+import Personalidad from "@/pages/personalidad";
 
 function App() {
   return (
@@ -28,6 +29,7 @@ function App() {
         <Route element={<AclesPage />} path="/acles" />
         <Route element={<Asistencia />} path="/asistencia" />
         <Route element={<AtrasosPage />} path="/atrasos" />
+        <Route element={<Personalidad />} path="/personalidad" />
       </Route>
     </Routes>
   );

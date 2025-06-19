@@ -8,10 +8,12 @@ export default function InformesPage() {
     <DefaultLayout>
       <section className="flex flex-col items-center justify-center gap-4 py-8 md:py-10">
         <div className="inline-block max-w-lg text-center justify-center">
-          <h1 className={title()}>Certificados</h1>
+          <h2 className={title()}>Certificados</h2>
 
           <AlumnoRegular />
         </div>
+        
+        
       </section>
     </DefaultLayout>
   );
