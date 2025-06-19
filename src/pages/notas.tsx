@@ -690,47 +690,47 @@ export default function NotasPage() {
         {!loading && libreta && (
           <>
             <div className="overflow-x-auto w-full max-w-6xl">
-              <table className="min-w-full border-collapse border border-gray-300">
+              <table className="min-w-full border-collapse border border-gray-300 dark:border-gray-600">
                 <thead>
-                  <tr className="bg-gray-100">
-                    <th className="border border-gray-300 px-4 py-2" rowSpan={2}>
+                  <tr className="bg-gray-100 dark:bg-gray-800">
+                    <th className="border border-gray-300 dark:border-gray-600 px-4 py-2 text-gray-900 dark:text-white font-semibold" rowSpan={2}>
                       Asignatura
                     </th>
                     <th
-                      className="border border-gray-300 px-4 py-2 bg-blue-100"
+                      className="border border-gray-300 dark:border-gray-600 px-4 py-2 bg-blue-100 dark:bg-blue-900 text-blue-900 dark:text-blue-100 font-semibold"
                       colSpan={10}
                     >
                       Primer Semestre
                     </th>
                     <th
-                      className="border border-gray-300 px-4 py-2 bg-green-100"
+                      className="border border-gray-300 dark:border-gray-600 px-4 py-2 bg-green-100 dark:bg-green-900 text-green-900 dark:text-green-100 font-semibold"
                       colSpan={10}
                     >
                       Segundo Semestre
                     </th>
-                    <th className="border border-gray-300 px-4 py-2 bg-blue-100" rowSpan={2}>
+                    <th className="border border-gray-300 dark:border-gray-600 px-4 py-2 bg-blue-100 dark:bg-blue-900 text-blue-900 dark:text-blue-100 font-semibold" rowSpan={2}>
                       1S
                     </th>
-                    <th className="border border-gray-300 px-4 py-2 bg-green-100" rowSpan={2}>
+                    <th className="border border-gray-300 dark:border-gray-600 px-4 py-2 bg-green-100 dark:bg-green-900 text-green-900 dark:text-green-100 font-semibold" rowSpan={2}>
                       2S
                     </th>
-                    <th className="border border-gray-300 px-4 py-2 bg-gray-200" rowSpan={2}>
+                    <th className="border border-gray-300 dark:border-gray-600 px-4 py-2 bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-white font-semibold" rowSpan={2}>
                       PF
                     </th>
-                    <th className="border border-gray-300 px-4 py-2 bg-gray-200" rowSpan={2}>
+                    <th className="border border-gray-300 dark:border-gray-600 px-4 py-2 bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-white font-semibold" rowSpan={2}>
                       PC
                     </th>
                   </tr>
-                  <tr className="bg-gray-50">
+                  <tr className="bg-gray-50 dark:bg-gray-700">
                     {[...Array(10)].map((_, i) => (
-                      <th key={i} className="border border-gray-300 px-2 py-2">
+                      <th key={i} className="border border-gray-300 dark:border-gray-600 px-2 py-2 text-gray-700 dark:text-gray-200 font-medium">
                         {i + 1}
                       </th>
                     ))}
                     {[...Array(10)].map((_, i) => (
                       <th
                         key={i + 10}
-                        className="border border-gray-300 px-2 py-2"
+                        className="border border-gray-300 dark:border-gray-600 px-2 py-2 text-gray-700 dark:text-gray-200 font-medium"
                       >
                         {i + 1}
                       </th>
@@ -751,15 +751,15 @@ export default function NotasPage() {
                       );
 
                       return (
-                        <tr key={asignatura.asignatura_id} className="text-center">
-                          <td className="border border-gray-300 px-4 py-2">
+                        <tr key={asignatura.asignatura_id} className="text-center hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+                          <td className="border border-gray-300 dark:border-gray-600 px-4 py-2 text-gray-900 dark:text-white font-medium">
                             {asignatura.nombre_asignatura}
                           </td>
                           {/* Primer Semestre */}
                           {[...Array(10)].map((_, i) => (
                             <td
                               key={i}
-                              className="border border-gray-300 px-2 py-2"
+                              className="border border-gray-300 dark:border-gray-600 px-2 py-2 text-gray-700 dark:text-gray-200"
                             >
                               {convertirCalificacion(asignatura[`calificacion${i + 1}`] as number | null, Boolean(asignatura.concepto))}
                             </td>
@@ -768,22 +768,22 @@ export default function NotasPage() {
                           {[...Array(10)].map((_, i) => (
                             <td
                               key={i + 10}
-                              className="border border-gray-300 px-2 py-2"
+                              className="border border-gray-300 dark:border-gray-600 px-2 py-2 text-gray-700 dark:text-gray-200"
                             >
                               {convertirCalificacion(asignatura[`calificacion${i + 13}`] as number | null, Boolean(asignatura.concepto))}
                             </td>
                           ))}
                           {/* Promedios */}
-                          <td className="border border-gray-300 px-2 py-2 font-semibold">
+                          <td className="border border-gray-300 dark:border-gray-600 px-2 py-2 font-semibold text-blue-700 dark:text-blue-300">
                             {promedio1S !== null ? convertirCalificacion(promedio1S, Boolean(asignatura.concepto)) : "-"}
                           </td>
-                          <td className="border border-gray-300 px-2 py-2 font-semibold">
+                          <td className="border border-gray-300 dark:border-gray-600 px-2 py-2 font-semibold text-green-700 dark:text-green-300">
                             {promedio2S !== null ? convertirCalificacion(promedio2S, Boolean(asignatura.concepto)) : "-"}
                           </td>
-                          <td className="border border-gray-300 px-2 py-2 font-semibold">
+                          <td className="border border-gray-300 dark:border-gray-600 px-2 py-2 font-semibold text-gray-900 dark:text-white">
                             {promedioFinal !== null ? convertirCalificacion(promedioFinal, Boolean(asignatura.concepto)) : "-"}
                           </td>
-                          <td className="border border-gray-300 px-2 py-2 font-semibold">
+                          <td className="border border-gray-300 dark:border-gray-600 px-2 py-2 font-semibold text-gray-900 dark:text-white">
                             {getPromedioCurso(asignatura.asignatura_id)}
                           </td>
                         </tr>
@@ -796,8 +796,8 @@ export default function NotasPage() {
             {/* Promedios Finales */}
             <div className="w-full max-w-6xl mt-8">
               <div className="grid grid-cols-2 gap-4">
-                <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
-                  <h3 className="text-lg font-semibold text-blue-800 mb-2">Promedio Final 1S</h3>
+                <div className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg border border-blue-200 dark:border-blue-700">
+                  <h3 className="text-lg font-semibold text-blue-800 dark:text-blue-200 mb-2">Promedio Final 1S</h3>
                   {(() => {
                     // Filtrar asignaturas no conceptuales y calcular sus promedios
                     const promedios1S = libreta.asignaturas
@@ -810,18 +810,18 @@ export default function NotasPage() {
                       })
                       .filter(promedio => promedio !== null) as number[];
                     
-                    if (promedios1S.length === 0) return <p className="text-gray-600">No hay notas disponibles</p>;
+                    if (promedios1S.length === 0) return <p className="text-gray-600 dark:text-gray-400">No hay notas disponibles</p>;
                     
                     // Sumar los promedios ya redondeados
                     const suma = promedios1S.reduce((acc, val) => acc + val, 0);
                     const promedioFinal = Math.floor(suma / promedios1S.length);
 
-                    return <p className="text-2xl font-bold text-blue-900">{promedioFinal}</p>;
+                    return <p className="text-2xl font-bold text-blue-900 dark:text-blue-100">{promedioFinal}</p>;
                   })()}
                 </div>
 
-                <div className="bg-green-50 p-4 rounded-lg border border-green-200">
-                  <h3 className="text-lg font-semibold text-green-800 mb-2">Promedio Final 2S</h3>
+                <div className="bg-green-50 dark:bg-green-900/20 p-4 rounded-lg border border-green-200 dark:border-green-700">
+                  <h3 className="text-lg font-semibold text-green-800 dark:text-green-200 mb-2">Promedio Final 2S</h3>
                   {(() => {
                     // Filtrar asignaturas no conceptuales y calcular sus promedios
                     const promedios2S = libreta.asignaturas
@@ -834,13 +834,13 @@ export default function NotasPage() {
                       })
                       .filter(promedio => promedio !== null) as number[];
                     
-                    if (promedios2S.length === 0) return <p className="text-gray-600">No hay notas disponibles</p>;
+                    if (promedios2S.length === 0) return <p className="text-gray-600 dark:text-gray-400">No hay notas disponibles</p>;
                     
                     // Sumar los promedios ya redondeados
                     const suma = promedios2S.reduce((acc, val) => acc + val, 0);
                     const promedioFinal = Math.floor(suma / promedios2S.length);
 
-                    return <p className="text-2xl font-bold text-green-900">{promedioFinal}</p>;
+                    return <p className="text-2xl font-bold text-green-900 dark:text-green-100">{promedioFinal}</p>;
                   })()}
                 </div>
               </div>

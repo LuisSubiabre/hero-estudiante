@@ -313,8 +313,8 @@ const PersonalidadPDF = ({ data }: { data: any }) => {
           </View>
           <View style={styles.signatureBox}>
             <Text style={styles.signatureLine}>_______________________</Text>
-            <Text style={styles.signatureName}>PATRICIO BRAVO JORQUERA</Text>
-            <Text style={styles.signatureName}>Director</Text>
+            <Text style={styles.signatureName}> </Text>
+            <Text style={styles.signatureName}>Orientación</Text>
           </View>
         </View>
 
