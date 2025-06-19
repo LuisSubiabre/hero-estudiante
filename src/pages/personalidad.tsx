@@ -1,5 +1,17 @@
 import { useEffect, useState } from "react";
 import { Card, Chip, Spinner } from "@heroui/react";
+import { 
+  User, 
+  Calendar, 
+  BookOpen, 
+  Award, 
+  Users, 
+  TrendingUp, 
+  AlertTriangle,
+  CheckCircle,
+  Clock,
+  FileText
+} from "lucide-react";
 
 import { title } from "@/components/primitives";
 import DefaultLayout from "@/layouts/default";
@@ -218,6 +230,53 @@ export default function PersonalidadPage() {
     }
   };
 
+  const getStatusIcon = (status: string) => {
+    switch (status) {
+      case "Siempre":
+        return <CheckCircle className="w-4 h-4" />;
+      case "Frecuentemente":
+        return <TrendingUp className="w-4 h-4" />;
+      case "A veces":
+        return <Clock className="w-4 h-4" />;
+      case "Nunca":
+        return <AlertTriangle className="w-4 h-4" />;
+      case "No observado":
+        return <FileText className="w-4 h-4" />;
+      default:
+        return <FileText className="w-4 h-4" />;
+    }
+  };
+
+  const getCategoryIcon = (category: string) => {
+    switch (category) {
+      case 'formacion_etica':
+        return <Award className="w-6 h-6 text-blue-600" />;
+      case 'crecimiento':
+        return <TrendingUp className="w-6 h-6 text-green-600" />;
+      case 'entorno':
+        return <Users className="w-6 h-6 text-purple-600" />;
+      case 'aprendizaje':
+        return <BookOpen className="w-6 h-6 text-orange-600" />;
+      case 'conductas':
+        return <AlertTriangle className="w-6 h-6 text-red-600" />;
+      default:
+        return <FileText className="w-6 h-6 text-gray-600" />;
+    }
+  };
+
+  const getCategoryColor = (category: string) => {
+    return 'border-l-blue-500 bg-blue-50';
+  };
+
+  const calculateProgress = (data: Record<string, string>) => {
+    const total = Object.keys(data).length;
+    const positiveCount = Object.values(data).filter(value => 
+      value === "Siempre" || value === "Frecuentemente"
+    ).length;
+
+    return (positiveCount / total) * 100;
+  };
+
   const getItemName = (category: string, key: string): string => {
     const index = parseInt(key.match(/\d+$/)?.[0] || '1') - 1;
     
@@ -239,27 +298,40 @@ export default function PersonalidadPage() {
 
   const renderCategory = (title: string, data: Record<string, string>, categoryKey: string) => {
     return (
-      <Card className="w-full mb-4 p-6">
-        <div className="mb-4">
-          <h3 className="text-lg font-semibold">{title}</h3>
-        </div>
-        <div className="border-t border-gray-200 mb-4" />
-        <div className="grid grid-cols-1 gap-3">
-          {Object.entries(data).map(([key, value]) => (
-            <div key={key} className="flex justify-between items-start p-3 bg-gray-50 rounded">
-              <span className="text-sm font-medium flex-1 mr-4">
-                {getItemName(categoryKey, key)}
-              </span>
-              <Chip 
-                className="flex-shrink-0"
-                color={getStatusColor(value) as any}
-                size="sm"
-                variant="flat"
-              >
-                {value}
-              </Chip>
-            </div>
-          ))}
+      <Card className={`w-full mb-6 overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300 ${getCategoryColor(categoryKey)}`}>
+        <div className="p-6">
+          <div className="flex items-center gap-3 mb-4">
+            {getCategoryIcon(categoryKey)}
+            <h3 className="text-xl font-bold text-gray-800">{title}</h3>
+          </div>
+          
+          <div className="space-y-3">
+            {Object.entries(data).map(([key, value], index) => (
+              <div key={key} className="bg-white rounded-lg p-4 shadow-sm border border-gray-100 hover:border-gray-200 transition-colors">
+                <div className="flex items-start justify-between">
+                  <div className="flex-1 mr-4">
+                    <div className="flex items-start gap-3">
+                      <span className="flex-shrink-0 w-6 h-6 bg-gray-100 rounded-full flex items-center justify-center text-xs font-bold text-gray-600 mt-0.5">
+                        {index + 1}
+                      </span>
+                      <span className="text-sm leading-relaxed text-gray-700">
+                        {getItemName(categoryKey, key)}
+                      </span>
+                    </div>
+                  </div>
+                  <Chip 
+                    className="flex-shrink-0"
+                    color={getStatusColor(value) as any}
+                    size="sm"
+                    startContent={getStatusIcon(value)}
+                    variant="flat"
+                  >
+                    {value}
+                  </Chip>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       </Card>
     );
@@ -305,76 +377,123 @@ export default function PersonalidadPage() {
 
   return (
     <DefaultLayout>
-      <section className="flex flex-col items-center justify-center gap-4 py-8 md:py-10">
+      <section className="flex flex-col items-center justify-center gap-6 py-8 md:py-10 px-4">
         <div className="inline-block max-w-4xl text-center justify-center w-full">
-          <h2 className={title()}>Informe de Personalidad</h2>
+          <div className="mb-8">
+            <h2 className={title()}>Informe de Personalidad</h2>
+            <p className="text-gray-600 mt-2">Evaluación integral del desarrollo personal y académico</p>
+          </div>
           
           {/* Información del estudiante */}
-          <Card className="w-full mb-6 p-6">
-            <div className="mb-4">
-              <h3 className="text-xl font-bold">Información del Estudiante</h3>
-            </div>
-            <div className="border-t border-gray-200 mb-4" />
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <p><strong>Nombre:</strong> {data.nombre_estudiante}</p>
-                <p><strong>RUT:</strong> {data.rut_estudiante}</p>
+          <Card className="w-full mb-8 p-6 bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200">
+            <div className="flex items-center gap-4 mb-4">
+              <div className="w-12 h-12 bg-blue-500 rounded-full flex items-center justify-center">
+                <User className="w-6 h-6 text-white" />
               </div>
               <div>
-                <p><strong>Curso:</strong> {data.curso_nombre}</p>
-                <p><strong>Profesor Jefe:</strong> {data.profesor_jefe_nombre}</p>
+                <h3 className="text-xl font-bold text-gray-800">Información del Estudiante</h3>
+                <p className="text-sm text-gray-600">Datos personales y académicos</p>
               </div>
             </div>
-            <div className="mt-4">
-              <p><strong>Año:</strong> {informe.anio}</p>
-              <p><strong>Estado:</strong> 
-                <Chip 
-                  className="ml-2"
-                  color={informe.estado === 'creado' ? 'success' : 'warning'}
-                  size="sm"
-                  variant="flat"
-                >
-                  {informe.estado}
-                </Chip>
-              </p>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="space-y-3">
+                <div className="flex items-center gap-2">
+                  <span className="text-sm font-semibold text-gray-700">Nombre:</span>
+                  <span className="text-sm text-gray-600">{data.nombre_estudiante}</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="text-sm font-semibold text-gray-700">RUT:</span>
+                  <span className="text-sm text-gray-600">{data.rut_estudiante}</span>
+                </div>
+              </div>
+              <div className="space-y-3">
+                <div className="flex items-center gap-2">
+                  <span className="text-sm font-semibold text-gray-700">Curso:</span>
+                  <span className="text-sm text-gray-600">{data.curso_nombre}</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="text-sm font-semibold text-gray-700">Profesor Jefe:</span>
+                  <span className="text-sm text-gray-600">{data.profesor_jefe_nombre}</span>
+                </div>
+              </div>
+            </div>
+            
+            <div className="mt-6 pt-4 border-t border-blue-200">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-4">
+                  <div className="flex items-center gap-2">
+                    <Calendar className="w-4 h-4 text-blue-600" />
+                    <span className="text-sm font-semibold text-gray-700">Año:</span>
+                    <span className="text-sm text-gray-600">{informe.anio}</span>
+                  </div>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="text-sm font-semibold text-gray-700">Estado:</span>
+                  <Chip 
+                    color={informe.estado === 'creado' ? 'success' : 'warning'}
+                    size="sm"
+                    startContent={informe.estado === 'creado' ? <CheckCircle className="w-3 h-3" /> : <Clock className="w-3 h-3" />}
+                    variant="flat"
+                  >
+                    {informe.estado}
+                  </Chip>
+                </div>
+              </div>
             </div>
           </Card>
 
           {/* Categorías del informe */}
-          {renderCategory("Formación Ética", informe.formacion_etica, 'formacion_etica')}
-          {renderCategory("Crecimiento y Autonomía", informe.crecimiento, 'crecimiento')}
-          {renderCategory("Entorno Escolar", informe.entorno, 'entorno')}
-          {renderCategory("Aprendizaje", informe.aprendizaje, 'aprendizaje')}
-          {renderCategory("Conductas", informe.conductas, 'conductas')}
+          <div className="space-y-6">
+            {renderCategory("Formación Ética", informe.formacion_etica, 'formacion_etica')}
+            {renderCategory("Crecimiento y Autonomía", informe.crecimiento, 'crecimiento')}
+            {renderCategory("Entorno Escolar", informe.entorno, 'entorno')}
+            {renderCategory("Aprendizaje", informe.aprendizaje, 'aprendizaje')}
+            {renderCategory("Conductas", informe.conductas, 'conductas')}
+          </div>
 
           {/* Observaciones */}
           {informe.observaciones && (
-            <Card className="w-full mb-4 p-6">
-              <div className="mb-4">
-                <h3 className="text-lg font-semibold">Observaciones</h3>
+            <Card className="w-full mb-6 p-6 bg-yellow-50 border border-yellow-200">
+              <div className="flex items-center gap-3 mb-4">
+                <FileText className="w-6 h-6 text-yellow-600" />
+                <h3 className="text-lg font-semibold text-gray-800">Observaciones</h3>
               </div>
-              <div className="border-t border-gray-200 mb-4" />
-              <p className="text-gray-700">{informe.observaciones}</p>
+              <div className="bg-white rounded-lg p-4 border border-yellow-100">
+                <p className="text-gray-700 leading-relaxed">{informe.observaciones}</p>
+              </div>
             </Card>
           )}
 
           {/* Fechas */}
-          <Card className="w-full p-6">
-            <div className="mb-4">
-              <h3 className="text-lg font-semibold">Información del Informe</h3>
+          <Card className="w-full p-6 bg-gray-50 border border-gray-200">
+            <div className="flex items-center gap-3 mb-4">
+              <Calendar className="w-6 h-6 text-gray-600" />
+              <h3 className="text-lg font-semibold text-gray-800">Información del Informe</h3>
             </div>
-            <div className="border-t border-gray-200 mb-4" />
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <p><strong>Fecha de Creación:</strong></p>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="bg-white rounded-lg p-4 border border-gray-100">
+                <p className="text-sm font-semibold text-gray-700 mb-2">Fecha de Creación:</p>
                 <p className="text-sm text-gray-600">
-                  {new Date(informe.fecha_creacion).toLocaleDateString('es-CL')}
+                  {new Date(informe.fecha_creacion).toLocaleDateString('es-CL', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                  })}
                 </p>
               </div>
-              <div>
-                <p><strong>Última Actualización:</strong></p>
+              <div className="bg-white rounded-lg p-4 border border-gray-100">
+                <p className="text-sm font-semibold text-gray-700 mb-2">Última Actualización:</p>
                 <p className="text-sm text-gray-600">
-                  {new Date(informe.fecha_actualizacion).toLocaleDateString('es-CL')}
+                  {new Date(informe.fecha_actualizacion).toLocaleDateString('es-CL', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                  })}
                 </p>
               </div>
             </div>
