@@ -376,6 +376,16 @@ export default function PersonalidadPage() {
             <h2 className={title()}>Informe de Personalidad</h2>
             <p className="text-gray-600 dark:text-gray-300 mt-2">Evaluación integral del desarrollo personal y académico</p>
             
+            {/* Mensaje de estado */}
+            {informe.estado === 'creado' && (
+              <div className="mt-4 p-3 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg">
+                <p className="text-sm text-blue-700 dark:text-blue-300">
+                  <AlertTriangle className="w-4 h-4 inline mr-2" />
+                  La información de este informe podría cambiar más adelante.
+                </p>
+              </div>
+            )}
+            
             {/* Botón de descarga PDF */}
             {!loading && data && (
               <div className="mt-4">
