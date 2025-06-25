@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [4.0.2](https://github.com/LuisSubiabre/hero-estudiante/compare/v4.0.1...v4.0.2) (2025-06-25)
+
+
+### Features
+
+* agregar mensaje de estado en la página de Personalidad para informar sobre posibles cambios en el informe ([eeea030](https://github.com/LuisSubiabre/hero-estudiante/commit/eeea03059f7ee7fe0e08119b336f1570270b6060))
+
 ### [4.0.1](https://github.com/LuisSubiabre/hero-estudiante/compare/v4.0.0...v4.0.1) (2025-06-25)
 
 ## [4.0.0](https://github.com/LuisSubiabre/hero-estudiante/compare/v3.0.2...v4.0.0) (2025-06-25)
