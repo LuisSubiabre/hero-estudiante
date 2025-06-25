@@ -93,25 +93,30 @@ export const Navbar = () => {
 
   return (
     <HeroUINavbar className="transition-all duration-300" maxWidth="xl" position="sticky">
-      <NavbarContent className="basis-1/5 sm:basis-full" justify="start">
-        <NavbarBrand className="gap-3 max-w-fit">
+      {/* Logo y Brand */}
+      <NavbarContent className="basis-1/6 sm:basis-1/5" justify="start">
+        <NavbarBrand className="gap-2 max-w-fit">
           <Link
-            className="flex justify-start items-center gap-1"
+            className="flex justify-start items-center gap-2"
             color="foreground"
             href="/"
           >
-            <img alt="LEUMAG" src="/images/logo.png" width={46} />
-            <p className="font-bold text-inherit">LEUMAG</p>
+            <img alt="LEUMAG" className="flex-shrink-0" height={40} src="/images/logo.png" width={40} />
+            <p className="font-bold text-inherit text-lg">LEUMAG</p>
           </Link>
         </NavbarBrand>
-        {isAuthenticated ? (
-          <div className="hidden lg:flex gap-4 justify-start ml-2">
+      </NavbarContent>
+
+      {/* Navegación Principal - Solo visible en desktop */}
+      {isAuthenticated && (
+        <NavbarContent className="hidden lg:flex basis-2/3" justify="center">
+          <div className="flex gap-6 justify-center items-center">
             {getFilteredNavItems().map((item) => (
               <NavbarItem key={item.href}>
                 <Link
                   className={clsx(
                     linkStyles({ color: "foreground" }),
-                    "data-[active=true]:text-primary data-[active=true]:font-medium"
+                    "data-[active=true]:text-primary data-[active=true]:font-medium text-sm font-medium px-3 py-2 rounded-lg transition-colors hover:bg-default-100"
                   )}
                   color="foreground"
                   href={item.href}
@@ -121,49 +126,51 @@ export const Navbar = () => {
               </NavbarItem>
             ))}
           </div>
-        ) : null}
-      </NavbarContent>
+        </NavbarContent>
+      )}
 
-      <NavbarContent
-        className="hidden lg:flex basis-1/5 sm:basis-full"
-        justify="end"
-      >
-        <NavbarItem className="hidden lg:flex gap-2">
-          <ThemeSwitch />
-        </NavbarItem>
+      {/* Elementos de Usuario y Controles */}
+      <NavbarContent className="basis-1/6 sm:basis-1/5" justify="end">
+        <div className="hidden lg:flex items-center gap-3">
+          {/* Theme Switch */}
+          <NavbarItem>
+            <ThemeSwitch />
+          </NavbarItem>
 
-        <NavbarItem className="hidden lg:flex gap-2">
+          {/* Información de Usuario y Logout */}
           {isAuthenticated ? (
-            <>
-              <div className="text-sm font-normal text-default-600 bg-default-100 px-4 py-2 rounded-full flex items-center gap-2">
-                <HeartFilledIcon className="text-danger" />
-                <span>Hola: {user.email}</span>
+            <div className="flex items-center gap-2">
+              <div className="text-xs font-normal text-default-600 bg-default-100 px-3 py-1.5 rounded-full flex items-center gap-1.5 max-w-[200px]">
+                <HeartFilledIcon className="text-danger w-3 h-3 flex-shrink-0" />
+                <span className="truncate">Hola: {user.email}</span>
               </div>
               <Link
-                className="flex items-center gap-2 text-sm font-normal text-danger hover:bg-danger-100 px-4 py-2 rounded-full transition-colors"
+                className="flex items-center gap-1.5 text-xs font-normal text-danger hover:bg-danger-100 px-3 py-1.5 rounded-full transition-colors"
                 href="/logout"
                 title="Cerrar sesión"
               >
-                <LogoutIcon className="text-danger" size={20} />
-                <span>Cerrar sesión</span>
+                <LogoutIcon className="text-danger w-4 h-4" />
+                <span className="hidden xl:inline">Salir</span>
               </Link>
-            </>
+            </div>
           ) : (
             <Link href="/login">
-              <div className="animate-pulse text-sm font-normal text-default-600 bg-default-100 px-4 py-2 rounded-full flex items-center gap-2 cursor-pointer">
-                <HeartFilledIcon className="text-danger" />
-                Iniciar sesión
+              <div className="animate-pulse text-xs font-normal text-default-600 bg-default-100 px-3 py-1.5 rounded-full flex items-center gap-1.5 cursor-pointer">
+                <HeartFilledIcon className="text-danger w-3 h-3" />
+                <span>Iniciar sesión</span>
               </div>
             </Link>
           )}
-        </NavbarItem>
+        </div>
+
+        {/* Controles Mobile */}
+        <div className="flex lg:hidden items-center gap-2">
+          <ThemeSwitch />
+          <NavbarMenuToggle />
+        </div>
       </NavbarContent>
 
-      <NavbarContent className="flex lg:hidden" justify="end">
-        <ThemeSwitch />
-        <NavbarMenuToggle className="ml-2" />
-      </NavbarContent>
-
+      {/* Menú Mobile */}
       <NavbarMenu className="bg-default-50 dark:bg-default-900/50 backdrop-blur-lg">
         {isAuthenticated ? (
           <>
