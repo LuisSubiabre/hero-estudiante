@@ -30,7 +30,7 @@ export default function IndexPage() {
                 Inspectores por Niveles
               </h2>
               <h4 className="text-lg text-center text-gray-800 dark:text-white">
-                Para envio de justificaciones
+                Para envio de justificaciones: <strong>justificaciones@liceoexperimental.cl</strong>
               </h4>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
