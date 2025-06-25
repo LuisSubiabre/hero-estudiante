@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [4.0.0](https://github.com/LuisSubiabre/hero-estudiante/compare/v3.0.2...v4.0.0) (2025-06-25)
+
+
+### Features
+
+* agregar componente CourseRestrictedRoute y actualizar rutas en App.tsx para restringir acceso a páginas según curso_id ([9a5747d](https://github.com/LuisSubiabre/hero-estudiante/commit/9a5747da81997dfc7795bb780e5ee5cc2990fe67))
+* agregar componente PersonalidadPDF y funcionalidad para descargar el informe en formato PDF desde la página de Personalidad ([ddac996](https://github.com/LuisSubiabre/hero-estudiante/commit/ddac996892eb24d5f63c380702fb10025ef23cce))
+* agregar ícono de usuario en la barra de navegación y comentar log en la página de Personalidad para mejorar la legibilidad del código ([6034faa](https://github.com/LuisSubiabre/hero-estudiante/commit/6034faa2829ca6ae35db1508275b1e4ffd85d8bc))
+* agregar íconos y mejorar el diseño de la página de Personalidad, incluyendo nuevas funciones para mostrar estados y categorías ([02250cf](https://github.com/LuisSubiabre/hero-estudiante/commit/02250cf24c97fc4a7c2d7f4237bd24335de3ed41))
+* agregar página de Personalidad y actualizar rutas y configuración del sitio ([811e526](https://github.com/LuisSubiabre/hero-estudiante/commit/811e526a8b40d06d3b6e94905e064b9a5b2268f7))
+* agregar servicio para obtener datos de personalidad desde la API ([90f98c2](https://github.com/LuisSubiabre/hero-estudiante/commit/90f98c28de9fb9e28c205fe6ecf297fea2d2c57d))
+
 ### [3.0.2](https://github.com/LuisSubiabre/hero-estudiante/compare/v3.0.1...v3.0.2) (2025-06-06)
 
 
