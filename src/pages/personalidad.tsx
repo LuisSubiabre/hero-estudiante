@@ -383,7 +383,7 @@ export default function PersonalidadPage() {
                   document={<PersonalidadPDF data={data} />}
                   fileName={`informe_personalidad_${data.nombre_estudiante.replace(/\s+/g, '_')}.pdf`}
                 >
-                  {({ loading, error }) => (
+                  {({ loading }) => (
                     <Button
                       className="mt-2"
                       color="primary"
