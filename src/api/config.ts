@@ -7,6 +7,11 @@ const api = axios.create({
   },
 });
 
+console.log('🔧 Configuración de API:', {
+  baseURL: import.meta.env.VITE_URL_BASE,
+  env: import.meta.env
+});
+
 api.interceptors.request.use((config) => {
   const token = localStorage.getItem("TokenLeu");
 
