@@ -19,15 +19,20 @@ export const getAllAsignaturas = async () => {
 export const inscribirAsignatura = async (asignatura_encuesta_id: number, prioridad: number = 1) => {
     try {
         console.log('📝 Inscribiendo en asignatura:', { asignatura_encuesta_id, prioridad });
+        console.log('📊 Mapeo de prioridades: Área A=1, Área B=2, Área C=3');
         
         const data = {
             asignatura_encuesta_id,
             prioridad
         };
         
+        console.log('📤 Datos enviados:', data);
+        console.log('🌐 URL:', '/fd/inscribir');
+        
         const response = await api.post('/fd/inscribir', data);
 
         console.log('✅ Respuesta de inscripción:', response.data);
+        console.log('📊 Status:', response.status);
         
         return response.data;
     } catch (error: any) {
@@ -36,8 +41,17 @@ export const inscribirAsignatura = async (asignatura_encuesta_id: number, priori
             console.error('📊 Detalles del error:', {
                 status: error.response.status,
                 statusText: error.response.statusText,
-                data: error.response.data
+                data: error.response.data,
+                headers: error.response.headers
             });
+            console.error('📤 Datos que se intentaron enviar:', {
+                asignatura_encuesta_id,
+                prioridad
+            });
+        } else if (error.request) {
+            console.error('📡 Error de red - no se recibió respuesta:', error.request);
+        } else {
+            console.error('⚙️ Error de configuración:', error.message);
         }
         throw error;
     }

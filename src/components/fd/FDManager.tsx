@@ -128,17 +128,75 @@ const FDManager: React.FC = () => {
 
   const handleInscribir = async (asignatura_encuesta_id: number) => {
     try {
+      // Validación básica del frontend (pero permitir que el backend tenga la última palabra)
+      const eleccionesActivas = resumenElecciones?.elecciones_activas || 0;
+
+      if (eleccionesActivas >= 3) {
+        console.log('⚠️ Frontend detecta 3+ asignaturas, pero permitiendo que el backend valide');
+      }
+
+      // Verificar si ya está inscrito en esta asignatura
+      if (eleccionesEstudiante.includes(asignatura_encuesta_id)) {
+        alert('⚠️ Ya estás inscrito en esta asignatura.');
+
+        return;
+      }
+
+      // Buscar la asignatura para obtener su área y determinar la prioridad
+      const asignatura = asignaturas.find(a => a.asignatura_encuesta_id === asignatura_encuesta_id);
+
+      if (!asignatura) {
+        alert('❌ No se pudo encontrar la información de la asignatura.');
+
+        return;
+      }
+
+      // Determinar prioridad basada en el área
+      let prioridad = 1; // Por defecto
+
+      switch (asignatura.area?.toUpperCase()) {
+        case 'A':
+          prioridad = 1;
+          break;
+        case 'B':
+          prioridad = 2;
+          break;
+        case 'C':
+          prioridad = 3;
+          break;
+        default:
+          console.warn('⚠️ Área desconocida:', asignatura.area, 'usando prioridad 1');
+          prioridad = 1;
+      }
+
+      console.log(`📝 Inscribiendo en asignatura ${asignatura_encuesta_id} (${asignatura.nombre})`);
+      console.log(`📊 Área: ${asignatura.area} → Prioridad: ${prioridad}`);
+      console.log(`📈 Elecciones actuales: ${eleccionesActivas}/3`);
+      
       setIsLoading(true);
-      await inscribirAsignatura(asignatura_encuesta_id, 1); // Prioridad 1 por defecto
+      await inscribirAsignatura(asignatura_encuesta_id, prioridad);
       
       // Recargar datos después de la inscripción
       await loadData();
       
       // Mostrar mensaje de éxito
-      alert('¡Inscripción exitosa!');
-    } catch (err) {
+      alert(`✅ ¡Inscripción exitosa!\n\nAsignatura: ${asignatura.nombre}\nÁrea: ${asignatura.area}\nPrioridad: ${prioridad}`);
+    } catch (err: any) {
       console.error('Error al inscribir:', err);
-      alert('Error al inscribir en la asignatura. Por favor, intenta nuevamente.');
+      
+      // Mostrar detalles del error si están disponibles
+      let errorMessage = '❌ Error al inscribir en la asignatura.';
+      
+      if (err.response?.data?.message) {
+        // Mostrar el mensaje específico del servidor
+        errorMessage = `❌ ${err.response.data.message}`;
+      } else if (err.response?.status === 400) {
+        errorMessage += '\n\nError 400: La petición no es válida. Verifica que no estés intentando inscribirte en una asignatura duplicada o que no haya problemas con los datos enviados.';
+      } else if (err.response?.status === 409) {
+        errorMessage += '\n\nError 409: Conflicto. Es posible que ya estés inscrito en esta asignatura o que haya un problema con la disponibilidad.';
+      }
+      
+      alert(errorMessage);
     } finally {
       setIsLoading(false);
     }
@@ -212,7 +270,8 @@ const FDManager: React.FC = () => {
           <div className="text-xs text-warning-600 dark:text-warning-400 space-y-1">
             <p>• Asignaturas cargadas: {asignaturas.length}</p>
             <p>• Bloques organizados: {bloques.length}</p>
-            <p>• Elecciones estudiante: {eleccionesEstudiante.length}</p>
+            <p>• Elecciones estudiante: {eleccionesEstudiante.length}/3</p>
+            <p>• Elecciones activas: {resumenElecciones?.elecciones_activas || 0}/3</p>
             <p>• URL Base: {import.meta.env.VITE_URL_BASE || 'No configurada'}</p>
           </div>
         </CardBody>
@@ -226,6 +285,16 @@ const FDManager: React.FC = () => {
             <p className="text-small text-default-500">
               Elige tus asignaturas para el próximo período académico
             </p>
+            
+            {/* Indicador de elecciones */}
+            <div className="flex items-center gap-4 mt-2">
+              <div className="flex items-center gap-2">
+                <div className={`w-3 h-3 rounded-full ${(resumenElecciones?.elecciones_activas || 0) > 2 ? 'bg-danger-500' : 'bg-success-500'}`} />
+                <span className="text-xs text-default-600">
+                  Elecciones: {resumenElecciones?.elecciones_activas || 0}/3
+                </span>
+              </div>
+            </div>
             
             {/* Leyenda de colores */}
             <div className="flex items-center gap-4 mt-2">
