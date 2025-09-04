@@ -13,7 +13,7 @@ import NotasPage from "@/pages/notas";
 import AclesPage from "@/pages/acles"; // Asegúrate de que la ruta sea correcta 
 import Asistencia from "@/components/Asistencia";
 import Personalidad from "@/pages/personalidad";
-
+import EncuestaFDPage from "@/pages/encuestafd";
 function App() {
   return (
     <Routes>
@@ -29,7 +29,7 @@ function App() {
         <Route element={<AclesPage />} path="/acles" />
         <Route element={<Asistencia />} path="/asistencia" />
         <Route element={<AtrasosPage />} path="/atrasos" />
-        
+        <Route element={<EncuestaFDPage />} path="/encuestafd" />
         {/* Rutas restringidas por curso */}
         <Route 
           element={

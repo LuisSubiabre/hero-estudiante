@@ -32,6 +32,10 @@ export const siteConfig = {
       label: "Certificados",
       href: "/certificados",
     },
+    {
+      label: "Encuesta FD",
+      href: "/encuestafd",
+    },
   ],
   navMenuItems: [
     {
@@ -61,6 +65,10 @@ export const siteConfig = {
     {
       label: "Certificados",
       href: "/certificados",
+    },
+    {
+      label: "Encuesta FD",
+      href: "/encuestafd",
     },
     {
       label: "Salir",

@@ -84,6 +84,8 @@ export const Navbar = () => {
         return <FlagIcon className="w-5 h-5" />;
       case "personalidad":
         return <UserIcon className="w-5 h-5" />;
+      case "encuestafd":
+        return <DocumentTextIcon className="w-5 h-5" />;
       case "salir":
         return <LogoutIcon className="w-5 h-5" />;
       default:
