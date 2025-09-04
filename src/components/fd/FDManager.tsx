@@ -5,7 +5,7 @@ import { UserIcon, RefreshCwIcon } from 'lucide-react';
 import BloqueAsignaturas from './BloqueAsignaturas';
 
 import { BookOpenIcon } from '@/components/icons';
-import { getAllAsignaturas } from '@/services/fdService';
+import { getAllAsignaturas, inscribirAsignatura, desinscribirAsignatura } from '@/services/fdService';
 
 
 const FDManager: React.FC = () => {
@@ -58,15 +58,39 @@ const FDManager: React.FC = () => {
   };
 
   const handleInscribir = async (asignatura_encuesta_id: number) => {
-    console.log('📝 Inscribiendo en asignatura:', asignatura_encuesta_id);
-    // TODO: Implementar inscripción cuando esté disponible el endpoint
-    alert('Función de inscripción pendiente de implementar');
+    try {
+      setIsLoading(true);
+      await inscribirAsignatura(asignatura_encuesta_id, 1); // Prioridad 1 por defecto
+      
+      // Recargar datos después de la inscripción
+      await loadData();
+      
+      // Mostrar mensaje de éxito
+      alert('¡Inscripción exitosa!');
+    } catch (err) {
+      console.error('Error al inscribir:', err);
+      alert('Error al inscribir en la asignatura. Por favor, intenta nuevamente.');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleDesinscribir = async (asignatura_encuesta_id: number) => {
-    console.log('🗑️ Desinscribiendo de asignatura:', asignatura_encuesta_id);
-    // TODO: Implementar desinscripción cuando esté disponible el endpoint
-    alert('Función de desinscripción pendiente de implementar');
+    try {
+      setIsLoading(true);
+      await desinscribirAsignatura(asignatura_encuesta_id);
+      
+      // Recargar datos después de la desinscripción
+      await loadData();
+      
+      // Mostrar mensaje de éxito
+      alert('¡Desinscripción exitosa!');
+    } catch (err) {
+      console.error('Error al desinscribir:', err);
+      alert('Error al desinscribir de la asignatura. Por favor, intenta nuevamente.');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   useEffect(() => {
@@ -129,6 +153,22 @@ const FDManager: React.FC = () => {
             <p className="text-small text-default-500">
               Elige tus asignaturas para el próximo período académico
             </p>
+            
+            {/* Leyenda de colores */}
+            <div className="flex items-center gap-4 mt-2">
+              <div className="flex items-center gap-2">
+                <div className="w-3 h-3 rounded-full bg-warning-500" />
+                <span className="text-xs text-default-600">Área A</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <div className="w-3 h-3 rounded-full bg-primary-500" />
+                <span className="text-xs text-default-600">Área B</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <div className="w-3 h-3 rounded-full bg-secondary-500" />
+                <span className="text-xs text-default-600">Área C</span>
+              </div>
+            </div>
           </div>
           <Button
             color="primary"

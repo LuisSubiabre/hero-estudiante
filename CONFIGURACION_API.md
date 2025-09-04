@@ -82,6 +82,8 @@ La API responde con el siguiente formato en el endpoint `GET /fd`:
       "cupos_totales": 33,
       "cupos_actuales": 33,
       "estado": "visible",
+      "dia": "MARTES Y VIERNES",
+      "horario": "07:45 A 10:00",
       "fecha_creacion": "2025-07-29T18:43:49.073Z",
       "fecha_actualizacion": "2025-08-12T11:27:37.276Z"
     }
@@ -97,6 +99,20 @@ La API responde con el siguiente formato en el endpoint `GET /fd`:
 - `cupos_totales`: Total de cupos disponibles
 - `cupos_actuales`: Cupos actualmente disponibles
 - `estado`: Estado de la asignatura ("visible" = activa)
+- `dia`: Días de la semana (ej: "MARTES Y VIERNES")
+- `horario`: Horario de la asignatura (ej: "07:45 A 10:00")
+
+### Endpoints de inscripción:
+
+**POST /fd/inscribir**
+```json
+{
+  "asignatura_encuesta_id": 9,
+  "prioridad": 1
+}
+```
+
+**DELETE /fd/desinscribir/:asignatura_encuesta_id**
 
 ## Debug temporal
 

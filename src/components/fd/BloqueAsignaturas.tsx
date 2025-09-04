@@ -25,6 +25,30 @@ const BloqueAsignaturas: React.FC<BloqueAsignaturasProps> = ({
     asignaturas: bloque.asignaturas
   });
 
+  // Obtener el color del área más común en este bloque
+  const getBloqueColor = () => {
+    const areas = bloque.asignaturas.map((a: any) => a.area?.toUpperCase()).filter(Boolean);
+    const areaCounts = areas.reduce((acc: any, area: string) => {
+      acc[area] = (acc[area] || 0) + 1;
+      return acc;
+    }, {});
+    
+    const mostCommonArea = Object.keys(areaCounts).reduce((a, b) => 
+      areaCounts[a] > areaCounts[b] ? a : b, 'A'
+    );
+    
+    switch (mostCommonArea) {
+      case 'A':
+        return 'warning';
+      case 'B':
+        return 'primary';
+      case 'C':
+        return 'secondary';
+      default:
+        return 'default';
+    }
+  };
+
   const asignaturasActivas = bloque.asignaturas.filter((a: any) => a.estado === 'visible' || a.activa);
   const totalCupos = asignaturasActivas.reduce((sum: number, a: any) => sum + (a.cupos_totales || 0), 0);
   const cuposDisponibles = asignaturasActivas.reduce((sum: number, a: any) => sum + (a.cupos_actuales || a.cupos_disponibles || 0), 0);
@@ -38,7 +62,7 @@ const BloqueAsignaturas: React.FC<BloqueAsignaturasProps> = ({
   return (
     <Card className="w-full">
       <CardHeader className="flex gap-3">
-        <BookOpenIcon className="w-6 h-6 text-primary" />
+        <BookOpenIcon className={`w-6 h-6 text-${getBloqueColor()}`} />
         <div className="flex flex-col flex-1">
           <div className="flex items-center justify-between">
             <p className="text-lg font-semibold">{bloque.nombre}</p>
