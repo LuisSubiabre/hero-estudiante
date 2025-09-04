@@ -5,9 +5,11 @@ import { UserIcon, RefreshCwIcon } from 'lucide-react';
 import BloqueAsignaturas from './BloqueAsignaturas';
 import EleccionesEstudiante from './EleccionesEstudiante';
 
+import ToastContainer from '@/components/ToastContainer';
 import { BookOpenIcon } from '@/components/icons';
 import { getAllAsignaturas, inscribirAsignatura, desinscribirAsignatura, listarAsignaturasInscritas } from '@/services/fdService';
 import { ResumenElecciones } from '@/types';
+import { useToast } from '@/hooks/useToast';
 
 
 const FDManager: React.FC = () => {
@@ -19,6 +21,8 @@ const FDManager: React.FC = () => {
   const [eleccionesEstudiante, setEleccionesEstudiante] = useState<number[]>([]);
   const [resumenElecciones, setResumenElecciones] = useState<ResumenElecciones | null>(null);
   const [isLoadingElecciones, setIsLoadingElecciones] = useState(false);
+  
+  const { toasts, removeToast, success, error: showError, warning } = useToast();
 
   const loadData = async () => {
     try {
@@ -137,7 +141,7 @@ const FDManager: React.FC = () => {
 
       // Verificar si ya está inscrito en esta asignatura
       if (eleccionesEstudiante.includes(asignatura_encuesta_id)) {
-        alert('⚠️ Ya estás inscrito en esta asignatura.');
+        warning('Asignatura duplicada', 'Ya estás inscrito en esta asignatura.');
 
         return;
       }
@@ -146,7 +150,7 @@ const FDManager: React.FC = () => {
       const asignatura = asignaturas.find(a => a.asignatura_encuesta_id === asignatura_encuesta_id);
 
       if (!asignatura) {
-        alert('❌ No se pudo encontrar la información de la asignatura.');
+        showError('Error', 'No se pudo encontrar la información de la asignatura.');
 
         return;
       }
@@ -180,23 +184,27 @@ const FDManager: React.FC = () => {
       await loadData();
       
       // Mostrar mensaje de éxito
-      alert(`✅ ¡Inscripción exitosa!\n\nAsignatura: ${asignatura.nombre}\nÁrea: ${asignatura.area}\nPrioridad: ${prioridad}`);
+      success(
+        '¡Inscripción exitosa!',
+        `${asignatura.nombre} (Área ${asignatura.area}, Prioridad ${prioridad})`
+      );
     } catch (err: any) {
       console.error('Error al inscribir:', err);
       
       // Mostrar detalles del error si están disponibles
-      let errorMessage = '❌ Error al inscribir en la asignatura.';
+      let errorTitle = 'Error al inscribir';
+      let errorMessage = 'No se pudo completar la inscripción.';
       
       if (err.response?.data?.message) {
         // Mostrar el mensaje específico del servidor
-        errorMessage = `❌ ${err.response.data.message}`;
+        errorMessage = err.response.data.message;
       } else if (err.response?.status === 400) {
-        errorMessage += '\n\nError 400: La petición no es válida. Verifica que no estés intentando inscribirte en una asignatura duplicada o que no haya problemas con los datos enviados.';
+        errorMessage = 'La petición no es válida. Verifica que no estés intentando inscribirte en una asignatura duplicada.';
       } else if (err.response?.status === 409) {
-        errorMessage += '\n\nError 409: Conflicto. Es posible que ya estés inscrito en esta asignatura o que haya un problema con la disponibilidad.';
+        errorMessage = 'Conflicto. Es posible que ya estés inscrito en esta asignatura.';
       }
       
-      alert(errorMessage);
+      showError(errorTitle, errorMessage);
     } finally {
       setIsLoading(false);
     }
@@ -211,10 +219,10 @@ const FDManager: React.FC = () => {
       await loadData();
       
       // Mostrar mensaje de éxito
-      alert('¡Desinscripción exitosa!');
+      success('¡Desinscripción exitosa!', 'Te has desinscrito de la asignatura correctamente.');
     } catch (err) {
       console.error('Error al desinscribir:', err);
-      alert('Error al desinscribir de la asignatura. Por favor, intenta nuevamente.');
+      showError('Error al desinscribir', 'No se pudo completar la desinscripción. Por favor, intenta nuevamente.');
     } finally {
       setIsLoading(false);
     }
@@ -416,6 +424,9 @@ const FDManager: React.FC = () => {
           )}
         </Tab>
       </Tabs>
+      
+      {/* Toast Container */}
+      <ToastContainer toasts={toasts} onRemove={removeToast} />
     </div>
   );
 };
