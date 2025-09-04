@@ -3,9 +3,11 @@ import { Card, CardBody, CardHeader, Tabs, Tab, Spinner, Button } from '@heroui/
 import { UserIcon, RefreshCwIcon } from 'lucide-react';
 
 import BloqueAsignaturas from './BloqueAsignaturas';
+import EleccionesEstudiante from './EleccionesEstudiante';
 
 import { BookOpenIcon } from '@/components/icons';
-import { getAllAsignaturas, inscribirAsignatura, desinscribirAsignatura } from '@/services/fdService';
+import { getAllAsignaturas, inscribirAsignatura, desinscribirAsignatura, listarAsignaturasInscritas } from '@/services/fdService';
+import { ResumenElecciones } from '@/types';
 
 
 const FDManager: React.FC = () => {
@@ -14,8 +16,9 @@ const FDManager: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [selectedTab, setSelectedTab] = useState('bloques');
-
-  const eleccionesEstudiante: number[] = []; // Por ahora vacío hasta implementar elecciones
+  const [eleccionesEstudiante, setEleccionesEstudiante] = useState<number[]>([]);
+  const [resumenElecciones, setResumenElecciones] = useState<ResumenElecciones | null>(null);
+  const [isLoadingElecciones, setIsLoadingElecciones] = useState(false);
 
   const loadData = async () => {
     try {
@@ -49,11 +52,77 @@ const FDManager: React.FC = () => {
 
       console.log('🏗️ Bloques organizados:', bloquesOrganizados);
       setBloques(bloquesOrganizados);
+      
+      // Cargar elecciones del estudiante
+      await loadElecciones();
     } catch (err) {
       console.error('❌ Error al cargar datos:', err);
       setError('Error al cargar los datos. Por favor, intenta nuevamente.');
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const loadElecciones = async () => {
+    try {
+      console.log('🎯 Cargando elecciones del estudiante...');
+      setIsLoadingElecciones(true);
+      
+      const eleccionesData = await listarAsignaturasInscritas();
+      
+      console.log('📋 Elecciones recibidas:', eleccionesData);
+      console.log('📋 Tipo de datos:', typeof eleccionesData, Array.isArray(eleccionesData));
+      console.log('📋 Cantidad de elecciones:', eleccionesData?.length);
+      
+      // Verificar que tenemos datos
+      if (!eleccionesData || !Array.isArray(eleccionesData)) {
+        console.warn('⚠️ No hay elecciones o formato incorrecto');
+        setResumenElecciones(null);
+        setEleccionesEstudiante([]);
+
+        return;
+      }
+      
+      // Transformar datos al formato esperado por EleccionesEstudiante
+      const eleccionesTransformadas = eleccionesData.map((eleccion: any) => {
+        console.log('🔄 Transformando elección:', eleccion);
+
+        return {
+          asignatura_encuesta_id: eleccion.asignatura_encuesta_id,
+          nombre_asignatura: eleccion.asignaturas_encuestum?.nombre || 'Sin nombre',
+          bloque: eleccion.asignaturas_encuestum?.bloque || 'Sin bloque',
+          area: eleccion.asignaturas_encuestum?.area || 'Sin área',
+          fecha_inscripcion: eleccion.fecha_creacion,
+          estado: 'activa' as const
+        };
+      });
+      
+      console.log('🔄 Elecciones transformadas:', eleccionesTransformadas);
+      
+      // Crear resumen de elecciones
+      const resumen: ResumenElecciones = {
+        estudiante: {
+          nombre: 'Estudiante', // TODO: Obtener del contexto de autenticación
+          rut: '12345678-9', // TODO: Obtener del contexto de autenticación
+          curso: '4° Medio' // TODO: Obtener del contexto de autenticación
+        },
+        elecciones: eleccionesTransformadas,
+        elecciones_activas: eleccionesTransformadas.filter((e: any) => e.estado === 'activa').length,
+        total_elecciones: eleccionesTransformadas.length
+      };
+      
+      setResumenElecciones(resumen);
+      setEleccionesEstudiante(eleccionesData.map((e: any) => e.asignatura_encuesta_id));
+      
+      console.log('✅ Elecciones procesadas:', resumen);
+      console.log('✅ Estado actualizado - resumenElecciones:', resumen);
+    } catch (err) {
+      console.error('❌ Error al cargar elecciones:', err);
+      console.error('❌ Detalles del error:', err);
+      setResumenElecciones(null);
+      setEleccionesEstudiante([]);
+    } finally {
+      setIsLoadingElecciones(false);
     }
   };
 
@@ -94,6 +163,7 @@ const FDManager: React.FC = () => {
   };
 
   useEffect(() => {
+    console.log('🚀 useEffect ejecutado - cargando datos iniciales');
     loadData();
   }, []);
 
@@ -101,7 +171,10 @@ const FDManager: React.FC = () => {
     isLoading,
     error,
     bloques: bloques.length,
-    asignaturas: asignaturas.length
+    asignaturas: asignaturas.length,
+    eleccionesEstudiante: eleccionesEstudiante.length,
+    resumenElecciones: resumenElecciones ? 'presente' : 'null',
+    isLoadingElecciones
   });
 
   if (isLoading) {
@@ -227,15 +300,51 @@ const FDManager: React.FC = () => {
             </div>
           }
         >
-          <Card>
-            <CardBody className="text-center py-12">
-              <UserIcon className="w-12 h-12 mx-auto mb-4 text-default-300" />
-              <p className="text-lg font-medium mb-2">Funcionalidad en desarrollo</p>
-              <p className="text-small text-default-500">
-                La gestión de elecciones estará disponible próximamente
-              </p>
-            </CardBody>
-          </Card>
+          {isLoadingElecciones ? (
+            <div className="flex justify-center items-center py-12">
+              <Spinner label="Cargando tus elecciones..." size="lg" />
+            </div>
+          ) : resumenElecciones ? (
+            <div className="space-y-4">
+              <div className="flex justify-end">
+                <Button
+                  color="primary"
+                  isLoading={isLoadingElecciones}
+                  size="sm"
+                  variant="flat"
+                  onPress={loadElecciones}
+                >
+                  <RefreshCwIcon className="w-4 h-4 mr-2" />
+                  Actualizar Elecciones
+                </Button>
+              </div>
+              <EleccionesEstudiante
+                isLoading={isLoading}
+                resumen={resumenElecciones}
+                onDesinscribir={handleDesinscribir}
+              />
+            </div>
+          ) : (
+            <Card>
+              <CardBody className="text-center py-12">
+                <UserIcon className="w-12 h-12 mx-auto mb-4 text-default-300" />
+                <p className="text-lg font-medium mb-2">No se pudieron cargar las elecciones</p>
+                <p className="text-small text-default-500 mb-4">
+                  Intenta recargar las elecciones o contacta al administrador
+                </p>
+                <Button
+                  color="primary"
+                  isLoading={isLoadingElecciones}
+                  size="sm"
+                  variant="flat"
+                  onPress={loadElecciones}
+                >
+                  <RefreshCwIcon className="w-4 h-4 mr-2" />
+                  Recargar Elecciones
+                </Button>
+              </CardBody>
+            </Card>
+          )}
         </Tab>
       </Tabs>
     </div>

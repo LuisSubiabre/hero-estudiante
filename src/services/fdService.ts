@@ -64,3 +64,19 @@ export const desinscribirAsignatura = async (asignatura_encuesta_id: number) => 
         throw error;
     }
 }
+
+export const listarAsignaturasInscritas = async () => {
+    const response = await api.get(`/fd/elecciones/estudiante`);
+
+    console.log('🔍 Respuesta completa de asignaturas inscritas:', response.data);
+    
+    // La API devuelve { success: true, data: [...] }
+    if (response.data.success && response.data.data) {
+        console.log('✅ Asignaturas inscritas extraídas correctamente:', response.data.data);
+
+        return response.data.data;
+    } else {
+        console.error('❌ Formato de respuesta inesperado:', response.data);
+        throw new Error('Formato de respuesta inesperado de la API');
+    }
+}
