@@ -26,25 +26,37 @@ export const Navbar = () => {
 
   // Función para filtrar elementos de navegación según el curso_id
   const getFilteredNavItems = () => {
-    if (!curso_id || curso_id < 1 || curso_id > 5) {
-      return siteConfig.navItems;
-    }
-    
-    // Si el curso_id está entre 1 y 5, excluir "Notas" y "Personalidad"
-    return siteConfig.navItems.filter(item => 
-      item.label !== "Notas" && item.label !== "Personalidad"
-    );
+    return siteConfig.navItems.filter(item => {
+      // Si el curso_id está entre 1 y 5, excluir "Notas" y "Personalidad"
+      if (curso_id && curso_id >= 1 && curso_id <= 5) {
+        return item.label !== "Notas" && item.label !== "Personalidad";
+      }
+      
+      // Si el curso_id NO está entre 25 y 30, excluir "Encuesta FD"
+      if (item.label === "Encuesta FD") {
+        return curso_id && curso_id >= 25 && curso_id <= 30;
+      }
+      
+      // Para todos los demás elementos, mostrarlos normalmente
+      return true;
+    });
   };
 
   const getFilteredNavMenuItems = () => {
-    if (!curso_id || curso_id < 1 || curso_id > 5) {
-      return siteConfig.navMenuItems;
-    }
-    
-    // Si el curso_id está entre 1 y 5, excluir "Notas" y "Personalidad"
-    return siteConfig.navMenuItems.filter(item => 
-      item.label !== "Notas" && item.label !== "Personalidad"
-    );
+    return siteConfig.navMenuItems.filter(item => {
+      // Si el curso_id está entre 1 y 5, excluir "Notas" y "Personalidad"
+      if (curso_id && curso_id >= 1 && curso_id <= 5) {
+        return item.label !== "Notas" && item.label !== "Personalidad";
+      }
+      
+      // Si el curso_id NO está entre 25 y 30, excluir "Encuesta FD"
+      if (item.label === "Encuesta FD") {
+        return curso_id && curso_id >= 25 && curso_id <= 30;
+      }
+      
+      // Para todos los demás elementos, mostrarlos normalmente
+      return true;
+    });
   };
 
   const searchInput = (
