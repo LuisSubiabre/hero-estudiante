@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [5.0.0](https://github.com/LuisSubiabre/hero-estudiante/compare/v4.0.2...v5.0.0) (2025-09-05)
+
+
+### Features
+
+* actualizar lógica de filtrado en el componente Navbar para manejar exclusiones de elementos de navegación según el curso_id, incluyendo "Encuesta FD" ([eed9aaf](https://github.com/LuisSubiabre/hero-estudiante/commit/eed9aaf760833113e8be1273d6b80f77d66f773d))
+* agregar funcionalidad de inscripción y desinscripción de asignaturas, incluyendo nuevos endpoints en la API y mejoras en la presentación de información en los componentes de la interfaz ([17df11c](https://github.com/LuisSubiabre/hero-estudiante/commit/17df11c7590e3a95b91a64412e04c3156affc072))
+* agregar interceptores de solicitud y respuesta en la API, incluyendo registros detallados de peticiones y manejo de errores en la inscripción de asignaturas en el componente FDManager ([5f155bd](https://github.com/LuisSubiabre/hero-estudiante/commit/5f155bd50af684c1fca00280e17964746bb1349e))
+* agregar lógica para manejar el límite de elecciones de asignaturas en los componentes AsignaturaCard y BloqueAsignaturas, y mostrar mensajes de restricción en el componente FDManager ([b8d7731](https://github.com/LuisSubiabre/hero-estudiante/commit/b8d7731741d72e532962f6208469fb673ce49d46))
+* agregar página de Encuesta FD y actualizar navegación y configuración del sitio para incluirla ([7f34333](https://github.com/LuisSubiabre/hero-estudiante/commit/7f343334db932050879eefad0a2ecfbf189e53a1))
+* implementar carga y gestión de elecciones de asignaturas en el componente FDManager, incluyendo nuevos estados y lógica para manejar elecciones del estudiante ([98e7694](https://github.com/LuisSubiabre/hero-estudiante/commit/98e76946bbd2bd248b1886b1f990a8f3dcdd7233))
+* implementar la gestión de asignaturas en la página de Formación Diferenciada, incluyendo componentes para mostrar bloques y elecciones de asignaturas, así como la integración con la API para obtener datos en tiempo real ([1c48b42](https://github.com/LuisSubiabre/hero-estudiante/commit/1c48b4225a683c10b9a14dfbcaa4e9708ff8b830))
+* integrar notificaciones mediante Toast en el componente FDManager para mejorar la experiencia del usuario al inscribirse y desinscribirse de asignaturas ([78b769f](https://github.com/LuisSubiabre/hero-estudiante/commit/78b769f9ac83803b654bb086aaadbd15b8163c58))
+* integrar ruta protegida para la página de Encuesta FD, asegurando acceso restringido a usuarios autorizados ([d55c471](https://github.com/LuisSubiabre/hero-estudiante/commit/d55c4712b3321324efddd1e28ac1ba7f44335e78))
+
 ### [4.0.2](https://github.com/LuisSubiabre/hero-estudiante/compare/v4.0.1...v4.0.2) (2025-06-25)
 
 
