@@ -203,7 +203,8 @@ const LoginForm = () => {
             isRequired
             className="w-full"
             label="Correo Electrónico"
-            labelPlacement="outside"
+            labelPlacement="inside"
+            placeholder="Ingresa tu correo electrónico"
             size="lg"
             type="email"
             value={email}
@@ -213,7 +214,7 @@ const LoginForm = () => {
 
           <Input
             isRequired
-            className="w-full pt-4"
+            className="w-full"
             endContent={
               <button
                 className="focus:outline-none"
@@ -258,7 +259,8 @@ const LoginForm = () => {
               </button>
             }
             label="Contraseña"
-            labelPlacement="outside"
+            labelPlacement="inside"
+            placeholder="Ingresa tu contraseña"
             size="lg"
             type={showPassword ? "text" : "password"}
             value={password}
