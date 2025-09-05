@@ -157,11 +157,45 @@ const LoginForm = () => {
             src="/images/logo.png"
           />
           <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
-            Liceo Experimental Umag
+            Liceo Experimental Umag.
           </h1>
           <p className="text-sm text-gray-500 dark:text-gray-400">
             Portal del Estudiante
           </p>
+        </div>
+
+        <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4 mb-6">
+          <div className="flex items-start gap-3">
+            <div className="flex-shrink-0">
+              <svg
+                className="w-5 h-5 text-blue-600 dark:text-blue-400 mt-0.5"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                />
+              </svg>
+            </div>
+            <div className="flex-1">
+              <h3 className="text-sm font-semibold text-blue-900 dark:text-blue-100 mb-1">
+                ¿Qué encontrarás en la plataforma?
+              </h3>
+              <ul className="text-xs text-blue-800 dark:text-blue-200 space-y-1">
+                <li>• Consulta de calificaciones</li>
+                <li>• Control de asistencia y atrasos</li>
+                <li>• Certificado Alumno Regular</li>
+                <li>• Informe de Personalidad</li>
+                <li>• ACLES</li>
+             
+              </ul>
+   
+            </div>
+          </div>
         </div>
 
         <form className="space-y-6" onSubmit={handleSubmit}>
