@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [5.0.5](https://github.com/LuisSubiabre/hero-estudiante/compare/v5.0.4...v5.0.5) (2025-09-05)
+
+
+### Bug Fixes
+
+* actualizar los placeholders en el formulario de inicio de sesión para mejorar la claridad, eliminando las etiquetas de los campos de correo electrónico y contraseña ([faa645e](https://github.com/LuisSubiabre/hero-estudiante/commit/faa645ee8b27611050ca05207db3bdfbd481e9fe))
+
 ### [5.0.4](https://github.com/LuisSubiabre/hero-estudiante/compare/v5.0.3...v5.0.4) (2025-09-05)
 
 
