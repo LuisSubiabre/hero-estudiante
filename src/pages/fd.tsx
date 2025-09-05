@@ -27,8 +27,6 @@ const jwtData = () => {
 
       const payload = JSON.parse(decoded);
 
-      console.log("Payload decodificado:", payload);
-
       return payload.estudiante_id;
     } catch (error) {
       console.error("Error al decodificar el token:", error);

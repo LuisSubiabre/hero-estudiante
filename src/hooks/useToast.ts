@@ -22,10 +22,11 @@ export const useToast = () => {
     setToasts(prev => [...prev, newToast]);
 
     // Auto-remove toast after duration
-    if (newToast.duration > 0) {
+    const duration = newToast.duration;
+    if (duration && duration > 0) {
       setTimeout(() => {
         removeToast(id);
-      }, newToast.duration);
+      }, duration);
     }
 
     return id;

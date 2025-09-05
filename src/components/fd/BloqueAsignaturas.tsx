@@ -1,8 +1,10 @@
 import React from 'react';
 import { Card, CardBody, CardHeader } from '@heroui/react';
+
+import AsignaturaCard from './AsignaturaCard';
+
 import { BookOpenIcon } from '@/components/icons';
 // import { BloqueFD } from '@/types'; // Comentado temporalmente
-import AsignaturaCard from './AsignaturaCard';
 
 interface BloqueAsignaturasProps {
   bloque: any; // Usando any temporalmente
@@ -21,17 +23,13 @@ const BloqueAsignaturas: React.FC<BloqueAsignaturasProps> = ({
   isLoading = false,
   maxEleccionesAlcanzado = false
 }) => {
-  console.log('🏗️ Renderizando BloqueAsignaturas:', {
-    bloque: bloque.nombre,
-    totalAsignaturas: bloque.asignaturas.length,
-    asignaturas: bloque.asignaturas
-  });
 
   // Obtener el color del área más común en este bloque
   const getBloqueColor = () => {
     const areas = bloque.asignaturas.map((a: any) => a.area?.toUpperCase()).filter(Boolean);
     const areaCounts = areas.reduce((acc: any, area: string) => {
       acc[area] = (acc[area] || 0) + 1;
+
       return acc;
     }, {});
     
@@ -52,14 +50,8 @@ const BloqueAsignaturas: React.FC<BloqueAsignaturasProps> = ({
   };
 
   const asignaturasActivas = bloque.asignaturas.filter((a: any) => a.estado === 'visible' || a.activa);
-  const totalCupos = asignaturasActivas.reduce((sum: number, a: any) => sum + (a.cupos_totales || 0), 0);
   const cuposDisponibles = asignaturasActivas.reduce((sum: number, a: any) => sum + (a.cupos_actuales || a.cupos_disponibles || 0), 0);
 
-  console.log('📊 Estadísticas del bloque:', {
-    asignaturasActivas: asignaturasActivas.length,
-    totalCupos,
-    cuposDisponibles
-  });
 
   return (
     <Card className="w-full">
@@ -92,11 +84,11 @@ const BloqueAsignaturas: React.FC<BloqueAsignaturasProps> = ({
               <AsignaturaCard
                 key={asignatura.asignatura_encuesta_id}
                 asignatura={asignatura}
-                onInscribir={onInscribir}
-                onDesinscribir={onDesinscribir}
                 isInscrito={eleccionesEstudiante.includes(asignatura.asignatura_encuesta_id)}
                 isLoading={isLoading}
                 maxEleccionesAlcanzado={maxEleccionesAlcanzado}
+                onDesinscribir={onDesinscribir}
+                onInscribir={onInscribir}
               />
             ))}
           </div>

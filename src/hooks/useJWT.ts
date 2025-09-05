@@ -27,13 +27,8 @@ export const useJWT = () => {
 
         const payload = JSON.parse(decoded) as JWTPayload;
 
-        console.log("JWT decodificado:", payload);
-        console.log("curso_id:", payload.curso_id);
-
         return payload;
       } catch (error) {
-        console.error("Error al decodificar el token:", error);
-
         return null;
       }
     }

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Alert, Button } from '@heroui/react';
 import { CheckCircle, XCircle, AlertTriangle, Info, X } from 'lucide-react';
-import { Toast, useToast } from '@/hooks/useToast';
+import type { Toast } from '@/hooks/useToast';
 
 interface ToastContainerProps {
   toasts: Toast[];

@@ -28,13 +28,10 @@ const FDManager: React.FC = () => {
 
   const loadData = async () => {
     try {
-      console.log('🚀 Iniciando carga de datos...');
       setIsLoading(true);
       setError(null);
 
       const asignaturasData = await getAllAsignaturas();
-
-      console.log('📊 Datos recibidos:', asignaturasData);
 
       setAsignaturas(asignaturasData);
       
@@ -56,13 +53,11 @@ const FDManager: React.FC = () => {
         asignaturas
       }));
 
-      console.log('🏗️ Bloques organizados:', bloquesOrganizados);
       setBloques(bloquesOrganizados);
       
       // Cargar elecciones del estudiante
       await loadElecciones();
-    } catch (err) {
-      console.error('❌ Error al cargar datos:', err);
+    } catch {
       setError('Error al cargar los datos. Por favor, intenta nuevamente.');
     } finally {
       setIsLoading(false);
@@ -72,18 +67,12 @@ const FDManager: React.FC = () => {
 
   const loadElecciones = async () => {
     try {
-      console.log('🎯 Cargando elecciones del estudiante...');
       setIsLoadingElecciones(true);
       
       const eleccionesData = await listarAsignaturasInscritas();
       
-      console.log('📋 Elecciones recibidas:', eleccionesData);
-      console.log('📋 Tipo de datos:', typeof eleccionesData, Array.isArray(eleccionesData));
-      console.log('📋 Cantidad de elecciones:', eleccionesData?.length);
-      
       // Verificar que tenemos datos
       if (!eleccionesData || !Array.isArray(eleccionesData)) {
-        console.warn('⚠️ No hay elecciones o formato incorrecto');
         setResumenElecciones(null);
         setEleccionesEstudiante([]);
 
@@ -92,8 +81,6 @@ const FDManager: React.FC = () => {
       
       // Transformar datos al formato esperado por EleccionesEstudiante
       const eleccionesTransformadas = eleccionesData.map((eleccion: any) => {
-        console.log('🔄 Transformando elección:', eleccion);
-
         return {
           asignatura_encuesta_id: eleccion.asignatura_encuesta_id,
           nombre_asignatura: eleccion.asignaturas_encuestum?.nombre || 'Sin nombre',
@@ -103,8 +90,6 @@ const FDManager: React.FC = () => {
           estado: 'activa' as const
         };
       });
-      
-      console.log('🔄 Elecciones transformadas:', eleccionesTransformadas);
       
       // Crear resumen de elecciones
       const resumen: ResumenElecciones = {
@@ -120,12 +105,7 @@ const FDManager: React.FC = () => {
       
       setResumenElecciones(resumen);
       setEleccionesEstudiante(eleccionesData.map((e: any) => e.asignatura_encuesta_id));
-      
-      console.log('✅ Elecciones procesadas:', resumen);
-      console.log('✅ Estado actualizado - resumenElecciones:', resumen);
-    } catch (err) {
-      console.error('❌ Error al cargar elecciones:', err);
-      console.error('❌ Detalles del error:', err);
+    } catch {
       setResumenElecciones(null);
       setEleccionesEstudiante([]);
     } finally {
@@ -139,7 +119,7 @@ const FDManager: React.FC = () => {
       const eleccionesActivas = resumenElecciones?.elecciones_activas || 0;
 
       if (eleccionesActivas >= 3) {
-        console.log('⚠️ Frontend detecta 3+ asignaturas, pero permitiendo que el backend valide');
+        // Frontend detecta 3+ asignaturas, pero permitiendo que el backend valide
       }
 
       // Verificar si ya está inscrito en esta asignatura
@@ -172,13 +152,8 @@ const FDManager: React.FC = () => {
           prioridad = 3;
           break;
         default:
-          console.warn('⚠️ Área desconocida:', asignatura.area, 'usando prioridad 1');
           prioridad = 1;
       }
-
-      console.log(`📝 Inscribiendo en asignatura ${asignatura_encuesta_id} (${asignatura.nombre})`);
-      console.log(`📊 Área: ${asignatura.area} → Prioridad: ${prioridad}`);
-      console.log(`📈 Elecciones actuales: ${eleccionesActivas}/3`);
       
       setIsLoading(true);
       await inscribirAsignatura(asignatura_encuesta_id, prioridad);
@@ -195,7 +170,6 @@ const FDManager: React.FC = () => {
         `${asignatura.nombre} (Área ${asignatura.area}, Prioridad ${prioridad})`
       );
     } catch (err: any) {
-      console.error('Error al inscribir:', err);
       
       // Mostrar detalles del error si están disponibles
       let errorTitle = 'Error al inscribir';
@@ -229,8 +203,7 @@ const FDManager: React.FC = () => {
       
       // Mostrar mensaje de éxito
       success('¡Desinscripción exitosa!', 'Te has desinscrito de la asignatura correctamente.');
-    } catch (err) {
-      console.error('Error al desinscribir:', err);
+    } catch {
       showError('Error al desinscribir', 'No se pudo completar la desinscripción. Por favor, intenta nuevamente.');
     } finally {
       setIsLoading(false);
@@ -238,20 +211,9 @@ const FDManager: React.FC = () => {
   };
 
   useEffect(() => {
-    console.log('🚀 useEffect ejecutado - cargando datos iniciales');
     loadData();
   }, []);
 
-  console.log('🎨 Renderizando FDManager:', {
-    isLoading,
-    error,
-    bloques: bloques.length,
-    asignaturas: asignaturas.length,
-    eleccionesEstudiante: eleccionesEstudiante.length,
-    resumenElecciones: resumenElecciones ? 'presente' : 'null',
-    isLoadingElecciones,
-    acceso_encuesta_fd
-  });
 
   // Verificar acceso a la encuesta FD
   if (acceso_encuesta_fd === false) {
@@ -298,23 +260,6 @@ const FDManager: React.FC = () => {
 
   return (
     <div className="space-y-6">
-      {/* Debug Info - Temporal */}
-      <Card className="bg-warning-50 dark:bg-warning-900/20">
-        <CardHeader>
-          <p className="text-sm font-semibold text-warning-700 dark:text-warning-300">
-            🔍 Debug Info (Temporal)
-          </p>
-        </CardHeader>
-        <CardBody>
-          <div className="text-xs text-warning-600 dark:text-warning-400 space-y-1">
-            <p>• Asignaturas cargadas: {asignaturas.length}</p>
-            <p>• Bloques organizados: {bloques.length}</p>
-            <p>• Elecciones estudiante: {eleccionesEstudiante.length}/3</p>
-            <p>• Elecciones activas: {resumenElecciones?.elecciones_activas || 0}/3</p>
-            <p>• URL Base: {import.meta.env.VITE_URL_BASE || 'No configurada'}</p>
-          </div>
-        </CardBody>
-      </Card>
 
       <Card>
         <CardHeader className="flex gap-3">
