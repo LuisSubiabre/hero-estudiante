@@ -157,7 +157,7 @@ const LoginForm = () => {
             src="/images/logo.png"
           />
           <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
-            Liceo Experimental Umag.
+            Liceo Experimental Umag
           </h1>
           <p className="text-sm text-gray-500 dark:text-gray-400">
             Portal del Estudiante
