@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [5.0.2](https://github.com/LuisSubiabre/hero-estudiante/compare/v5.0.1...v5.0.2) (2025-09-05)
+
+
+### Bug Fixes
+
+* corregir el título en el formulario de inicio de sesión añadiendo un punto final para mejorar la presentación ([4dd0e34](https://github.com/LuisSubiabre/hero-estudiante/commit/4dd0e340f7079df8939692ea954eda500b27b833))
+* eliminar el punto final del título en el formulario de inicio de sesión para una presentación más limpia ([e4cdb11](https://github.com/LuisSubiabre/hero-estudiante/commit/e4cdb11f7028fec81f74886990879add07c98c7a))
+
 ### [5.0.1](https://github.com/LuisSubiabre/hero-estudiante/compare/v5.0.0...v5.0.1) (2025-09-05)
 
 ## [5.0.0](https://github.com/LuisSubiabre/hero-estudiante/compare/v4.0.2...v5.0.0) (2025-09-05)
