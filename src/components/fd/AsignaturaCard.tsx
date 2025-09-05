@@ -10,6 +10,7 @@ interface AsignaturaCardProps {
   onDesinscribir: (asignatura_encuesta_id: number) => void;
   isInscrito: boolean;
   isLoading?: boolean;
+  maxEleccionesAlcanzado?: boolean;
 }
 
 const AsignaturaCard: React.FC<AsignaturaCardProps> = ({
@@ -17,7 +18,8 @@ const AsignaturaCard: React.FC<AsignaturaCardProps> = ({
   onInscribir,
   onDesinscribir,
   isInscrito,
-  isLoading = false
+  isLoading = false,
+  maxEleccionesAlcanzado = false
 }) => {
   const cuposDisponibles = asignatura.cupos_actuales || asignatura.cupos_disponibles || asignatura.cupos || 0;
   const cuposTotales = asignatura.cupos_totales || asignatura.cupos || 0;
@@ -95,7 +97,7 @@ const AsignaturaCard: React.FC<AsignaturaCardProps> = ({
               variant="flat" 
               size="sm"
             >
-              {cuposDisponibles}/{cuposTotales} cupos
+              {cuposDisponibles} cupos disponibles
             </Chip>
           </div>
           <div className="flex items-center gap-2">
@@ -173,16 +175,25 @@ const AsignaturaCard: React.FC<AsignaturaCardProps> = ({
           )}
 
           <div className="flex justify-end pt-2">
-            <Button
-              color={isInscrito ? "danger" : "primary"}
-              variant={isInscrito ? "flat" : "solid"}
-              size="sm"
-              onPress={handleAction}
-              isLoading={isLoading}
-              isDisabled={asignatura.estado !== 'visible' || (!isInscrito && cuposDisponibles === 0)}
-            >
-              {isInscrito ? 'Desinscribir' : 'Inscribir'}
-            </Button>
+            {/* Mostrar botón solo si está inscrito o si no se ha alcanzado el límite */}
+            {isInscrito || !maxEleccionesAlcanzado ? (
+              <Button
+                color={isInscrito ? "danger" : "primary"}
+                variant={isInscrito ? "flat" : "solid"}
+                size="sm"
+                onPress={handleAction}
+                isLoading={isLoading}
+                isDisabled={asignatura.estado !== 'visible' || (!isInscrito && cuposDisponibles === 0)}
+              >
+                {isInscrito ? 'Desinscribir' : 'Inscribir'}
+              </Button>
+            ) : (
+              <div className="text-center py-2">
+                <p className="text-xs text-default-500">
+                  Límite de 3 asignaturas alcanzado
+                </p>
+              </div>
+            )}
           </div>
         </div>
       </CardBody>

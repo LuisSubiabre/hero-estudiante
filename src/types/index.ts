@@ -19,6 +19,7 @@ export interface DecodedToken {
   curso_nombre: string;
   rut: string;
   nombre: string;
+  acceso_encuesta_fd: boolean;
 }
 
 export interface AuthContextType {

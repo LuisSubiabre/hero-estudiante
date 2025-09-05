@@ -25,6 +25,50 @@ const EleccionesEstudiante: React.FC<EleccionesEstudianteProps> = ({
     });
   };
 
+  const getAreaColor = (area: string) => {
+    const areaUpper = area?.toUpperCase();
+    switch (areaUpper) {
+      case 'A':
+        return 'warning'; // Naranja
+      case 'B':
+        return 'primary'; // Azul
+      case 'C':
+        return 'secondary'; // Púrpura
+      default:
+        return 'default';
+    }
+  };
+
+  const getAreaColorClasses = (area: string) => {
+    const areaUpper = area?.toUpperCase();
+    switch (areaUpper) {
+      case 'A':
+        return {
+          border: 'border-warning-200 dark:border-warning-800',
+          bg: 'bg-warning-50 dark:bg-warning-900/20',
+          text: 'text-warning-700 dark:text-warning-300'
+        };
+      case 'B':
+        return {
+          border: 'border-primary-200 dark:border-primary-800',
+          bg: 'bg-primary-50 dark:bg-primary-900/20',
+          text: 'text-primary-700 dark:text-primary-300'
+        };
+      case 'C':
+        return {
+          border: 'border-secondary-200 dark:border-secondary-800',
+          bg: 'bg-secondary-50 dark:bg-secondary-900/20',
+          text: 'text-secondary-700 dark:text-secondary-300'
+        };
+      default:
+        return {
+          border: 'border-default-200 dark:border-default-800',
+          bg: 'bg-default-50 dark:bg-default-900/20',
+          text: 'text-default-700 dark:text-default-300'
+        };
+    }
+  };
+
   return (
     <Card className="w-full">
       <CardHeader className="flex gap-3">
@@ -55,39 +99,42 @@ const EleccionesEstudiante: React.FC<EleccionesEstudianteProps> = ({
           </div>
         ) : (
           <div className="space-y-4">
-            {eleccionesActivas.map((eleccion) => (
-              <div
-                key={eleccion.asignatura_encuesta_id}
-                className="flex items-center justify-between p-4 bg-default-50 dark:bg-default-100 rounded-lg"
-              >
-                <div className="flex-1">
-                  <div className="flex items-center gap-3 mb-2">
-                    <h4 className="font-semibold text-foreground">
-                      {eleccion.nombre_asignatura}
-                    </h4>
-                    <Chip color="primary" variant="flat" size="sm">
-                      {eleccion.bloque}
-                    </Chip>
-                    <Chip color="secondary" variant="flat" size="sm">
-                      {eleccion.area}
-                    </Chip>
-                  </div>
-                  <div className="flex items-center gap-2 text-small text-default-500">
-                    <CalendarIcon className="w-4 h-4" />
-                    <span>Inscrito el {formatFecha(eleccion.fecha_inscripcion)}</span>
-                  </div>
-                </div>
-                <Button
-                  color="danger"
-                  variant="flat"
-                  size="sm"
-                  onPress={() => onDesinscribir(eleccion.asignatura_encuesta_id)}
-                  isLoading={isLoading}
+            {eleccionesActivas.map((eleccion) => {
+              const areaColors = getAreaColorClasses(eleccion.area);
+              return (
+                <div
+                  key={eleccion.asignatura_encuesta_id}
+                  className={`flex items-center justify-between p-4 ${areaColors.bg} ${areaColors.border} border rounded-lg`}
                 >
-                  Desinscribir
-                </Button>
-              </div>
-            ))}
+                  <div className="flex-1">
+                    <div className="flex items-center gap-3 mb-2">
+                      <h4 className="font-semibold text-foreground">
+                        {eleccion.nombre_asignatura}
+                      </h4>
+                      <Chip color="default" variant="flat" size="sm">
+                        {eleccion.bloque}
+                      </Chip>
+                      <Chip color={getAreaColor(eleccion.area)} variant="flat" size="sm">
+                        Área {eleccion.area}
+                      </Chip>
+                    </div>
+                    <div className="flex items-center gap-2 text-small text-default-500">
+                      <CalendarIcon className="w-4 h-4" />
+                      <span>Inscrito el {formatFecha(eleccion.fecha_inscripcion)}</span>
+                    </div>
+                  </div>
+                  <Button
+                    color="danger"
+                    variant="flat"
+                    size="sm"
+                    onPress={() => onDesinscribir(eleccion.asignatura_encuesta_id)}
+                    isLoading={isLoading}
+                  >
+                    Desinscribir
+                  </Button>
+                </div>
+              );
+            })}
           </div>
         )}
       </CardBody>

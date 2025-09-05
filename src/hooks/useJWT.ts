@@ -6,6 +6,7 @@ interface JWTPayload {
   email: string;
   rut: string;
   curso_nombre: string;
+  acceso_encuesta_fd: boolean;
   curso_id: number;
 }
 
@@ -48,5 +49,6 @@ export const useJWT = () => {
     email: jwtData?.email,
     rut: jwtData?.rut,
     curso_nombre: jwtData?.curso_nombre,
+    acceso_encuesta_fd: jwtData?.acceso_encuesta_fd,
   };
 }; 

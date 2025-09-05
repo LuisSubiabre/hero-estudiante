@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Card, CardBody, CardHeader, Tabs, Tab, Spinner, Button } from '@heroui/react';
-import { UserIcon, RefreshCwIcon } from 'lucide-react';
+import { UserIcon, RefreshCwIcon, AlertTriangle } from 'lucide-react';
 
 import BloqueAsignaturas from './BloqueAsignaturas';
 import EleccionesEstudiante from './EleccionesEstudiante';
@@ -10,6 +10,7 @@ import { BookOpenIcon } from '@/components/icons';
 import { getAllAsignaturas, inscribirAsignatura, desinscribirAsignatura, listarAsignaturasInscritas } from '@/services/fdService';
 import { ResumenElecciones } from '@/types';
 import { useToast } from '@/hooks/useToast';
+import { useJWT } from '@/hooks/useJWT';
 
 
 const FDManager: React.FC = () => {
@@ -23,6 +24,7 @@ const FDManager: React.FC = () => {
   const [isLoadingElecciones, setIsLoadingElecciones] = useState(false);
   
   const { toasts, removeToast, success, error: showError, warning } = useToast();
+  const { acceso_encuesta_fd } = useJWT();
 
   const loadData = async () => {
     try {
@@ -66,6 +68,7 @@ const FDManager: React.FC = () => {
       setIsLoading(false);
     }
   };
+
 
   const loadElecciones = async () => {
     try {
@@ -180,6 +183,9 @@ const FDManager: React.FC = () => {
       setIsLoading(true);
       await inscribirAsignatura(asignatura_encuesta_id, prioridad);
       
+      // Pequeño delay para asegurar que el backend haya procesado la inscripción
+      await new Promise(resolve => setTimeout(resolve, 500));
+      
       // Recargar datos después de la inscripción
       await loadData();
       
@@ -215,6 +221,9 @@ const FDManager: React.FC = () => {
       setIsLoading(true);
       await desinscribirAsignatura(asignatura_encuesta_id);
       
+      // Pequeño delay para asegurar que el backend haya procesado la desinscripción
+      await new Promise(resolve => setTimeout(resolve, 500));
+      
       // Recargar datos después de la desinscripción
       await loadData();
       
@@ -240,8 +249,30 @@ const FDManager: React.FC = () => {
     asignaturas: asignaturas.length,
     eleccionesEstudiante: eleccionesEstudiante.length,
     resumenElecciones: resumenElecciones ? 'presente' : 'null',
-    isLoadingElecciones
+    isLoadingElecciones,
+    acceso_encuesta_fd
   });
+
+  // Verificar acceso a la encuesta FD
+  if (acceso_encuesta_fd === false) {
+    return (
+      <Card className="w-full">
+        <CardBody className="text-center py-12">
+          <div className="flex flex-col items-center gap-4">
+            <AlertTriangle className="w-16 h-16 text-warning-500" />
+            <div>
+              <h3 className="text-xl font-semibold text-foreground mb-2">
+                Acceso Restringido
+              </h3>
+              <p className="text-default-600 mb-4">
+                No tiene acceso a la encuesta FD en este momento. Intente más tarde o contacte a U.T.P Media.
+              </p>
+            </div>
+          </div>
+        </CardBody>
+      </Card>
+    );
+  }
 
   if (isLoading) {
     return (
@@ -361,6 +392,7 @@ const FDManager: React.FC = () => {
                 bloque={bloque}
                 eleccionesEstudiante={eleccionesEstudiante}
                 isLoading={false}
+                maxEleccionesAlcanzado={(resumenElecciones?.elecciones_activas || 0) >= 3}
                 onDesinscribir={handleDesinscribir}
                 onInscribir={handleInscribir}
               />

@@ -10,6 +10,7 @@ interface BloqueAsignaturasProps {
   onInscribir: (asignatura_encuesta_id: number) => void;
   onDesinscribir: (asignatura_encuesta_id: number) => void;
   isLoading?: boolean;
+  maxEleccionesAlcanzado?: boolean;
 }
 
 const BloqueAsignaturas: React.FC<BloqueAsignaturasProps> = ({
@@ -17,7 +18,8 @@ const BloqueAsignaturas: React.FC<BloqueAsignaturasProps> = ({
   eleccionesEstudiante,
   onInscribir,
   onDesinscribir,
-  isLoading = false
+  isLoading = false,
+  maxEleccionesAlcanzado = false
 }) => {
   console.log('🏗️ Renderizando BloqueAsignaturas:', {
     bloque: bloque.nombre,
@@ -74,7 +76,7 @@ const BloqueAsignaturas: React.FC<BloqueAsignaturasProps> = ({
             <p className="text-small text-default-500">{bloque.descripcion}</p>
           )}
           <div className="text-small text-default-400">
-            Cupos: {cuposDisponibles}/{totalCupos} disponibles
+            {cuposDisponibles} cupos disponibles
           </div>
         </div>
       </CardHeader>
@@ -94,6 +96,7 @@ const BloqueAsignaturas: React.FC<BloqueAsignaturasProps> = ({
                 onDesinscribir={onDesinscribir}
                 isInscrito={eleccionesEstudiante.includes(asignatura.asignatura_encuesta_id)}
                 isLoading={isLoading}
+                maxEleccionesAlcanzado={maxEleccionesAlcanzado}
               />
             ))}
           </div>
