@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import {
-  Input,
   Button,
   Card,
   Modal,
@@ -309,14 +308,21 @@ const LoginForm = () => {
           <ModalHeader>Recuperar Contraseña</ModalHeader>
           <ModalBody>
             <form className="space-y-4" onSubmit={handleRecoverySubmit}>
-              <Input
-                isRequired
-                description="Ingresa tu RUT sin puntos y con guión (Ejemplo: 12345678-9)"
-                label="RUT"
-                placeholder="12345678-9"
-                value={rut}
-                onChange={(e) => validateRut(e.target.value)}
-              />
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                  RUT
+                </label>
+                <input
+                  required
+                  className="w-full px-4 py-3 text-base border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
+                  placeholder="12345678-9"
+                  value={rut}
+                  onChange={(e) => validateRut(e.target.value)}
+                />
+                <p className="text-xs text-gray-500 dark:text-gray-400">
+                  Ingresa tu RUT sin puntos y con guión (Ejemplo: 12345678-9)
+                </p>
+              </div>
 
               {recoveryError && (
                 <div className="text-red-500 text-sm">{recoveryError}</div>
