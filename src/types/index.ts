@@ -19,6 +19,7 @@ export interface DecodedToken {
   curso_nombre: string;
   rut: string;
   nombre: string;
+  acceso_encuesta_fd: boolean;
 }
 
 export interface AuthContextType {
@@ -87,5 +88,74 @@ export interface AtrasosResponse {
       rut: string;
     };
     atrasos: Atraso[];
+  };
+}
+
+// Tipos para Formación Diferenciada (FD)
+export interface AsignaturaEncuesta {
+  asignatura_encuesta_id: number;
+  nombre: string;
+  descripcion?: string;
+  bloque: string;
+  area: string;
+  cupos_disponibles: number;
+  cupos_totales: number;
+  profesor?: string;
+  horario?: string;
+  ubicacion?: string;
+  requisitos?: string;
+  activa: boolean;
+}
+
+export interface BloqueFD {
+  nombre: string;
+  descripcion?: string;
+  asignaturas: AsignaturaEncuesta[];
+}
+
+export interface AreaFD {
+  nombre: string;
+  descripcion?: string;
+  asignaturas: AsignaturaEncuesta[];
+}
+
+export interface EleccionEstudiante {
+  asignatura_encuesta_id: number;
+  nombre_asignatura: string;
+  bloque: string;
+  area: string;
+  fecha_inscripcion: string;
+  estado: 'activa' | 'cancelada';
+}
+
+export interface ResumenElecciones {
+  estudiante: {
+    nombre: string;
+    rut: string;
+    curso: string;
+  };
+  elecciones: EleccionEstudiante[];
+  total_elecciones: number;
+  elecciones_activas: number;
+}
+
+export interface EstudianteAsignatura {
+  estudiante_id: number;
+  nombre: string;
+  rut: string;
+  curso: string;
+  fecha_inscripcion: string;
+}
+
+export interface InscripcionRequest {
+  asignatura_encuesta_id: number;
+}
+
+export interface InscripcionResponse {
+  success: boolean;
+  message: string;
+  data?: {
+    inscripcion_id: number;
+    fecha_inscripcion: string;
   };
 }

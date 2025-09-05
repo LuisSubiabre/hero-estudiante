@@ -5,6 +5,7 @@ import Logout from "./pages/logout";
 
 import ProtectedRoute from "@/components/ProtectedRoute"; // Importa el componente de ruta protegida
 import CourseRestrictedRoute from "@/components/CourseRestrictedRoute"; // Importa el componente de restricción por curso
+import FDProtectedRoute from "@/components/FDProtectedRoute"; // Importa el componente de protección para FD
 import IndexPage from "@/pages/index";
 import InformesPage from "@/pages/informes";
 import NoDisponiblePage from "@/pages/nodisponible";
@@ -29,7 +30,14 @@ function App() {
         <Route element={<AclesPage />} path="/acles" />
         <Route element={<Asistencia />} path="/asistencia" />
         <Route element={<AtrasosPage />} path="/atrasos" />
-        <Route element={<EncuestaFDPage />} path="/encuestafd" />
+        <Route 
+          element={
+            <FDProtectedRoute>
+              <EncuestaFDPage />
+            </FDProtectedRoute>
+          } 
+          path="/encuestafd" 
+        />
         {/* Rutas restringidas por curso */}
         <Route 
           element={
