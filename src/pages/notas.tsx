@@ -396,7 +396,7 @@ const NotasPDF = ({ libreta, promediosCurso }: { libreta: Libreta, promediosCurs
     .sort((a, b) => a.indice - b.indice)
     .map(asignatura => {
       const notas1S = obtenerNotasSemestre(asignatura, 1, 10);
-      const notas2S = obtenerNotasSemestre(asignatura, 13, 22);
+      const notas2S = obtenerNotasSemestre(asignatura, 11, 20);
       const promedio1S = calcularPromedio(notas1S, configPromedios.promedioAnualAsignatura);
       const promedio2S = calcularPromedio(notas2S, configPromedios.promedioAnualAsignatura);
       const promedioFinal = calcularPromedio(
@@ -452,7 +452,7 @@ const NotasPDF = ({ libreta, promediosCurso }: { libreta: Libreta, promediosCurs
             .sort((a, b) => a.indice - b.indice)
             .map((asignatura) => {
               const notas1S = obtenerNotasSemestre(asignatura, 1, 10);
-              const notas2S = obtenerNotasSemestre(asignatura, 13, 22);
+              const notas2S = obtenerNotasSemestre(asignatura, 11, 20);
               const promedio1S = calcularPromedio(notas1S, configPromedios.promedioAnualAsignatura);
               const promedio2S = calcularPromedio(notas2S, configPromedios.promedioAnualAsignatura);
               const promedioFinal = calcularPromedio(
@@ -547,13 +547,13 @@ const calcularPromedioGeneral = (libreta: Libreta, tipo: number): string => {
 
       return promedio !== null ? promedio : null;
     } else if (tipo === 2) {
-      const notas = obtenerNotasSemestre(asignatura, 13, 22);
+      const notas = obtenerNotasSemestre(asignatura, 11, 20);
       const promedio = calcularPromedio(notas, configPromedios.promedioAnualAsignatura);
 
       return promedio !== null ? promedio : null;
     } else {
       const notas1S = obtenerNotasSemestre(asignatura, 1, 10);
-      const notas2S = obtenerNotasSemestre(asignatura, 13, 22);
+      const notas2S = obtenerNotasSemestre(asignatura, 11, 20);
       const promedio1S = calcularPromedio(notas1S, configPromedios.promedioAnualAsignatura);
       const promedio2S = calcularPromedio(notas2S, configPromedios.promedioAnualAsignatura);
       const promediosSemestres = [promedio1S, promedio2S].filter((nota): nota is number => nota !== null);
@@ -742,7 +742,7 @@ export default function NotasPage() {
                     .sort((a, b) => a.indice - b.indice)
                     .map((asignatura) => {
                       const notas1S = obtenerNotasSemestre(asignatura, 1, 10);
-                      const notas2S = obtenerNotasSemestre(asignatura, 13, 22);
+                      const notas2S = obtenerNotasSemestre(asignatura, 11, 20);
                       const promedio1S = calcularPromedio(notas1S, configPromedios.promedioAnualAsignatura);
                       const promedio2S = calcularPromedio(notas2S, configPromedios.promedioAnualAsignatura);
                       const promedioFinal = calcularPromedio(
@@ -770,7 +770,7 @@ export default function NotasPage() {
                               key={i + 10}
                               className="border border-gray-300 dark:border-gray-600 px-2 py-2 text-gray-700 dark:text-gray-200"
                             >
-                              {convertirCalificacion(asignatura[`calificacion${i + 13}`] as number | null, Boolean(asignatura.concepto))}
+                              {convertirCalificacion(asignatura[`calificacion${i + 11}`] as number | null, Boolean(asignatura.concepto))}
                             </td>
                           ))}
                           {/* Promedios */}
@@ -827,7 +827,7 @@ export default function NotasPage() {
                     const promedios2S = libreta.asignaturas
                       .filter(asignatura => !asignatura.concepto)
                       .map(asignatura => {
-                        const notas = obtenerNotasSemestre(asignatura, 13, 22);
+                        const notas = obtenerNotasSemestre(asignatura, 11, 20);
 
                         // Usar promedioAnualAsignatura para redondear cada promedio de asignatura
                         return calcularPromedio(notas, configPromedios.promedioAnualAsignatura);
