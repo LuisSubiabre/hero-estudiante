@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [5.0.8](https://github.com/LuisSubiabre/hero-estudiante/compare/v5.0.7...v5.0.8) (2025-10-06)
+
+
+### Bug Fixes
+
+* corregir el rango de notas del segundo semestre en el componente NotasPDF, ajustando los índices de 13-22 a 11-20 para un cálculo correcto de promedios ([374f171](https://github.com/LuisSubiabre/hero-estudiante/commit/374f17193cb2ee48c059f8840cc395aa64cfeea2))
+
 ### [5.0.7](https://github.com/LuisSubiabre/hero-estudiante/compare/v5.0.6...v5.0.7) (2025-09-05)
 
 ### [5.0.6](https://github.com/LuisSubiabre/hero-estudiante/compare/v5.0.5...v5.0.6) (2025-09-05)
