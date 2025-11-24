@@ -13,6 +13,7 @@ interface BloqueAsignaturasProps {
   onDesinscribir: (asignatura_encuesta_id: number) => void;
   isLoading?: boolean;
   maxEleccionesAlcanzado?: boolean;
+  isAsignaturaBloqueada?: (asignatura_encuesta_id: number) => boolean;
 }
 
 const BloqueAsignaturas: React.FC<BloqueAsignaturasProps> = ({
@@ -21,7 +22,8 @@ const BloqueAsignaturas: React.FC<BloqueAsignaturasProps> = ({
   onInscribir,
   onDesinscribir,
   isLoading = false,
-  maxEleccionesAlcanzado = false
+  maxEleccionesAlcanzado = false,
+  isAsignaturaBloqueada
 }) => {
 
   // Obtener el color del área más común en este bloque
@@ -89,6 +91,7 @@ const BloqueAsignaturas: React.FC<BloqueAsignaturasProps> = ({
                 maxEleccionesAlcanzado={maxEleccionesAlcanzado}
                 onDesinscribir={onDesinscribir}
                 onInscribir={onInscribir}
+                isBloqueada={isAsignaturaBloqueada ? isAsignaturaBloqueada(asignatura.asignatura_encuesta_id) : false}
               />
             ))}
           </div>

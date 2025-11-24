@@ -113,6 +113,44 @@ const FDManager: React.FC = () => {
     }
   };
 
+  // Calcular qué bloques ya tienen una asignatura seleccionada
+  const getBloquesConSeleccion = (): Set<string> => {
+    const bloquesSeleccionados = new Set<string>();
+    
+    if (resumenElecciones) {
+      resumenElecciones.elecciones
+        .filter(e => e.estado === 'activa')
+        .forEach(eleccion => {
+          bloquesSeleccionados.add(eleccion.bloque);
+        });
+    }
+    
+    return bloquesSeleccionados;
+  };
+
+  // Verificar si una asignatura está bloqueada (ya hay otra del mismo bloque seleccionada)
+  const isAsignaturaBloqueada = (asignatura_encuesta_id: number): boolean => {
+    const asignatura = asignaturas.find(a => a.asignatura_encuesta_id === asignatura_encuesta_id);
+
+    if (!asignatura) return false;
+    
+    const bloque = asignatura.bloque || 'Sin Bloque';
+    const bloquesConSeleccion = getBloquesConSeleccion();
+    
+    // Si el bloque ya tiene una selección, verificar si esta asignatura es la seleccionada
+    if (bloquesConSeleccion.has(bloque)) {
+      // Si esta asignatura ya está inscrita, no está bloqueada (puede desinscribirse)
+      if (eleccionesEstudiante.includes(asignatura_encuesta_id)) {
+        return false;
+      }
+
+      // Si hay otra asignatura del mismo bloque inscrita, esta está bloqueada
+      return true;
+    }
+    
+    return false;
+  };
+
   const handleInscribir = async (asignatura_encuesta_id: number) => {
     try {
       // Validación básica del frontend (pero permitir que el backend tenga la última palabra)
@@ -336,6 +374,7 @@ const FDManager: React.FC = () => {
                 key={bloque.nombre}
                 bloque={bloque}
                 eleccionesEstudiante={eleccionesEstudiante}
+                isAsignaturaBloqueada={isAsignaturaBloqueada}
                 isLoading={false}
                 maxEleccionesAlcanzado={(resumenElecciones?.elecciones_activas || 0) >= 3}
                 onDesinscribir={handleDesinscribir}

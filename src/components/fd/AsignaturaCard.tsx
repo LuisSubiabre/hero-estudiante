@@ -11,6 +11,7 @@ interface AsignaturaCardProps {
   isInscrito: boolean;
   isLoading?: boolean;
   maxEleccionesAlcanzado?: boolean;
+  isBloqueada?: boolean;
 }
 
 const AsignaturaCard: React.FC<AsignaturaCardProps> = ({
@@ -19,7 +20,8 @@ const AsignaturaCard: React.FC<AsignaturaCardProps> = ({
   onDesinscribir,
   isInscrito,
   isLoading = false,
-  maxEleccionesAlcanzado = false
+  maxEleccionesAlcanzado = false,
+  isBloqueada = false
 }) => {
   const cuposDisponibles = asignatura.cupos_actuales || asignatura.cupos_disponibles || asignatura.cupos || 0;
   const cuposTotales = asignatura.cupos_totales || asignatura.cupos || 0;
@@ -177,16 +179,27 @@ const AsignaturaCard: React.FC<AsignaturaCardProps> = ({
           <div className="flex justify-end pt-2">
             {/* Mostrar botón solo si está inscrito o si no se ha alcanzado el límite */}
             {isInscrito || !maxEleccionesAlcanzado ? (
-              <Button
-                color={isInscrito ? "danger" : "primary"}
-                variant={isInscrito ? "flat" : "solid"}
-                size="sm"
-                onPress={handleAction}
-                isLoading={isLoading}
-                isDisabled={asignatura.estado !== 'visible' || (!isInscrito && cuposDisponibles === 0)}
-              >
-                {isInscrito ? 'Desinscribir' : 'Inscribir'}
-              </Button>
+              <>
+                <Button
+                  color={isInscrito ? "danger" : "primary"}
+                  variant={isInscrito ? "flat" : "solid"}
+                  size="sm"
+                  onPress={handleAction}
+                  isLoading={isLoading}
+                  isDisabled={
+                    asignatura.estado !== 'visible' || 
+                    (!isInscrito && cuposDisponibles === 0) ||
+                    (!isInscrito && isBloqueada)
+                  }
+                >
+                  {isInscrito ? 'Desinscribir' : 'Inscribir'}
+                </Button>
+                {!isInscrito && isBloqueada && (
+                  <p className="text-xs text-default-500 mt-2 text-center w-full">
+                    Ya tienes una asignatura seleccionada en este bloque
+                  </p>
+                )}
+              </>
             ) : (
               <div className="text-center py-2">
                 <p className="text-xs text-default-500">
