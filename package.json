@@ -1,7 +1,7 @@
 {
   "name": "vite-template",
   "private": true,
-  "version": "5.0.8",
+  "version": null,
   "type": "module",
   "scripts": {
     "dev": "vite",

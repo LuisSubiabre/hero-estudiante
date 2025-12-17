@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [](https://github.com/LuisSubiabre/hero-estudiante/compare/v5.0.8...v) (2025-12-17)
+
+
+### Features
+
+* agregar función para calcular el promedio final y mostrarlo en el componente NotasPDF ([90c0606](https://github.com/LuisSubiabre/hero-estudiante/commit/90c0606517632057030dc52f833ea7c69f400679))
+* agregar lógica para manejar asignaturas bloqueadas en el componente AsignaturaCard y BloqueAsignaturas, permitiendo mostrar mensajes informativos y deshabilitar acciones según el estado de inscripción ([11b0190](https://github.com/LuisSubiabre/hero-estudiante/commit/11b0190cb5ca00786ce1b5a8e7e8eefaac08bb2a))
+* agregar visualización del promedio final en el componente Notas, incluyendo lógica para calcular y mostrar el promedio basado en las asignaturas disponibles ([8d57ba7](https://github.com/LuisSubiabre/hero-estudiante/commit/8d57ba7f54887e4efcb8792b245ea63fbc7368ef))
+
+
+### Bug Fixes
+
+* corregir error tipográfico en el título del gráfico de rendimiento en el componente Notas ([4558adf](https://github.com/LuisSubiabre/hero-estudiante/commit/4558adfd86619a0ee6c743cf31036a9554c91c76))
+* corregir errores tipográficos en los textos de promedios generales en el componente NotasPDF ([ba09b6e](https://github.com/LuisSubiabre/hero-estudiante/commit/ba09b6efc2567c663dd8f3f1bf281a88f3b040a9))
+
 ### [5.0.8](https://github.com/LuisSubiabre/hero-estudiante/compare/v5.0.7...v5.0.8) (2025-10-06)
 
 
