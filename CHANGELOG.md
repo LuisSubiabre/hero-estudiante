@@ -2,7 +2,7 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
-## [](https://github.com/LuisSubiabre/hero-estudiante/compare/v5.0.8...v) (2025-12-17)
+## [5.1.0](https://github.com/LuisSubiabre/hero-estudiante/compare/v5.0.8...v5.1.0) (2025-12-17)
 
 
 ### Features
