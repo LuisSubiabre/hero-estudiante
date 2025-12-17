@@ -23,7 +23,7 @@ interface PromedioCurso {
   promedio_general: string;
 }
 
-// Función para obtener el estudiante_id del token
+// Funci?n para obtener el estudiante_id del token
 const jwtData = () => {
   const token = localStorage.getItem("TokenLeu");
 
@@ -53,7 +53,7 @@ const jwtData = () => {
   return null;
 };
 
-// Función para convertir calificaciones numéricas a conceptos
+// Funci?n para convertir calificaciones num?ricas a conceptos
 const convertirCalificacion = (
   calificacion: number | null,
   esConcepto: boolean
@@ -62,21 +62,23 @@ const convertirCalificacion = (
 
   if (!esConcepto) return calificacion.toString();
 
-  switch (calificacion) {
-    case 70:
-      return "MB";
-    case 50:
-      return "B";
-    case 40:
-      return "S";
-    case 30:
-      return "I";
-    default:
-      return calificacion.toString();
-  }
+  // Aplicar la misma l?gica que en getPromedioCurso del PDF
+  // Redondear el valor
+  const redondeado =
+    Math.round(calificacion * 10) / 10 >= Math.floor(calificacion) + 0.5
+      ? Math.ceil(calificacion)
+      : Math.floor(calificacion);
+
+  // Convertir a concepto basado en rangos
+  if (redondeado >= 70) return "MB";
+  if (redondeado >= 60) return "B";
+  if (redondeado >= 50) return "S";
+  if (redondeado >= 40 || redondeado === 30) return "I";
+
+  return redondeado.toString();
 };
 
-// Función para calcular el promedio de un conjunto de notas
+// Funci?n para calcular el promedio de un conjunto de notas
 const calcularPromedio = (
   notas: (number | null)[],
   config:
@@ -95,7 +97,7 @@ const calcularPromedio = (
     return promedio;
   }
 
-  // Para promedioAnualAsignatura, aplicar la regla de aproximación
+  // Para promedioAnualAsignatura, aplicar la regla de aproximaci?n
   if (config.aproximar && "precision" in config) {
     const decimal = promedio - Math.floor(promedio);
     const base = config.reglaAproximacion?.base || 0;
@@ -110,11 +112,75 @@ const calcularPromedio = (
   return promedio;
 };
 
-// Función para obtener las notas de un semestre
-const obtenerNotasSemestre = (asignatura: any, inicio: number, fin: number) => {
+// Función para normalizar notas conceptuales (convertir strings a números)
+const normalizarNotaConceptual = (
+  nota: number | string | null
+): number | null => {
+  if (nota === null) return null;
+
+  // Si es un string, convertirlo a número según el concepto
+  if (typeof nota === "string") {
+    const notaUpper = nota.toUpperCase().trim();
+
+    switch (notaUpper) {
+      case "MB":
+        return 70;
+      case "B":
+        return 60;
+      case "S":
+        return 50;
+      case "I":
+        return 40;
+      default:
+        // Intentar parsear como número
+        const parsed = parseFloat(notaUpper);
+
+        // Si es 30, convertirlo a 40 (I) para el cálculo
+        if (!isNaN(parsed) && parsed === 30) return 40;
+
+        return isNaN(parsed) ? null : parsed;
+    }
+  }
+
+  // Si ya es un número, convertir 30 a 40 para el cálculo
+  if (typeof nota === "number" && nota === 30) return 40;
+
+  return typeof nota === "number" ? nota : null;
+};
+
+// Funci?n para calcular el promedio conceptual usando la misma l?gica del PDF
+const calcularPromedioConceptual = (
+  notas: (number | string | null)[]
+): number | null => {
+  // Normalizar todas las notas (convertir strings a números)
+  const notasNormalizadas = notas
+    .map(normalizarNotaConceptual)
+    .filter((nota) => nota !== null) as number[];
+
+  if (notasNormalizadas.length === 0) return null;
+
+  const suma = notasNormalizadas.reduce((acc, nota) => acc + nota, 0);
+  const promedio = suma / notasNormalizadas.length;
+
+  // Aplicar el mismo redondeo que en getPromedioCurso del PDF
+  // Aproximar: 59.5 -> 60, 59.4 -> 59
+  const redondeado =
+    Math.round(promedio * 10) / 10 >= Math.floor(promedio) + 0.5
+      ? Math.ceil(promedio)
+      : Math.floor(promedio);
+
+  return redondeado;
+};
+
+// Funci?n para obtener las notas de un semestre
+const obtenerNotasSemestre = (
+  asignatura: any,
+  inicio: number,
+  fin: number
+): (number | string | null)[] => {
   return Array.from(
     { length: fin - inicio + 1 },
-    (_, i) => asignatura[`calificacion${inicio + i}`] as number | null
+    (_, i) => asignatura[`calificacion${inicio + i}`] as number | string | null
   );
 };
 
@@ -305,22 +371,22 @@ const styles = StyleSheet.create({
   },
 });
 
-// Función para truncar texto
+// Funci?n para truncar texto
 const truncateText = (text: string, maxLength: number = 12) => {
   if (text.length <= maxLength) return text;
 
   return text.slice(0, maxLength) + "...";
 };
 
-// Componente para el gráfico de barras
+// Componente para el gr?fico de barras
 const BarChart = ({ data }: { data: { label: string; value: number }[] }) => {
   const maxValue = Math.max(...data.map((item) => item.value));
-  const scale = 100 / maxValue; // Aumentamos la escala para barras más altas
+  const scale = 100 / maxValue; // Aumentamos la escala para barras m?s altas
 
   return (
     <View style={styles.chartContainer}>
       <Text style={styles.chartTitle}>
-        Gráfico de Rendimiento Promedios Finales por Asignatura
+        Gr?fico de Rendimiento Promedios Finales por Asignatura
       </Text>
       <View style={styles.chart}>
         {data.map((item, index) => (
@@ -365,7 +431,7 @@ const NotasPDF = ({
     "PC",
   ];
 
-  // Función para obtener el promedio del curso para una asignatura (usada en el PDF)
+  // Funci?n para obtener el promedio del curso para una asignatura (usada en el PDF)
   const getPromedioCurso = (asignatura_id: number) => {
     const promedio = promediosCurso.find(
       (p) => p.asignatura_id === asignatura_id
@@ -389,14 +455,14 @@ const NotasPDF = ({
       if (esConcepto) {
         // Convertir a concepto
         if (redondeado >= 70) return "MB";
-        if (redondeado >= 50) return "B";
-        if (redondeado >= 40) return "S";
-        if (redondeado >= 30) return "I";
+        if (redondeado >= 60) return "B";
+        if (redondeado >= 50) return "S";
+        if (redondeado >= 40) return "I";
 
         return redondeado.toString();
       }
 
-      // Si no es conceptual, mantener como número
+      // Si no es conceptual, mantener como n?mero
       return redondeado.toString();
     }
 
@@ -417,24 +483,37 @@ const NotasPDF = ({
   //   return cellStyles;
   // };
 
-  // Preparar datos para el gráfico
+  // Preparar datos para el gr?fico
   const chartData = libreta.asignaturas
     .sort((a, b) => a.indice - b.indice)
     .map((asignatura) => {
+      const esConcepto = Boolean(asignatura.concepto);
       const notas1S = obtenerNotasSemestre(asignatura, 1, 10);
       const notas2S = obtenerNotasSemestre(asignatura, 11, 20);
-      const promedio1S = calcularPromedio(
-        notas1S,
-        configPromedios.promedioAnualAsignatura
-      );
-      const promedio2S = calcularPromedio(
-        notas2S,
-        configPromedios.promedioAnualAsignatura
-      );
-      const promedioFinal = calcularPromedio(
-        [promedio1S, promedio2S].filter((nota) => nota !== null) as number[],
-        configPromedios.promedioAnualAsignatura
-      );
+      
+      // Para asignaturas conceptuales, usar el cálculo del PDF
+      const promedio1S = esConcepto
+        ? calcularPromedioConceptual(notas1S)
+        : calcularPromedio(
+            notas1S,
+            configPromedios.promedioAnualAsignatura
+          );
+      const promedio2S = esConcepto
+        ? calcularPromedioConceptual(notas2S)
+        : calcularPromedio(
+            notas2S,
+            configPromedios.promedioAnualAsignatura
+          );
+      
+      // Para el promedio final, si es conceptual usar el cálculo del PDF
+      const promedioFinal = esConcepto
+        ? calcularPromedioConceptual(
+            [promedio1S, promedio2S].filter((nota) => nota !== null) as number[]
+          )
+        : calcularPromedio(
+            [promedio1S, promedio2S].filter((nota) => nota !== null) as number[],
+            configPromedios.promedioAnualAsignatura
+          );
 
       return {
         label: asignatura.nombre_asignatura,
@@ -455,7 +534,7 @@ const NotasPDF = ({
           <Text style={styles.subtitle}>Liceo Experimental UMAG</Text>
         </View>
 
-        {/* Información del Estudiante */}
+        {/* Informaci?n del Estudiante */}
         <View style={styles.studentInfo}>
           <Text style={styles.infoText}>
             Estudiante: {libreta.nombre_estudiante}
@@ -485,22 +564,37 @@ const NotasPDF = ({
           {libreta.asignaturas
             .sort((a, b) => a.indice - b.indice)
             .map((asignatura) => {
+              const esConcepto = Boolean(asignatura.concepto);
               const notas1S = obtenerNotasSemestre(asignatura, 1, 10);
               const notas2S = obtenerNotasSemestre(asignatura, 11, 20);
-              const promedio1S = calcularPromedio(
-                notas1S,
-                configPromedios.promedioAnualAsignatura
-              );
-              const promedio2S = calcularPromedio(
-                notas2S,
-                configPromedios.promedioAnualAsignatura
-              );
-              const promedioFinal = calcularPromedio(
-                [promedio1S, promedio2S].filter(
-                  (nota) => nota !== null
-                ) as number[],
-                configPromedios.promedioAnualAsignatura
-              );
+              
+              // Para asignaturas conceptuales, usar el c?lculo del PDF
+              const promedio1S = esConcepto
+                ? calcularPromedioConceptual(notas1S)
+                : calcularPromedio(
+                    notas1S,
+                    configPromedios.promedioAnualAsignatura
+                  );
+              const promedio2S = esConcepto
+                ? calcularPromedioConceptual(notas2S)
+                : calcularPromedio(
+                    notas2S,
+                    configPromedios.promedioAnualAsignatura
+                  );
+              
+              // Para el promedio final, si es conceptual usar el c?lculo del PDF
+              const promedioFinal = esConcepto
+                ? calcularPromedioConceptual(
+                    [promedio1S, promedio2S].filter(
+                      (nota) => nota !== null
+                    ) as number[]
+                  )
+                : calcularPromedio(
+                    [promedio1S, promedio2S].filter(
+                      (nota) => nota !== null
+                    ) as number[],
+                    configPromedios.promedioAnualAsignatura
+                  );
 
               const rowData = [
                 asignatura.nombre_asignatura,
@@ -542,14 +636,14 @@ const NotasPDF = ({
         {/* Promedios Finales */}
         <View style={styles.finalAverages}>
           <Text style={styles.averageText}>
-            Promedio General 1° Semestre: {calcularPromedioGeneral(libreta, 1)}
+            Promedio General 1? Semestre: {calcularPromedioGeneral(libreta, 1)}
           </Text>
           <Text style={styles.averageText}>
-            Promedio General 2° Semestre: {calcularPromedioGeneral(libreta, 2)}
+            Promedio General 2? Semestre: {calcularPromedioGeneral(libreta, 2)}
           </Text>
         </View>
 
-        {/* Gráfico de Promedios */}
+        {/* Gr?fico de Promedios */}
         <BarChart data={chartData} />
 
         {/* Firmas */}
@@ -573,7 +667,7 @@ const NotasPDF = ({
           </View>
         </View>
 
-        {/* Pie de página */}
+        {/* Pie de p?gina */}
         <Text style={styles.footer}>
           Documento generado el {new Date().toLocaleDateString()}
         </Text>
@@ -582,7 +676,7 @@ const NotasPDF = ({
   );
 };
 
-// Función para calcular el promedio general
+// Funci?n para calcular el promedio general
 const calcularPromedioGeneral = (libreta: Libreta, tipo: number): string => {
   const asignaturas = libreta.asignaturas.filter((a) => !a.concepto);
 
@@ -649,7 +743,7 @@ export default function NotasPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  // Función para obtener el promedio del curso para una asignatura (usada en la tabla HTML)
+  // Funci?n para obtener el promedio del curso para una asignatura (usada en la tabla HTML)
   const getPromedioCurso = (asignatura_id: number) => {
     const promedio = promediosCurso.find(
       (p) => p.asignatura_id === asignatura_id
@@ -673,14 +767,14 @@ export default function NotasPage() {
       if (esConcepto) {
         // Convertir a concepto
         if (redondeado >= 70) return "MB";
-        if (redondeado >= 50) return "B";
-        if (redondeado >= 40) return "S";
-        if (redondeado >= 30) return "I";
+        if (redondeado >= 60) return "B";
+        if (redondeado >= 50) return "S";
+        if (redondeado >= 40) return "I";
 
         return redondeado.toString();
       }
 
-      // Si no es conceptual, mantener como número
+      // Si no es conceptual, mantener como n?mero
       return redondeado.toString();
     }
 
@@ -696,7 +790,7 @@ export default function NotasPage() {
     //console.log("curso_id:", curso_id);
 
     if (!estudiante_id) {
-      setError("No se encontró el ID del estudiante");
+      setError("No se encontr? el ID del estudiante");
       setLoading(false);
 
       return;
@@ -719,7 +813,7 @@ export default function NotasPage() {
         if (data) {
           setLibreta(data);
         } else {
-          setError("No se encontró la libreta");
+          setError("No se encontr? la libreta");
         }
       })
       .catch((error) => {
@@ -832,22 +926,37 @@ export default function NotasPage() {
                   {libreta.asignaturas
                     .sort((a, b) => a.indice - b.indice)
                     .map((asignatura) => {
+                      const esConcepto = Boolean(asignatura.concepto);
                       const notas1S = obtenerNotasSemestre(asignatura, 1, 10);
                       const notas2S = obtenerNotasSemestre(asignatura, 11, 20);
-                      const promedio1S = calcularPromedio(
-                        notas1S,
-                        configPromedios.promedioAnualAsignatura
-                      );
-                      const promedio2S = calcularPromedio(
-                        notas2S,
-                        configPromedios.promedioAnualAsignatura
-                      );
-                      const promedioFinal = calcularPromedio(
-                        [promedio1S, promedio2S].filter(
-                          (nota) => nota !== null
-                        ) as number[],
-                        configPromedios.promedioAnualAsignatura
-                      );
+                      
+                      // Para asignaturas conceptuales, usar el cálculo del PDF
+                      const promedio1S = esConcepto
+                        ? calcularPromedioConceptual(notas1S)
+                        : calcularPromedio(
+                            notas1S,
+                            configPromedios.promedioAnualAsignatura
+                          );
+                      const promedio2S = esConcepto
+                        ? calcularPromedioConceptual(notas2S)
+                        : calcularPromedio(
+                            notas2S,
+                            configPromedios.promedioAnualAsignatura
+                          );
+                      
+                      // Para el promedio final, si es conceptual usar el cálculo del PDF
+                      const promedioFinal = esConcepto
+                        ? calcularPromedioConceptual(
+                            [promedio1S, promedio2S].filter(
+                              (nota) => nota !== null
+                            ) as number[]
+                          )
+                        : calcularPromedio(
+                            [promedio1S, promedio2S].filter(
+                              (nota) => nota !== null
+                            ) as number[],
+                            configPromedios.promedioAnualAsignatura
+                          );
 
                       return (
                         <tr
