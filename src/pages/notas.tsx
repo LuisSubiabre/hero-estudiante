@@ -53,78 +53,6 @@ const jwtData = () => {
   return null;
 };
 
-// Función para convertir calificaciones numéricas a conceptos
-const convertirCalificacion = (
-  calificacion: number | null,
-  esConcepto: boolean
-) => {
-  if (calificacion === null) return "-";
-
-  if (!esConcepto) return calificacion.toString();
-
-  // Para calificaciones individuales, usar valores exactos
-  // Convertir 30 a 40 para la comparación
-  const valorAComparar = calificacion === 30 ? 40 : calificacion;
-
-  switch (valorAComparar) {
-    case 70:
-      return "MB";
-    case 60:
-      return "B";
-    case 50:
-      return "S";
-    case 40:
-      return "I";
-    default:
-      // Para promedios calculados, aplicar redondeo y rangos
-      const redondeado =
-        Math.round(calificacion * 10) / 10 >= Math.floor(calificacion) + 0.5
-          ? Math.ceil(calificacion)
-          : Math.floor(calificacion);
-
-      if (redondeado >= 70) return "MB";
-      if (redondeado >= 60) return "B";
-      if (redondeado >= 50) return "S";
-      if (redondeado >= 40 || redondeado === 30) return "I";
-
-      return redondeado.toString();
-  }
-};
-
-// Funci?n para calcular el promedio de un conjunto de notas
-const calcularPromedio = (
-  notas: (number | null)[],
-  config:
-    | typeof configPromedios.promedioAnualAsignatura
-    | typeof configPromedios.promedioGeneralSemestral
-) => {
-  const notasValidas = notas.filter((nota) => nota !== null) as number[];
-
-  if (notasValidas.length === 0) return null;
-
-  const suma = notasValidas.reduce((acc, nota) => acc + nota, 0);
-  const promedio = suma / notasValidas.length;
-
-  // Para promedioGeneralSemestral, devolver el valor exacto sin redondeo
-  if (!config.aproximar) {
-    return promedio;
-  }
-
-  // Para promedioAnualAsignatura, aplicar la regla de aproximaci?n
-  if (config.aproximar && "precision" in config) {
-    const decimal = promedio - Math.floor(promedio);
-    const base = config.reglaAproximacion?.base || 0;
-
-    if (decimal >= base) {
-      return Math.ceil(promedio);
-    } else {
-      return Math.floor(promedio);
-    }
-  }
-
-  return promedio;
-};
-
 // Función para normalizar notas conceptuales (convertir strings a números)
 const normalizarNotaConceptual = (
   nota: number | string | null
@@ -159,6 +87,97 @@ const normalizarNotaConceptual = (
   if (typeof nota === "number" && nota === 30) return 40;
 
   return typeof nota === "number" ? nota : null;
+};
+
+// Función para convertir calificaciones numéricas a conceptos
+const convertirCalificacion = (
+  calificacion: number | string | null,
+  esConcepto: boolean
+) => {
+  if (calificacion === null) return "-";
+
+  // Normalizar si es string
+  let valorNumerico: number;
+  if (typeof calificacion === "string") {
+    const normalizado = normalizarNotaConceptual(calificacion);
+    if (normalizado === null) return "-";
+    valorNumerico = normalizado;
+  } else {
+    valorNumerico = calificacion;
+  }
+
+  if (!esConcepto) return valorNumerico.toString();
+
+  // Para calificaciones individuales, usar valores exactos
+  // Convertir 30 a 40 para la comparación
+  const valorAComparar = valorNumerico === 30 ? 40 : valorNumerico;
+
+  switch (valorAComparar) {
+    case 70:
+      return "MB";
+    case 60:
+      return "B";
+    case 50:
+      return "S";
+    case 40:
+      return "I";
+    default:
+      // Para promedios calculados, aplicar redondeo y rangos
+      const redondeado =
+        Math.round(valorNumerico * 10) / 10 >= Math.floor(valorNumerico) + 0.5
+          ? Math.ceil(valorNumerico)
+          : Math.floor(valorNumerico);
+
+      if (redondeado >= 70) return "MB";
+      if (redondeado >= 60) return "B";
+      if (redondeado >= 50) return "S";
+      if (redondeado >= 40 || redondeado === 30) return "I";
+
+      return redondeado.toString();
+  }
+};
+
+// Funci?n para calcular el promedio de un conjunto de notas
+const calcularPromedio = (
+  notas: (number | string | null)[],
+  config:
+    | typeof configPromedios.promedioAnualAsignatura
+    | typeof configPromedios.promedioGeneralSemestral
+) => {
+  // Normalizar todas las notas (convertir strings a números)
+  const notasNormalizadas = notas
+    .map((nota) => {
+      if (nota === null) return null;
+      if (typeof nota === "number") return nota;
+      return normalizarNotaConceptual(nota);
+    })
+    .filter((nota) => nota !== null) as number[];
+  
+  const notasValidas = notasNormalizadas;
+
+  if (notasValidas.length === 0) return null;
+
+  const suma = notasValidas.reduce((acc, nota) => acc + nota, 0);
+  const promedio = suma / notasValidas.length;
+
+  // Para promedioGeneralSemestral, devolver el valor exacto sin redondeo
+  if (!config.aproximar) {
+    return promedio;
+  }
+
+  // Para promedioAnualAsignatura, aplicar la regla de aproximaci?n
+  if (config.aproximar && "precision" in config) {
+    const decimal = promedio - Math.floor(promedio);
+    const base = config.reglaAproximacion?.base || 0;
+
+    if (decimal >= base) {
+      return Math.ceil(promedio);
+    } else {
+      return Math.floor(promedio);
+    }
+  }
+
+  return promedio;
 };
 
 // Funci?n para calcular el promedio conceptual usando la misma l?gica del PDF
