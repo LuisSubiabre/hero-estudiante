@@ -654,6 +654,9 @@ const NotasPDF = ({
           <Text style={styles.averageText}>
             Promedio General 2 Semestre: {calcularPromedioGeneral(libreta, 2)}
           </Text>
+          <Text style={styles.averageText}>
+            Promedio Final: {calcularPromedioFinal(libreta)}
+          </Text>
         </View>
 
         {/* Gr?fico de Promedios */}
@@ -689,7 +692,7 @@ const NotasPDF = ({
   );
 };
 
-// Funci?n para calcular el promedio general
+// Función para calcular el promedio general
 const calcularPromedioGeneral = (libreta: Libreta, tipo: number): string => {
   const asignaturas = libreta.asignaturas.filter((a) => !a.concepto);
 
@@ -747,6 +750,52 @@ const calcularPromedioGeneral = (libreta: Libreta, tipo: number): string => {
     promediosNumericos.reduce((a, b) => a + b, 0) / promediosNumericos.length;
 
   return Math.floor(promedioFinal).toString();
+};
+
+// Función para calcular el promedio final usando los PF de cada asignatura
+const calcularPromedioFinal = (libreta: Libreta): string => {
+  const asignaturas = libreta.asignaturas.filter((a) => !a.concepto);
+
+  if (asignaturas.length === 0) return "-";
+
+  const promediosPF = asignaturas.map((asignatura) => {
+    const notas1S = obtenerNotasSemestre(asignatura, 1, 10);
+    const notas2S = obtenerNotasSemestre(asignatura, 11, 20);
+    const promedio1S = calcularPromedio(
+      notas1S,
+      configPromedios.promedioAnualAsignatura
+    );
+    const promedio2S = calcularPromedio(
+      notas2S,
+      configPromedios.promedioAnualAsignatura
+    );
+    const promediosSemestres = [promedio1S, promedio2S].filter(
+      (nota): nota is number => nota !== null
+    );
+
+    return promediosSemestres.length > 0
+      ? calcularPromedio(
+          promediosSemestres,
+          configPromedios.promedioAnualAsignatura
+        )
+      : null;
+  });
+
+  const promediosNumericos = promediosPF
+    .filter((p): p is number => p !== null)
+    .map((p) => (typeof p === "string" ? parseFloat(p) : p))
+    .filter((p): p is number => !isNaN(p));
+
+  if (promediosNumericos.length === 0) return "-";
+
+  const promedioFinal =
+    promediosNumericos.reduce((a, b) => a + b, 0) / promediosNumericos.length;
+
+  // Aproximar: 65.4 → 65, 65.5 → 66
+  const decimal = promedioFinal - Math.floor(promedioFinal);
+  const redondeado = decimal >= 0.5 ? Math.ceil(promedioFinal) : Math.floor(promedioFinal);
+
+  return redondeado.toString();
 };
 
 export default function NotasPage() {
