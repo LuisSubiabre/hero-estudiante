@@ -399,7 +399,7 @@ const BarChart = ({ data }: { data: { label: string; value: number }[] }) => {
   return (
     <View style={styles.chartContainer}>
       <Text style={styles.chartTitle}>
-        Gr?fico de Rendimiento Promedios Finales por Asignatura
+        Gráfico de Rendimiento Promedios Finales por Asignatura
       </Text>
       <View style={styles.chart}>
         {data.map((item, index) => (
