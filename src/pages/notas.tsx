@@ -34,17 +34,17 @@ const jwtData = () => {
       const decoded = decodeURIComponent(
         atob(base64)
           .split("")
-          .map(c => "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2))
+          .map((c) => "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2))
           .join("")
       );
 
       const payload = JSON.parse(decoded);
 
-     // console.log("Payload completo:", payload);
+      // console.log("Payload completo:", payload);
 
       return payload;
     } catch (error) {
-    //  console.error("Error al decodificar el token:", error);
+      //  console.error("Error al decodificar el token:", error);
 
       return null;
     }
@@ -54,9 +54,12 @@ const jwtData = () => {
 };
 
 // Función para convertir calificaciones numéricas a conceptos
-const convertirCalificacion = (calificacion: number | null, esConcepto: boolean) => {
+const convertirCalificacion = (
+  calificacion: number | null,
+  esConcepto: boolean
+) => {
   if (calificacion === null) return "-";
-  
+
   if (!esConcepto) return calificacion.toString();
 
   switch (calificacion) {
@@ -74,38 +77,44 @@ const convertirCalificacion = (calificacion: number | null, esConcepto: boolean)
 };
 
 // Función para calcular el promedio de un conjunto de notas
-const calcularPromedio = (notas: (number | null)[], config: typeof configPromedios.promedioAnualAsignatura | typeof configPromedios.promedioGeneralSemestral) => {
-  const notasValidas = notas.filter(nota => nota !== null) as number[];
-  
+const calcularPromedio = (
+  notas: (number | null)[],
+  config:
+    | typeof configPromedios.promedioAnualAsignatura
+    | typeof configPromedios.promedioGeneralSemestral
+) => {
+  const notasValidas = notas.filter((nota) => nota !== null) as number[];
+
   if (notasValidas.length === 0) return null;
-  
+
   const suma = notasValidas.reduce((acc, nota) => acc + nota, 0);
   const promedio = suma / notasValidas.length;
-  
+
   // Para promedioGeneralSemestral, devolver el valor exacto sin redondeo
   if (!config.aproximar) {
     return promedio;
   }
-  
+
   // Para promedioAnualAsignatura, aplicar la regla de aproximación
-  if (config.aproximar && 'precision' in config) {
+  if (config.aproximar && "precision" in config) {
     const decimal = promedio - Math.floor(promedio);
     const base = config.reglaAproximacion?.base || 0;
-    
+
     if (decimal >= base) {
       return Math.ceil(promedio);
     } else {
       return Math.floor(promedio);
     }
   }
-  
+
   return promedio;
 };
 
 // Función para obtener las notas de un semestre
 const obtenerNotasSemestre = (asignatura: any, inicio: number, fin: number) => {
-  return Array.from({ length: fin - inicio + 1 }, (_, i) => 
-    asignatura[`calificacion${inicio + i}`] as number | null
+  return Array.from(
+    { length: fin - inicio + 1 },
+    (_, i) => asignatura[`calificacion${inicio + i}`] as number | null
   );
 };
 
@@ -305,12 +314,14 @@ const truncateText = (text: string, maxLength: number = 12) => {
 
 // Componente para el gráfico de barras
 const BarChart = ({ data }: { data: { label: string; value: number }[] }) => {
-  const maxValue = Math.max(...data.map(item => item.value));
+  const maxValue = Math.max(...data.map((item) => item.value));
   const scale = 100 / maxValue; // Aumentamos la escala para barras más altas
 
   return (
     <View style={styles.chartContainer}>
-      <Text style={styles.chartTitle}>Gráfico de Rendimiento Promedios Finales por Asignatura</Text>
+      <Text style={styles.chartTitle}>
+        Gráfico de Rendimiento Promedios Finales por Asignatura
+      </Text>
       <View style={styles.chart}>
         {data.map((item, index) => (
           <View key={index} style={styles.barContainer}>
@@ -333,32 +344,47 @@ const BarChart = ({ data }: { data: { label: string; value: number }[] }) => {
 };
 
 // Componente para el PDF
-const NotasPDF = ({ libreta, promediosCurso }: { libreta: Libreta, promediosCurso: PromedioCurso[] }) => {
+const NotasPDF = ({
+  libreta,
+  promediosCurso,
+}: {
+  libreta: Libreta;
+  promediosCurso: PromedioCurso[];
+}) => {
   const headerRow = [
     "Asignatura",
-    ...Array(10).fill("").map((_, i) => `${i + 1}`),
+    ...Array(10)
+      .fill("")
+      .map((_, i) => `${i + 1}`),
     "1S",
-    ...Array(10).fill("").map((_, i) => `${i + 1}`),
+    ...Array(10)
+      .fill("")
+      .map((_, i) => `${i + 1}`),
     "2S",
     "PF",
-    "PC"
+    "PC",
   ];
 
   // Función para obtener el promedio del curso para una asignatura (usada en el PDF)
   const getPromedioCurso = (asignatura_id: number) => {
-    const promedio = promediosCurso.find(p => p.asignatura_id === asignatura_id);
+    const promedio = promediosCurso.find(
+      (p) => p.asignatura_id === asignatura_id
+    );
 
     if (promedio) {
       const valor = parseFloat(promedio.promedio_general);
-      
+
       // Encontrar si la asignatura es conceptual
-      const asignatura = libreta.asignaturas.find(a => a.asignatura_id === asignatura_id);
+      const asignatura = libreta.asignaturas.find(
+        (a) => a.asignatura_id === asignatura_id
+      );
       const esConcepto = Boolean(asignatura?.concepto);
 
       // Aproximar: 59.5 -> 60, 59.4 -> 59
-      const redondeado = Math.round(valor * 10) / 10 >= Math.floor(valor) + 0.5
-        ? Math.ceil(valor)
-        : Math.floor(valor);
+      const redondeado =
+        Math.round(valor * 10) / 10 >= Math.floor(valor) + 0.5
+          ? Math.ceil(valor)
+          : Math.floor(valor);
 
       if (esConcepto) {
         // Convertir a concepto
@@ -394,13 +420,19 @@ const NotasPDF = ({ libreta, promediosCurso }: { libreta: Libreta, promediosCurs
   // Preparar datos para el gráfico
   const chartData = libreta.asignaturas
     .sort((a, b) => a.indice - b.indice)
-    .map(asignatura => {
+    .map((asignatura) => {
       const notas1S = obtenerNotasSemestre(asignatura, 1, 10);
       const notas2S = obtenerNotasSemestre(asignatura, 11, 20);
-      const promedio1S = calcularPromedio(notas1S, configPromedios.promedioAnualAsignatura);
-      const promedio2S = calcularPromedio(notas2S, configPromedios.promedioAnualAsignatura);
+      const promedio1S = calcularPromedio(
+        notas1S,
+        configPromedios.promedioAnualAsignatura
+      );
+      const promedio2S = calcularPromedio(
+        notas2S,
+        configPromedios.promedioAnualAsignatura
+      );
       const promedioFinal = calcularPromedio(
-        [promedio1S, promedio2S].filter(nota => nota !== null) as number[],
+        [promedio1S, promedio2S].filter((nota) => nota !== null) as number[],
         configPromedios.promedioAnualAsignatura
       );
 
@@ -419,13 +451,15 @@ const NotasPDF = ({ libreta, promediosCurso }: { libreta: Libreta, promediosCurs
             src="/images/logo_fondo_blanco.png"
             style={{ width: 120, height: 32 }}
           />
-          <Text style={styles.title}>Informe Parcial de Calificaciones</Text>
+          <Text style={styles.title}>Informe Final de Calificaciones</Text>
           <Text style={styles.subtitle}>Liceo Experimental UMAG</Text>
         </View>
 
         {/* Información del Estudiante */}
         <View style={styles.studentInfo}>
-          <Text style={styles.infoText}>Estudiante: {libreta.nombre_estudiante}</Text>
+          <Text style={styles.infoText}>
+            Estudiante: {libreta.nombre_estudiante}
+          </Text>
           <Text style={styles.infoText}>Curso: {libreta.curso_nombre}</Text>
         </View>
 
@@ -434,12 +468,12 @@ const NotasPDF = ({ libreta, promediosCurso }: { libreta: Libreta, promediosCurs
           {/* Header de la tabla */}
           <View style={[styles.tableRow, styles.tableHeader]}>
             {headerRow.map((header, index) => (
-              <Text 
-                key={index} 
+              <Text
+                key={index}
                 style={[
-                  styles.tableCell, 
+                  styles.tableCell,
                   styles.headerCell,
-                  index === 0 ? styles.subjectCell : styles.gradeCell
+                  index === 0 ? styles.subjectCell : styles.gradeCell,
                 ]}
               >
                 {header}
@@ -453,33 +487,48 @@ const NotasPDF = ({ libreta, promediosCurso }: { libreta: Libreta, promediosCurs
             .map((asignatura) => {
               const notas1S = obtenerNotasSemestre(asignatura, 1, 10);
               const notas2S = obtenerNotasSemestre(asignatura, 11, 20);
-              const promedio1S = calcularPromedio(notas1S, configPromedios.promedioAnualAsignatura);
-              const promedio2S = calcularPromedio(notas2S, configPromedios.promedioAnualAsignatura);
+              const promedio1S = calcularPromedio(
+                notas1S,
+                configPromedios.promedioAnualAsignatura
+              );
+              const promedio2S = calcularPromedio(
+                notas2S,
+                configPromedios.promedioAnualAsignatura
+              );
               const promedioFinal = calcularPromedio(
-                [promedio1S, promedio2S].filter(nota => nota !== null) as number[],
+                [promedio1S, promedio2S].filter(
+                  (nota) => nota !== null
+                ) as number[],
                 configPromedios.promedioAnualAsignatura
               );
 
               const rowData = [
                 asignatura.nombre_asignatura,
-                ...notas1S.map(n => convertirCalificacion(n, Boolean(asignatura.concepto))),
+                ...notas1S.map((n) =>
+                  convertirCalificacion(n, Boolean(asignatura.concepto))
+                ),
                 convertirCalificacion(promedio1S, Boolean(asignatura.concepto)),
-                ...notas2S.map(n => convertirCalificacion(n, Boolean(asignatura.concepto))),
+                ...notas2S.map((n) =>
+                  convertirCalificacion(n, Boolean(asignatura.concepto))
+                ),
                 convertirCalificacion(promedio2S, Boolean(asignatura.concepto)),
-                convertirCalificacion(promedioFinal, Boolean(asignatura.concepto)),
-                getPromedioCurso(asignatura.asignatura_id)
+                convertirCalificacion(
+                  promedioFinal,
+                  Boolean(asignatura.concepto)
+                ),
+                getPromedioCurso(asignatura.asignatura_id),
               ];
 
               return (
                 <View key={asignatura.asignatura_id} style={styles.tableRow}>
                   {rowData.map((cell, index) => (
-                    <Text 
-                      key={index} 
+                    <Text
+                      key={index}
                       style={[
                         styles.tableCell,
                         index === 0 ? styles.subjectCell : styles.gradeCell,
                         index >= rowData.length - 3 ? styles.averageCell : {},
-                        index === rowData.length - 1 ? styles.gradeCell : {}
+                        index === rowData.length - 1 ? styles.gradeCell : {},
                       ]}
                     >
                       {cell}
@@ -506,12 +555,11 @@ const NotasPDF = ({ libreta, promediosCurso }: { libreta: Libreta, promediosCurs
         {/* Firmas */}
         <View style={styles.signatures}>
           <View style={styles.signatureBox}>
-          <Image
-              src="#"
-              style={{ width: 120, height: 40 }}
-            />
+            <Image src="#" style={{ width: 120, height: 40 }} />
             <Text style={styles.signatureLine}>_______________________</Text>
-            <Text style={styles.signatureName}>{libreta.profesor_jefe_nombre}</Text>
+            <Text style={styles.signatureName}>
+              {libreta.profesor_jefe_nombre}
+            </Text>
             <Text style={styles.signatureName}>Profesor Jefe</Text>
           </View>
           <View style={styles.signatureBox}>
@@ -536,42 +584,60 @@ const NotasPDF = ({ libreta, promediosCurso }: { libreta: Libreta, promediosCurs
 
 // Función para calcular el promedio general
 const calcularPromedioGeneral = (libreta: Libreta, tipo: number): string => {
-  const asignaturas = libreta.asignaturas.filter(a => !a.concepto);
-  
+  const asignaturas = libreta.asignaturas.filter((a) => !a.concepto);
+
   if (asignaturas.length === 0) return "-";
 
-  const promedios = asignaturas.map(asignatura => {
+  const promedios = asignaturas.map((asignatura) => {
     if (tipo === 1) {
       const notas = obtenerNotasSemestre(asignatura, 1, 10);
-      const promedio = calcularPromedio(notas, configPromedios.promedioAnualAsignatura);
+      const promedio = calcularPromedio(
+        notas,
+        configPromedios.promedioAnualAsignatura
+      );
 
       return promedio !== null ? promedio : null;
     } else if (tipo === 2) {
       const notas = obtenerNotasSemestre(asignatura, 11, 20);
-      const promedio = calcularPromedio(notas, configPromedios.promedioAnualAsignatura);
+      const promedio = calcularPromedio(
+        notas,
+        configPromedios.promedioAnualAsignatura
+      );
 
       return promedio !== null ? promedio : null;
     } else {
       const notas1S = obtenerNotasSemestre(asignatura, 1, 10);
       const notas2S = obtenerNotasSemestre(asignatura, 11, 20);
-      const promedio1S = calcularPromedio(notas1S, configPromedios.promedioAnualAsignatura);
-      const promedio2S = calcularPromedio(notas2S, configPromedios.promedioAnualAsignatura);
-      const promediosSemestres = [promedio1S, promedio2S].filter((nota): nota is number => nota !== null);
+      const promedio1S = calcularPromedio(
+        notas1S,
+        configPromedios.promedioAnualAsignatura
+      );
+      const promedio2S = calcularPromedio(
+        notas2S,
+        configPromedios.promedioAnualAsignatura
+      );
+      const promediosSemestres = [promedio1S, promedio2S].filter(
+        (nota): nota is number => nota !== null
+      );
 
-      return promediosSemestres.length > 0 ? 
-        calcularPromedio(promediosSemestres, configPromedios.promedioAnualAsignatura) : 
-        null;
+      return promediosSemestres.length > 0
+        ? calcularPromedio(
+            promediosSemestres,
+            configPromedios.promedioAnualAsignatura
+          )
+        : null;
     }
   });
 
   const promediosNumericos = promedios
     .filter((p): p is number => p !== null)
-    .map(p => typeof p === 'string' ? parseFloat(p) : p)
+    .map((p) => (typeof p === "string" ? parseFloat(p) : p))
     .filter((p): p is number => !isNaN(p));
 
   if (promediosNumericos.length === 0) return "-";
 
-  const promedioFinal = promediosNumericos.reduce((a, b) => a + b, 0) / promediosNumericos.length;
+  const promedioFinal =
+    promediosNumericos.reduce((a, b) => a + b, 0) / promediosNumericos.length;
 
   return Math.floor(promedioFinal).toString();
 };
@@ -585,19 +651,24 @@ export default function NotasPage() {
 
   // Función para obtener el promedio del curso para una asignatura (usada en la tabla HTML)
   const getPromedioCurso = (asignatura_id: number) => {
-    const promedio = promediosCurso.find(p => p.asignatura_id === asignatura_id);
+    const promedio = promediosCurso.find(
+      (p) => p.asignatura_id === asignatura_id
+    );
 
     if (promedio) {
       const valor = parseFloat(promedio.promedio_general);
-      
+
       // Encontrar si la asignatura es conceptual
-      const asignatura = libreta?.asignaturas.find(a => a.asignatura_id === asignatura_id);
+      const asignatura = libreta?.asignaturas.find(
+        (a) => a.asignatura_id === asignatura_id
+      );
       const esConcepto = Boolean(asignatura?.concepto);
 
       // Aproximar: 59.5 -> 60, 59.4 -> 59
-      const redondeado = Math.round(valor * 10) / 10 >= Math.floor(valor) + 0.5
-        ? Math.ceil(valor)
-        : Math.floor(valor);
+      const redondeado =
+        Math.round(valor * 10) / 10 >= Math.floor(valor) + 0.5
+          ? Math.ceil(valor)
+          : Math.floor(valor);
 
       if (esConcepto) {
         // Convertir a concepto
@@ -623,7 +694,7 @@ export default function NotasPage() {
 
     //console.log("JWT completo:", jwt);
     //console.log("curso_id:", curso_id);
-    
+
     if (!estudiante_id) {
       setError("No se encontró el ID del estudiante");
       setLoading(false);
@@ -635,7 +706,7 @@ export default function NotasPage() {
     if (curso_id) {
       promediosCursos(curso_id)
         .then((promediosData) => {
-        //  console.log("Promedios del curso:", promediosData);
+          //  console.log("Promedios del curso:", promediosData);
           setPromediosCurso(promediosData);
         })
         .catch((error) => {
@@ -670,10 +741,12 @@ export default function NotasPage() {
           {!loading && libreta && (
             <PDFDownloadLink
               className="mt-4 inline-block px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors"
-              document={<NotasPDF libreta={libreta} promediosCurso={promediosCurso} />}
+              document={
+                <NotasPDF libreta={libreta} promediosCurso={promediosCurso} />
+              }
               fileName={`notas_${libreta.nombre_estudiante}.pdf`}
             >
-              {({ loading,  }) =>
+              {({ loading }) =>
                 loading ? "Generando PDF..." : "Descargar PDF"
               }
             </PDFDownloadLink>
@@ -693,7 +766,10 @@ export default function NotasPage() {
               <table className="min-w-full border-collapse border border-gray-300 dark:border-gray-600">
                 <thead>
                   <tr className="bg-gray-100 dark:bg-gray-800">
-                    <th className="border border-gray-300 dark:border-gray-600 px-4 py-2 text-gray-900 dark:text-white font-semibold" rowSpan={2}>
+                    <th
+                      className="border border-gray-300 dark:border-gray-600 px-4 py-2 text-gray-900 dark:text-white font-semibold"
+                      rowSpan={2}
+                    >
                       Asignatura
                     </th>
                     <th
@@ -708,22 +784,37 @@ export default function NotasPage() {
                     >
                       Segundo Semestre
                     </th>
-                    <th className="border border-gray-300 dark:border-gray-600 px-4 py-2 bg-blue-100 dark:bg-blue-900 text-blue-900 dark:text-blue-100 font-semibold" rowSpan={2}>
+                    <th
+                      className="border border-gray-300 dark:border-gray-600 px-4 py-2 bg-blue-100 dark:bg-blue-900 text-blue-900 dark:text-blue-100 font-semibold"
+                      rowSpan={2}
+                    >
                       1S
                     </th>
-                    <th className="border border-gray-300 dark:border-gray-600 px-4 py-2 bg-green-100 dark:bg-green-900 text-green-900 dark:text-green-100 font-semibold" rowSpan={2}>
+                    <th
+                      className="border border-gray-300 dark:border-gray-600 px-4 py-2 bg-green-100 dark:bg-green-900 text-green-900 dark:text-green-100 font-semibold"
+                      rowSpan={2}
+                    >
                       2S
                     </th>
-                    <th className="border border-gray-300 dark:border-gray-600 px-4 py-2 bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-white font-semibold" rowSpan={2}>
+                    <th
+                      className="border border-gray-300 dark:border-gray-600 px-4 py-2 bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-white font-semibold"
+                      rowSpan={2}
+                    >
                       PF
                     </th>
-                    <th className="border border-gray-300 dark:border-gray-600 px-4 py-2 bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-white font-semibold" rowSpan={2}>
+                    <th
+                      className="border border-gray-300 dark:border-gray-600 px-4 py-2 bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-white font-semibold"
+                      rowSpan={2}
+                    >
                       PC
                     </th>
                   </tr>
                   <tr className="bg-gray-50 dark:bg-gray-700">
                     {[...Array(10)].map((_, i) => (
-                      <th key={i} className="border border-gray-300 dark:border-gray-600 px-2 py-2 text-gray-700 dark:text-gray-200 font-medium">
+                      <th
+                        key={i}
+                        className="border border-gray-300 dark:border-gray-600 px-2 py-2 text-gray-700 dark:text-gray-200 font-medium"
+                      >
                         {i + 1}
                       </th>
                     ))}
@@ -743,15 +834,26 @@ export default function NotasPage() {
                     .map((asignatura) => {
                       const notas1S = obtenerNotasSemestre(asignatura, 1, 10);
                       const notas2S = obtenerNotasSemestre(asignatura, 11, 20);
-                      const promedio1S = calcularPromedio(notas1S, configPromedios.promedioAnualAsignatura);
-                      const promedio2S = calcularPromedio(notas2S, configPromedios.promedioAnualAsignatura);
+                      const promedio1S = calcularPromedio(
+                        notas1S,
+                        configPromedios.promedioAnualAsignatura
+                      );
+                      const promedio2S = calcularPromedio(
+                        notas2S,
+                        configPromedios.promedioAnualAsignatura
+                      );
                       const promedioFinal = calcularPromedio(
-                        [promedio1S, promedio2S].filter(nota => nota !== null) as number[],
+                        [promedio1S, promedio2S].filter(
+                          (nota) => nota !== null
+                        ) as number[],
                         configPromedios.promedioAnualAsignatura
                       );
 
                       return (
-                        <tr key={asignatura.asignatura_id} className="text-center hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+                        <tr
+                          key={asignatura.asignatura_id}
+                          className="text-center hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+                        >
                           <td className="border border-gray-300 dark:border-gray-600 px-4 py-2 text-gray-900 dark:text-white font-medium">
                             {asignatura.nombre_asignatura}
                           </td>
@@ -761,7 +863,12 @@ export default function NotasPage() {
                               key={i}
                               className="border border-gray-300 dark:border-gray-600 px-2 py-2 text-gray-700 dark:text-gray-200"
                             >
-                              {convertirCalificacion(asignatura[`calificacion${i + 1}`] as number | null, Boolean(asignatura.concepto))}
+                              {convertirCalificacion(
+                                asignatura[`calificacion${i + 1}`] as
+                                  | number
+                                  | null,
+                                Boolean(asignatura.concepto)
+                              )}
                             </td>
                           ))}
                           {/* Segundo Semestre */}
@@ -770,18 +877,38 @@ export default function NotasPage() {
                               key={i + 10}
                               className="border border-gray-300 dark:border-gray-600 px-2 py-2 text-gray-700 dark:text-gray-200"
                             >
-                              {convertirCalificacion(asignatura[`calificacion${i + 11}`] as number | null, Boolean(asignatura.concepto))}
+                              {convertirCalificacion(
+                                asignatura[`calificacion${i + 11}`] as
+                                  | number
+                                  | null,
+                                Boolean(asignatura.concepto)
+                              )}
                             </td>
                           ))}
                           {/* Promedios */}
                           <td className="border border-gray-300 dark:border-gray-600 px-2 py-2 font-semibold text-blue-700 dark:text-blue-300">
-                            {promedio1S !== null ? convertirCalificacion(promedio1S, Boolean(asignatura.concepto)) : "-"}
+                            {promedio1S !== null
+                              ? convertirCalificacion(
+                                  promedio1S,
+                                  Boolean(asignatura.concepto)
+                                )
+                              : "-"}
                           </td>
                           <td className="border border-gray-300 dark:border-gray-600 px-2 py-2 font-semibold text-green-700 dark:text-green-300">
-                            {promedio2S !== null ? convertirCalificacion(promedio2S, Boolean(asignatura.concepto)) : "-"}
+                            {promedio2S !== null
+                              ? convertirCalificacion(
+                                  promedio2S,
+                                  Boolean(asignatura.concepto)
+                                )
+                              : "-"}
                           </td>
                           <td className="border border-gray-300 dark:border-gray-600 px-2 py-2 font-semibold text-gray-900 dark:text-white">
-                            {promedioFinal !== null ? convertirCalificacion(promedioFinal, Boolean(asignatura.concepto)) : "-"}
+                            {promedioFinal !== null
+                              ? convertirCalificacion(
+                                  promedioFinal,
+                                  Boolean(asignatura.concepto)
+                                )
+                              : "-"}
                           </td>
                           <td className="border border-gray-300 dark:border-gray-600 px-2 py-2 font-semibold text-gray-900 dark:text-white">
                             {getPromedioCurso(asignatura.asignatura_id)}
@@ -797,50 +924,78 @@ export default function NotasPage() {
             <div className="w-full max-w-6xl mt-8">
               <div className="grid grid-cols-2 gap-4">
                 <div className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg border border-blue-200 dark:border-blue-700">
-                  <h3 className="text-lg font-semibold text-blue-800 dark:text-blue-200 mb-2">Promedio Final 1S</h3>
+                  <h3 className="text-lg font-semibold text-blue-800 dark:text-blue-200 mb-2">
+                    Promedio Final 1S
+                  </h3>
                   {(() => {
                     // Filtrar asignaturas no conceptuales y calcular sus promedios
                     const promedios1S = libreta.asignaturas
-                      .filter(asignatura => !asignatura.concepto)
-                      .map(asignatura => {
+                      .filter((asignatura) => !asignatura.concepto)
+                      .map((asignatura) => {
                         const notas = obtenerNotasSemestre(asignatura, 1, 10);
 
                         // Usar promedioAnualAsignatura para redondear cada promedio de asignatura
-                        return calcularPromedio(notas, configPromedios.promedioAnualAsignatura);
+                        return calcularPromedio(
+                          notas,
+                          configPromedios.promedioAnualAsignatura
+                        );
                       })
-                      .filter(promedio => promedio !== null) as number[];
-                    
-                    if (promedios1S.length === 0) return <p className="text-gray-600 dark:text-gray-400">No hay notas disponibles</p>;
-                    
+                      .filter((promedio) => promedio !== null) as number[];
+
+                    if (promedios1S.length === 0)
+                      return (
+                        <p className="text-gray-600 dark:text-gray-400">
+                          No hay notas disponibles
+                        </p>
+                      );
+
                     // Sumar los promedios ya redondeados
                     const suma = promedios1S.reduce((acc, val) => acc + val, 0);
                     const promedioFinal = Math.floor(suma / promedios1S.length);
 
-                    return <p className="text-2xl font-bold text-blue-900 dark:text-blue-100">{promedioFinal}</p>;
+                    return (
+                      <p className="text-2xl font-bold text-blue-900 dark:text-blue-100">
+                        {promedioFinal}
+                      </p>
+                    );
                   })()}
                 </div>
 
                 <div className="bg-green-50 dark:bg-green-900/20 p-4 rounded-lg border border-green-200 dark:border-green-700">
-                  <h3 className="text-lg font-semibold text-green-800 dark:text-green-200 mb-2">Promedio Final 2S</h3>
+                  <h3 className="text-lg font-semibold text-green-800 dark:text-green-200 mb-2">
+                    Promedio Final 2S
+                  </h3>
                   {(() => {
                     // Filtrar asignaturas no conceptuales y calcular sus promedios
                     const promedios2S = libreta.asignaturas
-                      .filter(asignatura => !asignatura.concepto)
-                      .map(asignatura => {
+                      .filter((asignatura) => !asignatura.concepto)
+                      .map((asignatura) => {
                         const notas = obtenerNotasSemestre(asignatura, 11, 20);
 
                         // Usar promedioAnualAsignatura para redondear cada promedio de asignatura
-                        return calcularPromedio(notas, configPromedios.promedioAnualAsignatura);
+                        return calcularPromedio(
+                          notas,
+                          configPromedios.promedioAnualAsignatura
+                        );
                       })
-                      .filter(promedio => promedio !== null) as number[];
-                    
-                    if (promedios2S.length === 0) return <p className="text-gray-600 dark:text-gray-400">No hay notas disponibles</p>;
-                    
+                      .filter((promedio) => promedio !== null) as number[];
+
+                    if (promedios2S.length === 0)
+                      return (
+                        <p className="text-gray-600 dark:text-gray-400">
+                          No hay notas disponibles
+                        </p>
+                      );
+
                     // Sumar los promedios ya redondeados
                     const suma = promedios2S.reduce((acc, val) => acc + val, 0);
                     const promedioFinal = Math.floor(suma / promedios2S.length);
 
-                    return <p className="text-2xl font-bold text-green-900 dark:text-green-100">{promedioFinal}</p>;
+                    return (
+                      <p className="text-2xl font-bold text-green-900 dark:text-green-100">
+                        {promedioFinal}
+                      </p>
+                    );
                   })()}
                 </div>
               </div>
