@@ -649,10 +649,10 @@ const NotasPDF = ({
         {/* Promedios Finales */}
         <View style={styles.finalAverages}>
           <Text style={styles.averageText}>
-            Promedio General 1? Semestre: {calcularPromedioGeneral(libreta, 1)}
+            Promedio General 1 Semestre: {calcularPromedioGeneral(libreta, 1)}
           </Text>
           <Text style={styles.averageText}>
-            Promedio General 2? Semestre: {calcularPromedioGeneral(libreta, 2)}
+            Promedio General 2 Semestre: {calcularPromedioGeneral(libreta, 2)}
           </Text>
         </View>
 
