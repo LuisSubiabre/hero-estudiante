@@ -1093,7 +1093,7 @@ export default function NotasPage() {
 
             {/* Promedios Finales */}
             <div className="w-full max-w-6xl mt-8">
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-3 gap-4">
                 <div className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg border border-blue-200 dark:border-blue-700">
                   <h3 className="text-lg font-semibold text-blue-800 dark:text-blue-200 mb-2">
                     Promedio Final 1S
@@ -1165,6 +1165,77 @@ export default function NotasPage() {
                     return (
                       <p className="text-2xl font-bold text-green-900 dark:text-green-100">
                         {promedioFinal}
+                      </p>
+                    );
+                  })()}
+                </div>
+
+                <div className="bg-gray-50 dark:bg-gray-900/20 p-4 rounded-lg border border-gray-200 dark:border-gray-700">
+                  <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-2">
+                    Promedio Final
+                  </h3>
+                  {(() => {
+                    // Calcular el promedio final usando los PF de cada asignatura
+                    const asignaturas = libreta.asignaturas.filter(
+                      (a) => !a.concepto
+                    );
+
+                    if (asignaturas.length === 0)
+                      return (
+                        <p className="text-gray-600 dark:text-gray-400">
+                          No hay notas disponibles
+                        </p>
+                      );
+
+                    const promediosPF = asignaturas.map((asignatura) => {
+                      const notas1S = obtenerNotasSemestre(asignatura, 1, 10);
+                      const notas2S = obtenerNotasSemestre(asignatura, 11, 20);
+                      const promedio1S = calcularPromedio(
+                        notas1S,
+                        configPromedios.promedioAnualAsignatura
+                      );
+                      const promedio2S = calcularPromedio(
+                        notas2S,
+                        configPromedios.promedioAnualAsignatura
+                      );
+                      const promediosSemestres = [promedio1S, promedio2S].filter(
+                        (nota): nota is number => nota !== null
+                      );
+
+                      return promediosSemestres.length > 0
+                        ? calcularPromedio(
+                            promediosSemestres,
+                            configPromedios.promedioAnualAsignatura
+                          )
+                        : null;
+                    });
+
+                    const promediosNumericos = promediosPF
+                      .filter((p): p is number => p !== null)
+                      .map((p) => (typeof p === "string" ? parseFloat(p) : p))
+                      .filter((p): p is number => !isNaN(p));
+
+                    if (promediosNumericos.length === 0)
+                      return (
+                        <p className="text-gray-600 dark:text-gray-400">
+                          No hay notas disponibles
+                        </p>
+                      );
+
+                    const promedioFinal =
+                      promediosNumericos.reduce((a, b) => a + b, 0) /
+                      promediosNumericos.length;
+
+                    // Aproximar: 65.4 → 65, 65.5 → 66
+                    const decimal = promedioFinal - Math.floor(promedioFinal);
+                    const redondeado =
+                      decimal >= 0.5
+                        ? Math.ceil(promedioFinal)
+                        : Math.floor(promedioFinal);
+
+                    return (
+                      <p className="text-2xl font-bold text-gray-900 dark:text-gray-100">
+                        {redondeado}
                       </p>
                     );
                   })()}
