@@ -53,7 +53,7 @@ const jwtData = () => {
   return null;
 };
 
-// Funci?n para convertir calificaciones num?ricas a conceptos
+// Función para convertir calificaciones numéricas a conceptos
 const convertirCalificacion = (
   calificacion: number | null,
   esConcepto: boolean
@@ -62,20 +62,33 @@ const convertirCalificacion = (
 
   if (!esConcepto) return calificacion.toString();
 
-  // Aplicar la misma l?gica que en getPromedioCurso del PDF
-  // Redondear el valor
-  const redondeado =
-    Math.round(calificacion * 10) / 10 >= Math.floor(calificacion) + 0.5
-      ? Math.ceil(calificacion)
-      : Math.floor(calificacion);
+  // Para calificaciones individuales, usar valores exactos
+  // Convertir 30 a 40 para la comparación
+  const valorAComparar = calificacion === 30 ? 40 : calificacion;
 
-  // Convertir a concepto basado en rangos
-  if (redondeado >= 70) return "MB";
-  if (redondeado >= 60) return "B";
-  if (redondeado >= 50) return "S";
-  if (redondeado >= 40 || redondeado === 30) return "I";
+  switch (valorAComparar) {
+    case 70:
+      return "MB";
+    case 60:
+      return "B";
+    case 50:
+      return "S";
+    case 40:
+      return "I";
+    default:
+      // Para promedios calculados, aplicar redondeo y rangos
+      const redondeado =
+        Math.round(calificacion * 10) / 10 >= Math.floor(calificacion) + 0.5
+          ? Math.ceil(calificacion)
+          : Math.floor(calificacion);
 
-  return redondeado.toString();
+      if (redondeado >= 70) return "MB";
+      if (redondeado >= 60) return "B";
+      if (redondeado >= 50) return "S";
+      if (redondeado >= 40 || redondeado === 30) return "I";
+
+      return redondeado.toString();
+  }
 };
 
 // Funci?n para calcular el promedio de un conjunto de notas
