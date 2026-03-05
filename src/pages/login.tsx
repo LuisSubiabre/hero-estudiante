@@ -185,10 +185,7 @@ const LoginForm = () => {
                 ¿Qué encontrarás en la plataforma?
               </h3>
               <ul className="text-xs text-blue-800 dark:text-blue-200 space-y-1">
-                <li>• Consulta de calificaciones</li>
-                <li>• Control de asistencia y atrasos</li>
                 <li>• Certificado Alumno Regular</li>
-                <li>• Informe de Personalidad</li>
                 <li>• ACLES</li>
              
               </ul>
