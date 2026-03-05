@@ -25,7 +25,7 @@ export default function IndexPage() {
                />
             </div>
 
-            <div className="mt-12">
+            {/* <div className="mt-12">
               <h2 className="text-2xl font-bold text-center mb-4 text-gray-800 dark:text-white">
                 Inspectores por Niveles
               </h2>
@@ -100,7 +100,7 @@ export default function IndexPage() {
                   </div>
                 </div>
               </div>
-            </div>
+            </div> */}
           </div>
         </section>
       ) : (

@@ -8,26 +8,26 @@ export const siteConfig = {
       label: "Inicio",
       href: "/",
     },
-    {
-      label: "Notas",
-      href: "/notas",
-    },
-    {
-      label: "Asistencia",
-      href: "/asistencia",
-    },
-    {
-      label: "ACLES",
-      href: "/acles",
-    },
-    {
-      label: "Atrasos",
-      href: "/atrasos",
-    },
-    {
-      label: "Personalidad",
-      href: "/personalidad",
-    },
+    // {
+    //   label: "Notas",
+    //   href: "/notas",
+    // },
+    // {
+    //   label: "Asistencia",
+    //   href: "/asistencia",
+    // },
+    // {
+    //   label: "ACLES",
+    //   href: "/acles",
+    // },
+    // {
+    //   label: "Atrasos",
+    //   href: "/atrasos",
+    // },
+    // {
+    //   label: "Personalidad",
+    //   href: "/personalidad",
+    // },
     {
       label: "Certificados",
       href: "/certificados",
@@ -42,26 +42,26 @@ export const siteConfig = {
       label: "Inicio",
       href: "/",
     },
-    {
-      label: "Notas",
-      href: "/notas",
-    },
-    {
-      label: "Asistencia",
-      href: "/asistencia",
-    },
-    {
-      label: "ACLES",
-      href: "/acles",
-    },
-    {
-      label: "Atrasos",
-      href: "/atrasos",
-    },
-    {
-      label: "Personalidad",
-      href: "/personalidad",
-    },
+    // {
+    //   label: "Notas",
+    //   href: "/notas",
+    // },
+    // {
+    //   label: "Asistencia",
+    //   href: "/asistencia",
+    // },
+    // {
+    //   label: "ACLES",
+    //   href: "/acles",
+    // },
+    // {
+    //   label: "Atrasos",
+    //   href: "/atrasos",
+    // },
+    // {
+    //   label: "Personalidad",
+    //   href: "/personalidad",
+    // },
     {
       label: "Certificados",
       href: "/certificados",
