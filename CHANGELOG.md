@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [5.1.1](https://github.com/LuisSubiabre/hero-estudiante/compare/v5.1.0...v5.1.1) (2026-03-05)
+
+
+### Features
+
+* agregar función para normalizar notas conceptuales y mejorar la lógica de conversión de calificaciones en el componente Notas, permitiendo el manejo de strings y números en las calificaciones ([eda047f](https://github.com/LuisSubiabre/hero-estudiante/commit/eda047f3df9aed997468374f669ca2aab591dc37))
+* comentar secciones del menú y contenido en la página de inicio para futuras implementaciones ([2815ad7](https://github.com/LuisSubiabre/hero-estudiante/commit/2815ad7dbab2ac48bf4637ceff2182211741afb1))
+
 ## [5.1.0](https://github.com/LuisSubiabre/hero-estudiante/compare/v5.0.8...v5.1.0) (2025-12-17)
 
 
