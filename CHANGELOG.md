@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [5.1.2](https://github.com/LuisSubiabre/hero-estudiante/compare/v5.1.1...v5.1.2) (2026-03-05)
+
+
+### Features
+
+* remove outdated features from the login information section ([efd27a0](https://github.com/LuisSubiabre/hero-estudiante/commit/efd27a042caa5d8315b1cdf534ce681e4acc6fdf))
+
 ### [5.1.1](https://github.com/LuisSubiabre/hero-estudiante/compare/v5.1.0...v5.1.1) (2026-03-05)
 
 
