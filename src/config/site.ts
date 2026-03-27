@@ -16,10 +16,10 @@ export const siteConfig = {
     //   label: "Asistencia",
     //   href: "/asistencia",
     // },
-    // {
-    //   label: "ACLES",
-    //   href: "/acles",
-    // },
+    {
+      label: "ACLES",
+      href: "/acles",
+    },
     // {
     //   label: "Atrasos",
     //   href: "/atrasos",
@@ -50,10 +50,10 @@ export const siteConfig = {
     //   label: "Asistencia",
     //   href: "/asistencia",
     // },
-    // {
-    //   label: "ACLES",
-    //   href: "/acles",
-    // },
+    {
+      label: "ACLES",
+      href: "/acles",
+    },
     // {
     //   label: "Atrasos",
     //   href: "/atrasos",

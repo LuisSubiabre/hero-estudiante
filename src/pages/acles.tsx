@@ -20,6 +20,7 @@ import {
   talleresInscritos,
   tallerInscripcion,
   tallerRetirar,
+  talleresVisibles,
 } from "@/services/tallerService";
 import { Taller } from "@/types";
 export default function NotasPage() {
@@ -32,6 +33,7 @@ export default function NotasPage() {
   const [errorTalleres, setErrorTalleres] = useState("");
   const [errorInscritos, setErrorInscritos] = useState("");
   const [error, setError] = useState("");
+  const [visible, setVisible] = useState<boolean | null>(null);
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
   // Función para obtener los talleres disponibles
@@ -95,6 +97,9 @@ export default function NotasPage() {
   useEffect(() => {
     fetchTalleres();
     fetchTalleresInscritos();
+    talleresVisibles(0).then((data) => {
+      setVisible(data?.visible ?? data);
+    });
   }, []);
 
   // Función para decodificar el token JWT
@@ -259,6 +264,13 @@ export default function NotasPage() {
           </Alert>
         </div>
 
+        {/* Talleres: condicionado por configuración de visibilidad */}
+        {visible === false ? (
+          <div className="w-full max-w-4xl">
+            <Alert color="warning">Los talleres no están disponibles en este momento. Por favor, refresque la página o inténtelo más tarde. </Alert>
+          </div>
+        ) : (
+          <>
         {/* Listado de talleres inscritos */}
         <div className="w-full max-w-4xl">
           <h2 className="text-xl font-semibold mb-4">Mis Talleres Inscritos</h2>
@@ -290,7 +302,7 @@ export default function NotasPage() {
                       </div>
                     </div>
                     <div className="mt-auto">
-                      {t.taller_id === 54 && (
+                      {(
                         <Button
                           className="w-full"
                           color="danger"
@@ -331,9 +343,7 @@ export default function NotasPage() {
               {cantidadTalleresInscritos >= 2 ? (
                 <>
                   <Alert className="mb-6" color="warning">
-                    Ya has alcanzado el máximo de talleres permitidos. Puedes
-                    ver los talleres disponibles a continuación, pero solo
-                    podrás inscribirte en el taller especial. Si tienes dudas, puedes escribir a <strong>acle@liceoexperimental.cl</strong>
+                    Ya has alcanzado el máximo de talleres permitidos. Si tienes dudas, puedes escribir a <strong>acle@liceoexperimental.cl</strong>
                   </Alert>
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {talleresDisponibles.map((t) => (
@@ -370,16 +380,7 @@ export default function NotasPage() {
                               <span className="text-danger">Sin cupos</span>
                             )}
                           </div>
-                          {t.taller_id === 54 &&
-                            t.cantidad_cupos > t.cantidad_inscritos && (
-                              <Button
-                                className="w-full mt-4"
-                                color="primary"
-                                onPress={() => inscribirTaller(t.taller_id)}
-                              >
-                                Inscribirse en el taller
-                              </Button>
-                            )}
+                         
                         </div>
                       </Card>
                     ))}
@@ -425,7 +426,7 @@ export default function NotasPage() {
                               </span>
                             )}
                           </div>
-                          {t.taller_id === 54 &&
+                          {
                             t.cantidad_cupos > t.cantidad_inscritos && (
                               <Button
                                 className="w-full"
@@ -449,6 +450,8 @@ export default function NotasPage() {
             </Alert>
           )}
         </div>
+          </>
+        )}
       </section>
 
       <Modal isOpen={isOpen} onOpenChange={onOpenChange}>

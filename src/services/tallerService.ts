@@ -4,8 +4,8 @@ import api from "../api/config.ts";
 export const searchTaller = async (id: number) => {
   const response = await api.get(`/talleres/${id}`);
 
-  return response.data;
-};
+    return response.data;
+  };
 
 // lista de talleres inscritos por un estudiante
 export const talleresInscritos = async (id: number) => {
@@ -34,3 +34,8 @@ export const tallerRetirar = async (
 
   return response.data;
 };
+export const talleresVisibles = async (id: number) => {
+  const response = await api.get(`/secciones-config/visible`);
+
+    return response.data;
+  };
