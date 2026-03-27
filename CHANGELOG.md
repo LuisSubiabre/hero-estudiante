@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [5.2.0](https://github.com/LuisSubiabre/hero-estudiante/compare/v5.1.2...v5.2.0) (2026-03-27)
+
+
+### Features
+
+* add visibility handling for talleres and update site configuration ([3186f44](https://github.com/LuisSubiabre/hero-estudiante/commit/3186f44f4042bbe785925d82e24c9027fad2ce2c))
+
 ### [5.1.2](https://github.com/LuisSubiabre/hero-estudiante/compare/v5.1.1...v5.1.2) (2026-03-05)
 
 
