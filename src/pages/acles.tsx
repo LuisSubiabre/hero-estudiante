@@ -97,7 +97,7 @@ export default function NotasPage() {
   useEffect(() => {
     fetchTalleres();
     fetchTalleresInscritos();
-    talleresVisibles(0).then((data) => {
+    talleresVisibles().then((data) => {
       setVisible(data?.visible ?? data);
     });
   }, []);
@@ -241,12 +241,27 @@ export default function NotasPage() {
           {cantidadTalleresInscritos >= 2 && (
             <div className="mt-4">
               <span className="inline-block bg-warning text-white text-sm font-semibold px-4 py-2 rounded">
-                El periodo de inscripciones ha finalizado.
+                Límite de inscripción alcanzado
+
               </span>
             </div>
           )}
         </div>
 
+        {/* Talleres: condicionado por configuración de visibilidad */}
+        {visible === false ? (
+          <div className="w-full max-w-4xl flex flex-col items-center justify-center py-16 gap-4">
+            <span className="text-5xl">🔒</span>
+            <h2 className="text-2xl font-bold text-default-700">
+              Talleres no disponibles
+            </h2>
+            <p className="text-default-500 text-center max-w-md">
+              Los talleres no están disponibles en este momento. Por favor,
+              vuelve a intentarlo más tarde.
+            </p>
+          </div>
+        ) : (
+          <>
         {/* Estado de inscripción */}
         <div className="w-full max-w-4xl">
           <Alert
@@ -263,14 +278,6 @@ export default function NotasPage() {
             </div>
           </Alert>
         </div>
-
-        {/* Talleres: condicionado por configuración de visibilidad */}
-        {visible === false ? (
-          <div className="w-full max-w-4xl">
-            <Alert color="warning">Los talleres no están disponibles en este momento. Por favor, refresque la página o inténtelo más tarde. </Alert>
-          </div>
-        ) : (
-          <>
         {/* Listado de talleres inscritos */}
         <div className="w-full max-w-4xl">
           <h2 className="text-xl font-semibold mb-4">Mis Talleres Inscritos</h2>

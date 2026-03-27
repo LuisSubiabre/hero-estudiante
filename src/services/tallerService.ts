@@ -34,7 +34,7 @@ export const tallerRetirar = async (
 
   return response.data;
 };
-export const talleresVisibles = async (id: number) => {
+export const talleresVisibles = async () => {
   const response = await api.get(`/secciones-config/visible`);
 
     return response.data;
