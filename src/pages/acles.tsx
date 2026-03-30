@@ -238,7 +238,7 @@ export default function NotasPage() {
           <p className="text-default-500 mt-2">
             Inscríbete en los talleres de tu interés
           </p>
-          {cantidadTalleresInscritos >= 2 && (
+          {cantidadTalleresInscritos >= 3 && (
             <div className="mt-4">
               <span className="inline-block bg-warning text-white text-sm font-semibold px-4 py-2 rounded">
                 Límite de inscripción alcanzado
@@ -266,11 +266,11 @@ export default function NotasPage() {
         <div className="w-full max-w-4xl">
           <Alert
             className="mb-6"
-            color={cantidadTalleresInscritos >= 2 ? "warning" : "secondary"}
+            color={cantidadTalleresInscritos >= 3 ? "warning" : "secondary"}
           >
             <div className="flex justify-between items-center w-full">
-              <span>Talleres inscritos: {cantidadTalleresInscritos} de 2</span>
-              {cantidadTalleresInscritos >= 2 && (
+              <span>Talleres inscritos: {cantidadTalleresInscritos} de 3</span>
+              {cantidadTalleresInscritos >= 3 && (
                 <span className="font-semibold">
                   Límite de inscripción alcanzado
                 </span>
@@ -347,7 +347,7 @@ export default function NotasPage() {
 
           {!loadingTalleres && talleresDisponibles.length > 0 && (
             <>
-              {cantidadTalleresInscritos >= 2 ? (
+              {cantidadTalleresInscritos >= 3 ? (
                 <>
                   <Alert className="mb-6" color="warning">
                     Ya has alcanzado el máximo de talleres permitidos. Si tienes dudas, puedes escribir a <strong>acle@liceoexperimental.cl</strong>
